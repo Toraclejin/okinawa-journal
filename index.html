@@ -2016,6 +2016,12 @@
       transform: translateY(12px);
     }
     .toolbar.scrolling button { pointer-events: none; }
+    /* 하단 페이지네이션이 뷰에 들어오면 툴바 숨김 (클릭 간섭 방지) */
+    .toolbar.pagination-in-view {
+      opacity: 0;
+      transform: translateY(140%);
+      pointer-events: none;
+    }
     .toolbar button {
       width: 44px;
       height: 44px;
@@ -2664,24 +2670,25 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* 상단 네비 바 */
+  /* 상단 네비 바 — 에디토리얼 톤 */
   .page-nav {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 150;
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(0, 71, 255, 0.1);
-    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: saturate(180%) blur(16px);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
+    border-bottom: 1px solid rgba(0, 10, 51, 0.06);
+    padding: 14px 20px 0;
   }
   .page-nav-inner {
     max-width: 1280px;
     margin: 0 auto;
     display: flex;
-    gap: 6px;
+    align-items: stretch;
+    gap: 4px;
     overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -2690,31 +2697,44 @@
   .page-nav-inner::-webkit-scrollbar { display: none; }
   .page-nav-btn {
     flex-shrink: 0;
-    padding: 10px 16px;
-    border: 1.5px solid transparent;
-    border-radius: 999px;
+    padding: 6px 14px 14px;
+    border: none;
     background: transparent;
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--blue-deep);
+    font-family: 'Pretendard Variable', Pretendard, 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--blue-ink);
+    opacity: 0.45;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: opacity 0.2s, color 0.2s;
     scroll-snap-align: start;
     -webkit-tap-highlight-color: transparent;
+    position: relative;
+    white-space: nowrap;
   }
-  .page-nav-btn:hover { background: var(--page-tint); }
+  .page-nav-btn:hover { opacity: 0.85; }
   .page-nav-btn.current {
+    opacity: 1;
+    font-weight: 700;
+    color: var(--blue);
+  }
+  .page-nav-btn.current::after {
+    content: "";
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 0;
+    height: 2.5px;
     background: var(--blue);
-    color: var(--white);
-    border-color: var(--blue);
+    border-radius: 2px;
   }
   @media (max-width: 600px) {
-    body { padding-top: 72px; }
-    .page-nav { padding: 10px 14px; }
-    .page-nav-btn { padding: 8px 13px; font-size: 12px; }
+    body { padding-top: 62px; }
+    .page-nav { padding: 12px 14px 0; }
+    .page-nav-btn { padding: 5px 11px 12px; font-size: 13px; }
+    .page-nav-btn.current::after { left: 11px; right: 11px; height: 2px; }
   }
 
   /* 좌우 페이지 이동 화살표 (고정) */
@@ -4954,6 +4974,19 @@
     renderBottomPagination(id, idx);
   }
 
+  // 페이지네이션이 뷰에 들어오면 툴바 자동 숨김 (모바일 클릭 간섭 방지)
+  const paginationVisibilityObserver = ('IntersectionObserver' in window) ? new IntersectionObserver((entries) => {
+    const toolbar = document.getElementById('toolbar');
+    if (!toolbar) return;
+    // active 페이지의 pagination이 뷰에 있을 때만 숨김
+    const anyIntersecting = entries.some(e => {
+      if (!e.isIntersecting) return false;
+      const page = e.target.closest('.page');
+      return page && page.classList.contains('active');
+    });
+    toolbar.classList.toggle('pagination-in-view', anyIntersecting);
+  }, { threshold: 0.01, rootMargin: '0px 0px -40px 0px' }) : null;
+
   function renderBottomPagination(id, idx) {
     // 각 .page 맨 아래에 이전/다음 버튼 삽입 (없으면 생성)
     document.querySelectorAll('.page').forEach(pageEl => {
@@ -4980,6 +5013,7 @@
           const cur = PAGE_IDS.indexOf(pageEl.dataset.page);
           if (cur < PAGE_IDS.length - 1) showPage(PAGE_IDS[cur + 1]);
         });
+        if (paginationVisibilityObserver) paginationVisibilityObserver.observe(nav);
       }
       const myIdx = PAGE_IDS.indexOf(pageEl.dataset.page);
       const prevBtn = nav.querySelector('.pg-prev');
