@@ -1399,7 +1399,7 @@
     .frame-deco { display: none; }
 
     .cover { padding: 50px 28px 40px; }
-    .cover h1 { font-size: 72px; line-height: 0.88; }
+    .cover h1 { font-size: clamp(44px, 13.5vw, 84px); line-height: 0.88; white-space: nowrap; }
     .cover-dek { margin-left: 0; font-size: 19px; }
     .cover-foot { grid-template-columns: 1fr 1fr; gap: 16px; padding: 20px; }
     .cover-foot .cell { border-right: none; padding-right: 0; padding-bottom: 10px; }
@@ -2478,14 +2478,25 @@
 
 <!-- 툴바 -->
 <div class="toolbar" id="toolbar">
+  <button type="button" id="btn-scroll-top" title="맨 위로">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 11 12 6 7 11"></polyline><polyline points="17 18 12 13 7 18"></polyline></svg>
+    <span class="tip">맨 위로</span>
+  </button>
+  <button type="button" id="btn-scroll-bottom" title="맨 아래로">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 13 12 18 17 13"></polyline><polyline points="7 6 12 11 17 6"></polyline></svg>
+    <span class="tip">맨 아래로</span>
+  </button>
   <button type="button" id="btn-export" title="내보내기">
-    ↓<span class="tip">내보내기</span>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+    <span class="tip">내보내기</span>
   </button>
   <button type="button" id="btn-import" title="불러오기">
-    ↑<span class="tip">불러오기</span>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+    <span class="tip">불러오기</span>
   </button>
   <button type="button" id="btn-print" title="PDF·인쇄">
-    ⎙<span class="tip">PDF·인쇄</span>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+    <span class="tip">PDF·인쇄</span>
   </button>
   <button type="button" id="btn-info" title="사용법">
     ?<span class="tip">사용법</span>
@@ -2502,7 +2513,7 @@
     <p class="lead">이 매거진은 여행 전·중·후 모두 함께합니다.</p>
 
     <div class="info-row">
-      <div class="info-icon">↓</div>
+      <div class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></div>
       <div class="info-text">
         <h4>Export · 내보내기</h4>
         <p>별점·메모·체크박스 전부 JSON 파일로 저장. 카톡·이메일로 보내거나 다른 기기로 옮길 때 사용.</p>
@@ -2510,7 +2521,7 @@
     </div>
 
     <div class="info-row">
-      <div class="info-icon">↑</div>
+      <div class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></div>
       <div class="info-text">
         <h4>Import · 불러오기</h4>
         <p>저장한 JSON 파일을 불러오면 모든 내용 복원. 폰 ↔ 맥북 자유롭게 이동 가능.</p>
@@ -2518,7 +2529,7 @@
     </div>
 
     <div class="info-row">
-      <div class="info-icon">⎙</div>
+      <div class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></div>
       <div class="info-text">
         <h4>Print · 인쇄·PDF 저장</h4>
         <p>브라우저 인쇄 화면으로 이동. "PDF로 저장" 선택 시 과제용 제출물로 변환. 색상·레이아웃 모두 유지.</p>
@@ -4128,6 +4139,16 @@
   // ==========================================
   document.getElementById('btn-print').addEventListener('click', () => {
     window.print();
+  });
+
+  // ==========================================
+  //  SCROLL - 맨 위 / 맨 아래로
+  // ==========================================
+  document.getElementById('btn-scroll-top').addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  document.getElementById('btn-scroll-bottom').addEventListener('click', () => {
+    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
   });
 
   // ==========================================
