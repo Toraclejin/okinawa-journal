@@ -2655,6 +2655,170 @@
     .opt-place::before { display: none !important; }
   }
 
+  /* ========== 페이지 시스템 (분할 네비) ========== */
+  body { padding-top: 88px; }
+  .page { display: none; }
+  .page.active { display: block; animation: pageFadeIn 0.4s cubic-bezier(0.22, 0.61, 0.36, 1); }
+  @keyframes pageFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* 상단 네비 바 */
+  .page-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 150;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0, 71, 255, 0.1);
+    padding: 12px 20px;
+  }
+  .page-nav-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-snap-type: x proximity;
+  }
+  .page-nav-inner::-webkit-scrollbar { display: none; }
+  .page-nav-btn {
+    flex-shrink: 0;
+    padding: 10px 16px;
+    border: 1.5px solid transparent;
+    border-radius: 999px;
+    background: transparent;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blue-deep);
+    cursor: pointer;
+    transition: all 0.2s;
+    scroll-snap-align: start;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .page-nav-btn:hover { background: var(--page-tint); }
+  .page-nav-btn.current {
+    background: var(--blue);
+    color: var(--white);
+    border-color: var(--blue);
+  }
+  @media (max-width: 600px) {
+    body { padding-top: 72px; }
+    .page-nav { padding: 10px 14px; }
+    .page-nav-btn { padding: 8px 13px; font-size: 12px; }
+  }
+
+  /* 좌우 페이지 이동 화살표 (고정) */
+  .page-arrow {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 90;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 2px solid var(--blue);
+    background: rgba(255, 255, 255, 0.85);
+    color: var(--blue);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 6px 18px rgba(0, 31, 102, 0.15);
+    transition: all 0.2s ease;
+    opacity: 0.6;
+  }
+  .page-arrow:hover, .page-arrow:focus {
+    opacity: 1;
+    background: var(--blue);
+    color: var(--white);
+    transform: translateY(-50%) scale(1.05);
+  }
+  .page-arrow-prev { left: 24px; }
+  .page-arrow-next { right: 24px; }
+  .page-arrow.disabled {
+    opacity: 0;
+    pointer-events: none;
+  }
+  @media (max-width: 900px) {
+    .page-arrow { width: 42px; height: 42px; }
+    .page-arrow-prev { left: 10px; }
+    .page-arrow-next { right: 10px; }
+  }
+  @media (max-width: 500px) {
+    .page-arrow { opacity: 0.4; }
+  }
+
+  /* 페이지 하단 페이지네이션 */
+  .page-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 40px 60px 60px;
+    border-top: 2px solid var(--blue-100);
+    margin-top: 40px;
+  }
+  .page-pagination .pg-btn {
+    flex: 1;
+    max-width: 280px;
+    padding: 20px 24px;
+    border: 2px solid var(--blue);
+    border-radius: 16px;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--blue-deep);
+  }
+  .page-pagination .pg-btn:hover {
+    background: var(--blue);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 71, 255, 0.2);
+  }
+  .page-pagination .pg-btn.pg-next { text-align: right; margin-left: auto; align-items: flex-end; }
+  .page-pagination .pg-lbl {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .page-pagination .pg-title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 20px;
+    font-weight: 500;
+  }
+  .page-pagination .pg-btn.hidden { visibility: hidden; }
+  @media (max-width: 600px) {
+    .page-pagination { padding: 30px 24px 40px; gap: 10px; }
+    .page-pagination .pg-btn { padding: 14px 16px; }
+    .page-pagination .pg-title { font-size: 16px; }
+  }
+
+  @media print {
+    .page { display: block !important; }
+    .page-nav, .page-arrow, .page-pagination { display: none !important; }
+    body { padding-top: 0 !important; }
+  }
+
   /* ========== 성능 최적화: content-visibility ========== */
   /* 스크롤 뷰 밖의 섹션은 렌더링 스킵 → 모바일 로딩 속도 향상 */
   .day, .mood-section, .pack-spread, .blank-spread {
@@ -2796,7 +2960,30 @@
   </div>
 </div>
 
+<!-- ========== 상단 페이지 네비 ========== -->
+<nav class="page-nav" id="page-nav" aria-label="페이지 네비">
+  <div class="page-nav-inner">
+    <button type="button" class="page-nav-btn" data-nav="cover">표지</button>
+    <button type="button" class="page-nav-btn" data-nav="prep">여행 전</button>
+    <button type="button" class="page-nav-btn" data-nav="d1">Day 1</button>
+    <button type="button" class="page-nav-btn" data-nav="d2">Day 2</button>
+    <button type="button" class="page-nav-btn" data-nav="d3">Day 3</button>
+    <button type="button" class="page-nav-btn" data-nav="d4">Day 4</button>
+    <button type="button" class="page-nav-btn" data-nav="back">마무리</button>
+  </div>
+</nav>
+
+<!-- 좌우 페이지 이동 화살표 (고정) -->
+<button type="button" class="page-arrow page-arrow-prev" id="page-prev" aria-label="이전 페이지">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+</button>
+<button type="button" class="page-arrow page-arrow-next" id="page-next" aria-label="다음 페이지">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+</button>
+
 <main class="sheet">
+
+<div class="page" data-page="cover">
 
 <div class="runner">
   <span class="accent">The Family Journal</span>
@@ -2909,6 +3096,9 @@
   </div>
 </section>
 
+</div><!-- /page cover -->
+
+<div class="page" data-page="d1">
 <!-- ========== DAY 1 ========== -->
 <section class="day" id="d1">
   <div class="day-opener mint-bg">
@@ -3211,6 +3401,9 @@
   </div>
 </section>
 
+</div><!-- /page d1 -->
+
+<div class="page" data-page="d2">
 <!-- ========== DAY 2 ========== -->
 <section class="day" id="d2">
   <div class="day-opener blue-bg">
@@ -3582,6 +3775,9 @@
   </div>
 </section>
 
+</div><!-- /page d2 -->
+
+<div class="page" data-page="d3">
 <!-- ========== DAY 3 ========== -->
 <section class="day" id="d3">
   <div class="day-opener amber-bg">
@@ -3977,6 +4173,9 @@
   </div>
 </section>
 
+</div><!-- /page d3 -->
+
+<div class="page" data-page="d4">
 <!-- ========== DAY 4 ========== -->
 <section class="day" id="d4">
   <div class="day-opener ink-bg">
@@ -4071,6 +4270,9 @@
   </div>
 </section>
 
+</div><!-- /page d4 -->
+
+<div class="page" data-page="prep">
 <!-- ========== PACKING ========== -->
 <section class="pack-spread" id="pack">
   <div class="pack-head">
@@ -4149,6 +4351,9 @@
   </div>
 </section>
 
+</div><!-- /page prep -->
+
+<div class="page" data-page="back">
 <!-- ========== BACK COVER ========== -->
 <section class="back">
   <div class="back-mark">End of Issue · Volume I ✺</div>
@@ -4163,6 +4368,8 @@
     <span>Okinawa, Spring 2026</span>
   </div>
 </section>
+
+</div><!-- /page back -->
 
 </main>
 
@@ -4698,6 +4905,150 @@
       grid.appendChild(makePhotoItem(photo.id, photo.dataUrl, targetId));
     });
   });
+
+  // ==========================================
+  //  페이지 네비게이션 (분할 페이지)
+  // ==========================================
+  const PAGES = [
+    { id: 'cover', label: '표지', short: '표지' },
+    { id: 'prep',  label: '여행 전', short: '여행 전' },
+    { id: 'd1',    label: 'Day 1 · Arrival', short: 'Day 1' },
+    { id: 'd2',    label: 'Day 2 · Whale Shark', short: 'Day 2' },
+    { id: 'd3',    label: 'Day 3 · Chatan', short: 'Day 3' },
+    { id: 'd4',    label: 'Day 4 · Farewell', short: 'Day 4' },
+    { id: 'back',  label: '마무리', short: '마무리' }
+  ];
+  const PAGE_IDS = PAGES.map(p => p.id);
+
+  function currentPageId() {
+    const active = document.querySelector('.page.active');
+    return active ? active.dataset.page : PAGE_IDS[0];
+  }
+
+  function showPage(id, { skipScroll = false } = {}) {
+    if (!PAGE_IDS.includes(id)) id = 'cover';
+    document.querySelectorAll('.page').forEach(p => {
+      p.classList.toggle('active', p.dataset.page === id);
+    });
+    document.querySelectorAll('.page-nav-btn').forEach(btn => {
+      btn.classList.toggle('current', btn.dataset.nav === id);
+    });
+    updateArrowsAndPagination(id);
+    if (!skipScroll) window.scrollTo({ top: 0, behavior: 'instant' });
+    try { localStorage.setItem('okinawa-journal-page', id); } catch(e){}
+    if (location.hash.slice(1) !== id) {
+      history.replaceState(null, '', `#${id}`);
+    }
+  }
+
+  function updateArrowsAndPagination(id) {
+    const idx = PAGE_IDS.indexOf(id);
+    const prev = document.getElementById('page-prev');
+    const next = document.getElementById('page-next');
+    prev.classList.toggle('disabled', idx <= 0);
+    next.classList.toggle('disabled', idx >= PAGE_IDS.length - 1);
+    // 활성 네비 버튼 스크롤 가시화
+    const activeBtn = document.querySelector('.page-nav-btn.current');
+    if (activeBtn) activeBtn.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+    // 하단 페이지네이션 업데이트
+    renderBottomPagination(id, idx);
+  }
+
+  function renderBottomPagination(id, idx) {
+    // 각 .page 맨 아래에 이전/다음 버튼 삽입 (없으면 생성)
+    document.querySelectorAll('.page').forEach(pageEl => {
+      let nav = pageEl.querySelector(':scope > .page-pagination');
+      if (!nav) {
+        nav = document.createElement('div');
+        nav.className = 'page-pagination';
+        nav.innerHTML = `
+          <button type="button" class="pg-btn pg-prev">
+            <span class="pg-lbl">← 이전</span>
+            <span class="pg-title"></span>
+          </button>
+          <button type="button" class="pg-btn pg-next">
+            <span class="pg-lbl">다음 →</span>
+            <span class="pg-title"></span>
+          </button>
+        `;
+        pageEl.appendChild(nav);
+        nav.querySelector('.pg-prev').addEventListener('click', () => {
+          const cur = PAGE_IDS.indexOf(pageEl.dataset.page);
+          if (cur > 0) showPage(PAGE_IDS[cur - 1]);
+        });
+        nav.querySelector('.pg-next').addEventListener('click', () => {
+          const cur = PAGE_IDS.indexOf(pageEl.dataset.page);
+          if (cur < PAGE_IDS.length - 1) showPage(PAGE_IDS[cur + 1]);
+        });
+      }
+      const myIdx = PAGE_IDS.indexOf(pageEl.dataset.page);
+      const prevBtn = nav.querySelector('.pg-prev');
+      const nextBtn = nav.querySelector('.pg-next');
+      prevBtn.classList.toggle('hidden', myIdx <= 0);
+      nextBtn.classList.toggle('hidden', myIdx >= PAGE_IDS.length - 1);
+      if (myIdx > 0) prevBtn.querySelector('.pg-title').textContent = PAGES[myIdx - 1].label;
+      if (myIdx < PAGE_IDS.length - 1) nextBtn.querySelector('.pg-title').textContent = PAGES[myIdx + 1].label;
+    });
+  }
+
+  // 네비 버튼 클릭
+  document.querySelectorAll('.page-nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => showPage(btn.dataset.nav));
+  });
+
+  // 좌우 화살표 클릭
+  document.getElementById('page-prev').addEventListener('click', () => {
+    const idx = PAGE_IDS.indexOf(currentPageId());
+    if (idx > 0) showPage(PAGE_IDS[idx - 1]);
+  });
+  document.getElementById('page-next').addEventListener('click', () => {
+    const idx = PAGE_IDS.indexOf(currentPageId());
+    if (idx < PAGE_IDS.length - 1) showPage(PAGE_IDS[idx + 1]);
+  });
+
+  // TOC 앵커 (#d1, #d2, ..., #pack) 클릭 가로채서 페이지 전환으로
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    const href = a.getAttribute('href').slice(1);
+    const mapped = href === 'pack' ? 'prep' : href;
+    if (PAGE_IDS.includes(mapped)) {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        showPage(mapped);
+      });
+    }
+  });
+
+  // 키보드 좌/우 화살표 지원
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      // 입력 필드엔 영향 안 주게
+      const t = e.target;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+      const idx = PAGE_IDS.indexOf(currentPageId());
+      if (e.key === 'ArrowLeft' && idx > 0) showPage(PAGE_IDS[idx - 1]);
+      if (e.key === 'ArrowRight' && idx < PAGE_IDS.length - 1) showPage(PAGE_IDS[idx + 1]);
+    }
+  });
+
+  // 브라우저 뒤로/앞으로 버튼
+  window.addEventListener('hashchange', () => {
+    const id = location.hash.slice(1);
+    if (id && PAGE_IDS.includes(id)) showPage(id, { skipScroll: false });
+  });
+
+  // 초기 로드: 해시 > localStorage > cover
+  (function initPage() {
+    const hashId = location.hash.slice(1);
+    let initId = 'cover';
+    if (hashId && PAGE_IDS.includes(hashId)) initId = hashId;
+    else {
+      try {
+        const saved = localStorage.getItem('okinawa-journal-page');
+        if (saved && PAGE_IDS.includes(saved)) initId = saved;
+      } catch(e){}
+    }
+    showPage(initId, { skipScroll: true });
+  })();
 
   // ==========================================
   //  구글맵 연결 (opt-place 클릭 → 확인 모달 → 지도 열기)
