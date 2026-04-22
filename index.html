@@ -768,6 +768,56 @@
     margin-bottom: 20px;
   }
 
+  /* 모바일 전용 더보기/접기 */
+  .opt-body-toggle { display: none; }
+  @media (max-width: 900px) {
+    .opt-body.collapsible {
+      max-height: calc(1.65em * 3);
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 0;
+    }
+    .opt-body.collapsible::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2em;
+      background: linear-gradient(to bottom, transparent, var(--white));
+      pointer-events: none;
+    }
+    .opt.highlight .opt-body.collapsible::after {
+      background: linear-gradient(to bottom, transparent, var(--blue));
+    }
+    .opt-body.collapsible.expanded {
+      max-height: none;
+    }
+    .opt-body.collapsible.expanded::after { display: none; }
+    .opt-body-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: 8px 0 20px;
+      padding: 6px 14px;
+      border: 1px solid var(--blue-100);
+      border-radius: 999px;
+      background: transparent;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--blue);
+      cursor: pointer;
+    }
+    .opt-body-toggle:active { background: var(--page-tint); }
+    .opt.highlight .opt-body-toggle {
+      border-color: rgba(255,255,255,0.4);
+      color: var(--amber);
+    }
+  }
+
   .opt-features {
     list-style: none;
     margin-bottom: 20px;
@@ -1270,12 +1320,14 @@
     text-transform: uppercase;
   }
   .blank-left h2 em {
+    display: block;
     font-family: 'Fraunces', serif;
     font-style: italic;
-    font-weight: 400;
+    font-weight: 700;
     color: var(--blue-ink);
     text-transform: none;
     letter-spacing: -0.02em;
+    margin-top: 4px;
   }
 
   .blank-left p {
@@ -1361,20 +1413,24 @@
   .back-main h2 {
     font-family: 'Archivo Black', 'Archivo', sans-serif;
     font-weight: 900;
-    font-size: clamp(72px, 14vw, 180px);
-    line-height: 0.85;
+    font-size: clamp(44px, 13vw, 180px);
+    line-height: 0.88;
     letter-spacing: -0.055em;
     margin-bottom: 32px;
     color: var(--blue);
     text-transform: uppercase;
+    white-space: nowrap;
+    overflow-wrap: normal;
   }
   .back-main h2 em {
+    display: block;
     font-family: 'Fraunces', serif;
     font-style: italic;
-    font-weight: 400;
+    font-weight: 700;
     color: var(--blue-ink);
     text-transform: none;
     letter-spacing: -0.02em;
+    margin-top: 4px;
   }
 
   .back-main p {
@@ -1468,7 +1524,8 @@
     .blank-left h2 { font-size: 40px; }
 
     .back { padding: 70px 28px; }
-    .back-main h2 { font-size: 72px; }
+    .back::before { width: 120px; height: 120px; top: 18%; right: 4%; }
+    .back::after { width: 60px; height: 60px; bottom: 10%; left: 4%; }
     .back::before { width: 120px; height: 120px; }
   }
 
@@ -1583,10 +1640,7 @@
   }
   /* 표지 h1의 의도된 줄바꿈은 데스크탑에서만 유지 */
   @media (max-width: 600px) {
-    .cover h1 br { display: none; }
     .cover h1 { word-spacing: 0.1em; }
-    .back-main h2 br { display: none; }
-    .blank-left h2 br { display: none; }
   }
 
   /* ========== READYMAG 스타일 MOOD CARDS ========== */
@@ -2657,7 +2711,7 @@
     <div class="contents-label">
       In This Issue
       <span class="big">Contents</span>
-      <p>네 개의 날과 여러 개의 옵션. 그날 고르는 것은 너의 몫.</p>
+      <p>나흘 동안 여기저기! 뭘 할지,<br/>어디 갈지, 네가 골라봐.</p>
     </div>
 
     <ol class="contents-list">
@@ -4479,6 +4533,51 @@
     state.photos[targetId].forEach(photo => {
       grid.appendChild(makePhotoItem(photo.id, photo.dataUrl, targetId));
     });
+  });
+
+  // ==========================================
+  //  OPT-BODY 더보기/접기 (모바일 전용)
+  // ==========================================
+  function setupOptBodyToggles() {
+    const isMobile = window.matchMedia('(max-width: 900px)').matches;
+    document.querySelectorAll('.opt-body').forEach(body => {
+      let btn = body.nextElementSibling;
+      const hasBtn = btn && btn.classList && btn.classList.contains('opt-body-toggle');
+      if (!hasBtn) {
+        btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'opt-body-toggle';
+        btn.textContent = '+ 더보기';
+        btn.addEventListener('click', () => {
+          const expanded = body.classList.toggle('expanded');
+          btn.textContent = expanded ? '− 접기' : '+ 더보기';
+        });
+        body.after(btn);
+      }
+      // 짧으면 버튼 숨기기
+      body.classList.remove('collapsible');
+      body.classList.remove('expanded');
+      btn.style.display = 'none';
+      btn.textContent = '+ 더보기';
+      if (!isMobile) return;
+      // 실제 높이 측정: 임시로 max-height 풀어서 scrollHeight 비교
+      body.classList.add('collapsible');
+      const collapsedH = body.clientHeight;
+      body.classList.add('expanded');
+      const fullH = body.clientHeight;
+      body.classList.remove('expanded');
+      if (fullH > collapsedH + 5) {
+        btn.style.display = '';
+      } else {
+        body.classList.remove('collapsible');
+      }
+    });
+  }
+  setupOptBodyToggles();
+  let toggleResizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(toggleResizeTimer);
+    toggleResizeTimer = setTimeout(setupOptBodyToggles, 200);
   });
 </script>
 </body>
