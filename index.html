@@ -251,12 +251,13 @@
   .cover h1 {
     font-family: 'Archivo Black', 'Archivo', sans-serif;
     font-weight: 900;
-    font-size: clamp(100px, 19vw, 280px);
-    line-height: 0.82;
+    font-size: clamp(80px, 13.5vw, 220px);
+    line-height: 0.88;
     letter-spacing: -0.055em;
     margin-bottom: 20px;
     color: var(--blue);
     text-transform: uppercase;
+    white-space: nowrap;
   }
   .cover h1 .subline {
     display: block;
@@ -1734,17 +1735,20 @@
     flex-direction: column;
   }
 
-  @media (max-width: 900px) {
-    .mood-section { padding: 50px 24px 60px; }
-    .mood-section-head { flex-direction: column; gap: 12px; align-items: flex-start; }
+  @media (max-width: 1100px) {
     .mood-grid {
       grid-template-columns: 1fr 1fr;
       grid-template-areas:
         "big big"
         "small1 small2"
         "small3 small4";
-      gap: 12px;
+      gap: 16px;
     }
+  }
+  @media (max-width: 900px) {
+    .mood-section { padding: 50px 24px 60px; }
+    .mood-section-head { flex-direction: column; gap: 12px; align-items: flex-start; }
+    .mood-grid { gap: 12px; }
     .mood-card { min-height: 180px; padding: 24px 16px; }
     .mood-card.big { min-height: 240px; }
   }
@@ -1835,7 +1839,13 @@
       right: 20px;
       flex-direction: row;
       gap: 6px;
+      transition: opacity 0.25s ease, transform 0.25s ease;
     }
+    .toolbar.scrolling {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    .toolbar.scrolling button { pointer-events: none; }
     .toolbar button {
       width: 44px;
       height: 44px;
@@ -4150,6 +4160,17 @@
   document.getElementById('btn-scroll-bottom').addEventListener('click', () => {
     window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
   });
+
+  // 모바일 스크롤 중 툴바 자동 숨김 (400ms 멈추면 다시 나타남)
+  const toolbarEl = document.getElementById('toolbar');
+  let toolbarHideTimer;
+  window.addEventListener('scroll', () => {
+    toolbarEl.classList.add('scrolling');
+    clearTimeout(toolbarHideTimer);
+    toolbarHideTimer = setTimeout(() => {
+      toolbarEl.classList.remove('scrolling');
+    }, 400);
+  }, { passive: true });
 
   // ==========================================
   //  INFO - 사용법 모달
