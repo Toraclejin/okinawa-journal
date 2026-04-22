@@ -2660,6 +2660,46 @@
     contain-intrinsic-size: auto 1200px;
   }
 
+  /* ========== 클릭 비활성화된 mood-card (지도 매핑 없는 것) ========== */
+  .mood-card-wrap.no-map { cursor: default; }
+  .mood-card-wrap.no-map:hover .mood-card,
+  .mood-card-wrap.no-map:active .mood-card {
+    transform: none;
+    box-shadow: inherit;
+  }
+  .mood-card-wrap.no-map:hover .mood-card-caption { color: var(--blue-deep); }
+
+  /* ========== 스크롤 리빌 애니메이션 (부드러운 페이드 + 슬라이드업) ========== */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.75s cubic-bezier(0.22, 0.61, 0.36, 1),
+                  transform 0.75s cubic-bezier(0.22, 0.61, 0.36, 1);
+      will-change: opacity, transform;
+    }
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* 카드·옵션은 살짝 순차적으로 */
+    .mood-card-wrap.reveal,
+    .contents-list li.reveal,
+    .opt.reveal,
+    .opt-write.reveal,
+    .pack-col.reveal {
+      transition-duration: 0.65s;
+    }
+  }
+  /* 모션 민감 사용자는 즉시 표시 */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal.in-view {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -2951,9 +2991,9 @@
     <div class="opt">
       <span class="opt-badge amber"><span class="dot"></span>Option 1 · Only</span>
       <div class="opt-title">Blue Seal <em>Ice Cream</em></div>
-      <div class="opt-place">Blue Seal · Makiminato Main Store</div>
+      <div class="opt-place">Blue Seal 마키미나토 본점 · 우라소에</div>
       <div class="opt-body">
-        오키나와 대표 아이스크림. 1948년 미군이 오키나와 주둔병들 사기 올리려고 만든 데서 시작됐고, 지금은 현지인·관광객 모두 사랑하는 국민 디저트. 우라소에 마키미나토가 본점이자 공장. 공항→차탄 가는 길에 있어서 첫 도착 간식으로 딱. 보라색 감자(베니이모), 시쿠와사(감귤), 솔티드 쿠키, 타이모 치즈케이크 등 오키나와 한정 맛이 핵심 — 육지 매장엔 없음.
+        오키나와 대표 아이스크림. 1948년 미군이 오키나와 주둔병 사기 올리려고 만든 데서 시작, 지금은 국민 디저트. **우라소에시 마키미나토 5-5-6**이 본점이자 공장 (Route 58 위, 거대한 콘 모양 네온간판). **영업 09:00~24:00 (금·토는 새벽 1시까지)**. 공항→차탄 가는 길에 있어서 첫 간식으로 딱. 본점 안쪽엔 Blue Seal Ice Park(공장 견학) 코너도 있음.
       </div>
       <div class="opt-menu">
         <span class="pick">Beni-imo</span>
@@ -3107,9 +3147,9 @@
     <div class="opt">
       <span class="opt-badge amber"><span class="dot"></span>Option 3</span>
       <div class="opt-title">호텔 <em>레스토랑</em></div>
-      <div class="opt-place">In-House Dining</div>
+      <div class="opt-place">Vessel Hotel Campana · 관내 다이닝</div>
       <div class="opt-body">
-        첫날 가장 편한 선택. 호텔 내부 레스토랑에서 가볍게. 멀리 안 나가도 됨.
+        호텔 1층 다이닝. 첫날 가장 편한 선택. 오키나와 현지식 + 양식 a la carte 메뉴. 챔푸루(볶음), 아구돼지, 소키 수프, 라후테 카레, 오키나와 소바 등 로컬 메뉴 풍부. 조식 뷔페는 다음날 아침 07:00~10:30 운영.
       </div>
       <div class="opt-menu">
         <span class="pick">스테이크</span>
@@ -3483,9 +3523,9 @@
     <div class="opt">
       <span class="opt-badge coral"><span class="dot"></span>Option 2</span>
       <div class="opt-title">리조트 <em>레스토랑</em></div>
-      <div class="opt-place">In-House Dining</div>
+      <div class="opt-place">Vessel Hotel Campana · 관내 다이닝</div>
       <div class="opt-body">
-        다시 외출이 싫으면 호텔 내부에서. 운전 안 해도 되고, 한 번 더 쉴 수 있음.
+        다시 외출이 싫으면 호텔 내부 다이닝에서. 운전 안 해도 되고, 추라우미 다녀온 피로 풀기 좋음. 로컬 오키나와 요리 + 양식 a la carte. 일몰 전 예약하면 창가에서 바다 뷰 가능.
       </div>
       <div class="opt-menu">
         <span class="pick">스테이크</span>
@@ -4675,12 +4715,89 @@
       .trim();
   }
 
-  function openMapModal(rawText) {
+  // 검증된 장소 → 정확한 구글맵 검색어 매핑
+  // (키: 원문에 포함된 문자열, 긴 키 먼저 매칭)
+  const PLACE_QUERIES = [
+    ['blue seal 마키미나토 본점', 'Blue Seal Makiminato Honten Urasoe Okinawa'],
+    ['blue seal', 'Blue Seal Mihama American Village Okinawa'],
+    ['the calif kitchen', 'The Calif Kitchen Okinawa Depot Island'],
+    ['rooftop pool', 'Vessel Hotel Campana Okinawa'],
+    ['루프탑', 'Vessel Hotel Campana Okinawa'],
+    ['sunset beach', 'Chatan Park Sunset Beach Okinawa'],
+    ['선셋 비치', 'Chatan Park Sunset Beach Okinawa'],
+    ['아메리칸 빌리지', 'Mihama American Village Chatan'],
+    ['american village', 'Mihama American Village Chatan'],
+    ['호텔 대욕장', 'Vessel Hotel Campana Okinawa'],
+    ['호텔 레스토랑', 'Vessel Hotel Campana Okinawa'],
+    ['리조트 레스토랑', 'Vessel Hotel Campana Okinawa'],
+    ['호텔 복귀', 'Vessel Hotel Campana Okinawa'],
+    ['vessel hotel campana', 'Vessel Hotel Campana Okinawa'],
+    ['vessel hotel', 'Vessel Hotel Campana Okinawa'],
+    ['07:30 체크아웃', 'Vessel Hotel Campana Okinawa'],
+    ['churaumi aquarium', 'Okinawa Churaumi Aquarium Motobu'],
+    ['추라우미', 'Okinawa Churaumi Aquarium Motobu'],
+    ['ocean blue cafe', 'Ocean Blue Cafe Churaumi Aquarium'],
+    ['kouri island', 'Kouri Island Okinawa'],
+    ['kourijima', 'Kouri Island Okinawa'],
+    ['kouri', 'Kouri Island Kouri Bridge Okinawa'],
+    ['코우리', 'Kouri Island Kouri Bridge Okinawa'],
+    ['emerald beach', 'Emerald Beach Ocean Expo Park Motobu'],
+    ['steakhouse 88', 'Steak House 88 Chatan'],
+    ['araha beach', 'Araha Beach Chatan Okinawa'],
+    ['차탄 아라하', 'Araha Beach Chatan Okinawa'],
+    ['아라하', 'Araha Beach Chatan Okinawa'],
+    ['transit cafe', 'Transit Cafe Sunabe Chatan Okinawa'],
+    ['zhyvago', 'Zhyvago Coffee Works Okinawa American Village'],
+    ['aeon mall rycom', 'Aeon Mall Okinawa Rycom'],
+    ['aeon rycom', 'Aeon Mall Okinawa Rycom'],
+    ['kurasushi', 'Kura Sushi Aeon Mall Okinawa Rycom'],
+    ['kura sushi', 'Kura Sushi Aeon Mall Okinawa Rycom'],
+    ['sushiro', 'Sushiro Chatan Okinawa'],
+    ['스시로', 'Sushiro Chatan Okinawa'],
+    ['naha airport', 'Naha Airport Okinawa'],
+    ['나하 공항', 'Naha Airport Okinawa'],
+    ['소바집', 'Motobu Soba Okinawa'],
+  ];
+
+  // 실제 장소가 아니라 모달 열지 않을 문구
+  const SKIP_MAP_PATTERNS = [
+    '돌아오는 비행기',
+    '창가 자리',
+    '오늘의 사진',
+    '탑승 전 한 잔',
+  ];
+
+  function resolveMapQuery(rawText) {
+    const lower = rawText.toLowerCase().trim();
+    // 1) 장소 아닌 것 스킵
+    for (const skip of SKIP_MAP_PATTERNS) {
+      if (lower.includes(skip.toLowerCase())) return null;
+    }
+    // 2) 명시적 매핑 — 텍스트에서 먼저 등장하는 키 우선 (동점이면 긴 키 우선)
+    // 예: "Zhyvago Coffee · American Village"에서 zhyvago가 pos 0 → zhyvago 선택
+    const matches = [];
+    for (const [key, query] of PLACE_QUERIES) {
+      const pos = lower.indexOf(key.toLowerCase());
+      if (pos !== -1) matches.push({ pos, keyLen: key.length, query });
+    }
+    if (matches.length > 0) {
+      matches.sort((a, b) => a.pos - b.pos || b.keyLen - a.keyLen);
+      return matches[0].query;
+    }
+    // 3) 폴백: 텍스트 정제 후 Okinawa 부착
     const cleaned = cleanMapQuery(rawText);
-    const needsOkinawa = !/okinawa|오키나와|chatan|차탄|motobu|모토부|naha|나하|mihama|미하마|urasoe|우라소에|kitanakagusuku/i.test(cleaned);
-    currentMapQuery = needsOkinawa ? `${cleaned} Okinawa` : cleaned;
+    if (!cleaned) return null;
+    const hasLocation = /okinawa|오키나와|chatan|차탄|motobu|모토부|naha|나하|mihama|미하마|urasoe|우라소에|kitanakagusuku/i.test(cleaned);
+    return hasLocation ? cleaned : `${cleaned} Okinawa`;
+  }
+
+  function openMapModal(rawText) {
+    const query = resolveMapQuery(rawText);
+    if (!query) return false;
+    currentMapQuery = query;
     mapModalPlaceEl.textContent = rawText;
     mapModal.classList.add('open');
+    return true;
   }
 
   document.addEventListener('click', (e) => {
@@ -4693,7 +4810,7 @@
     }
     // 2) .mood-card-wrap 클릭 (SUNSET/POOL/ICE CREAM 같은 카드)
     const mood = e.target.closest('.mood-card-wrap');
-    if (mood) {
+    if (mood && !mood.classList.contains('no-map')) {
       const caption = mood.querySelector('.mood-card-caption');
       if (caption) {
         e.preventDefault();
@@ -4702,6 +4819,45 @@
       return;
     }
   });
+
+  // 페이지 로드 시 지도 연결 불가한 mood card는 클릭 비활성화
+  document.querySelectorAll('.mood-card-wrap').forEach(wrap => {
+    const caption = wrap.querySelector('.mood-card-caption');
+    if (!caption) return;
+    if (!resolveMapQuery(caption.textContent.trim())) {
+      wrap.classList.add('no-map');
+    }
+  });
+
+  // ==========================================
+  //  스크롤 리빌 애니메이션 (IntersectionObserver)
+  // ==========================================
+  if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches && 'IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+    const revealSelectors = [
+      '.cover-kicker', '.cover h1', '.cover-dek', '.cover-hero-image', '.cover-foot .cell',
+      '.contents-label', '.contents-list li',
+      '.day-opener',
+      '.mood-section-head', '.mood-card-wrap',
+      '.time-slot', '.opt', '.opt-write',
+      '.fullquote', '.ed-note', '.reader-note',
+      '.pack-head', '.pack-col',
+      '.blank-left', '.blank-right',
+      '.back-mark', '.back-main', '.back-sig'
+    ];
+    document.querySelectorAll(revealSelectors.join(', ')).forEach(el => {
+      el.classList.add('reveal');
+      revealObserver.observe(el);
+    });
+  }
 
   mapModalConfirm.addEventListener('click', () => {
     if (currentMapQuery) {
