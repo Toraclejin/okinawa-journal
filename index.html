@@ -585,6 +585,34 @@
   .day-opener.blue-bg .day-opener-right .dek { color: rgba(255,255,255,0.9); border-color: var(--amber); }
   .day-opener.amber-bg .day-opener-right .dek { color: var(--blue-deep); border-color: var(--blue); }
   .day-opener.coral-bg .day-opener-right .dek { color: rgba(255,255,255,0.9); border-color: var(--amber); }
+  .day-opener.ink-bg .day-opener-right .dek { color: rgba(255,255,255,0.9); border-color: var(--amber); }
+
+  /* dek 더보기/접기 — short/more 두 영역 */
+  .dek .dek-more { display: none; }
+  .dek.expanded .dek-more { display: inline; }
+  .dek.expanded .dek-more::before { content: ' '; }
+  .dek-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin: 14px 0 0;
+    padding: 5px 12px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-style: normal;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: currentColor;
+    background: transparent;
+    border: 1.4px solid currentColor;
+    border-radius: 999px;
+    cursor: pointer;
+    opacity: 0.72;
+    transition: opacity 0.15s ease, background 0.15s ease;
+  }
+  .dek-toggle:hover { opacity: 1; }
+  .dek-toggle:active { opacity: 1; transform: translateY(1px); }
 
   .day-opener .summary {
     display: grid;
@@ -2660,6 +2688,10 @@
     }
     .opt-body.collapsible::after { display: none !important; }
     .opt-body-toggle { display: none !important; }
+    /* dek도 인쇄 시 전체 펼쳐서 출력 */
+    .dek .dek-more { display: inline !important; }
+    .dek .dek-more::before { content: ' ' !important; }
+    .dek-toggle { display: none !important; }
     /* 맵 핀 아이콘도 인쇄 시 제거 (잉크 절약) */
     .opt-place::before { display: none !important; }
   }
@@ -3388,7 +3420,7 @@
     <div class="day-opener-right">
       <h2>The First <em>Afternoon.</em></h2>
       <div class="dek">
-        나하 공항 도착 → 렌터카 받고 북부 모토부까지 차로 약 1시간 40분. 호텔 바로 옆이 비세 후쿠기 나무길, 에메랄드 비치, 추라우미 수족관.
+        <span class="dek-short">비행기 문이 열리면 여기부터 오키나와. **섬 북쪽 끝까지 차로 1시간 40분 드라이브**.</span><span class="dek-more">호텔 문 열고 나가면 — **300살 먹은 나무 터널**, 산호 부스러기로 만든 하얀 해변, **세상에서 제일 큰 수족관**이 전부 걸어서 닿는 거리. 첫날은 짐 풀고 근처 산책, 저녁엔 이에섬 너머로 해 지는 거 보기.</span>
       </div>
       <div class="summary">
         <div class="item">
@@ -3968,7 +4000,7 @@
     <div class="day-opener-right">
       <h2>The <em>Whale Shark.</em></h2>
       <div class="dek">
-        호텔 바로 옆이 추라우미 수족관. 도보 7분. 아침 일찍 가면 고래상어 앞이 비어있고, 오후엔 코우리섬·에메랄드 비치로 드라이브.
+        <span class="dek-short">**8.8m**. 스쿨버스 한 대 길이. 그게 오늘 만날 **고래상어 한 마리 크기**. 호텔에서 딱 7분 걸어가면 그 물고기 앞.</span><span class="dek-more">아침 8시 반 수족관 문 여는 순간 들어가면 — **바다 그대로 옮겨놓은 35미터짜리 수조** 앞자리를 우리 가족이 독차지. 9시 반엔 돌고래 쇼, 3시·5시엔 고래상어 먹이쇼. 오후엔 **2km짜리 바다 다리** 건너 코우리섬 드라이브.</span>
       </div>
       <div class="summary">
         <div class="item">
@@ -4612,9 +4644,9 @@
       <div class="day-lbl">Chapter III · Chatan</div>
     </div>
     <div class="day-opener-right">
-      <h2>Move &amp; <em>Sushi.</em></h2>
+      <h2>Across the <em>Island.</em></h2>
       <div class="dek">
-        오전 Motobu 마지막 산책 → 11시 체크아웃 → 차탄까지 차로 약 1시간 30분. 오후엔 American Village 도보 투어, 저녁엔 회전초밥.
+        <span class="dek-short">북쪽 끝에서 남쪽 중간까지, **섬의 반을 가로지르는 드라이브**. 도착하면 여행 마지막 밤.</span><span class="dek-more">오전 모토부 마지막 산책(후쿠기 나무길·바다 수영) → 11시 체크아웃 → 남쪽 차탄까지 차로 1시간 30분. 중간에 **코끼리 코 모양 절벽**(만자모)이나 오리온 맥주 공장 구경. 오후엔 American Village — 관람차·포켓몬센터·네온 간판 골목. 저녁은 회전초밥, 먹고 바로 위층에서 볼링.</span>
       </div>
       <div class="summary">
         <div class="item">
@@ -5286,7 +5318,7 @@
     <div class="day-opener-right">
       <h2>The Last <em>Morning.</em></h2>
       <div class="dek">
-        차탄에서 공항까지 차로 약 40분. 이른 아침 체크아웃하고 바로 공항으로.
+        <span class="dek-short">7시 30분. 호텔 나와서 공항까지 40분. 11시 5분 비행기. **창가 자리 먼저 찜하면** 이륙하면서 오키나와 바다가 창문을 꽉 채운다.</span><span class="dek-more">짐은 전날 밤에 다 싸둬야 진짜 아침이 편함. 공항 도착하면 탑승 전 시간 남음 — **마지막 블루씰 아이스크림 한 컵**, 기념품 한 번 더 훑기. 비행기 타고 창밖 에메랄드 바다 한 번 보고, 오키나와한테 "또 올게" 인사.</span>
       </div>
       <div class="summary">
         <div class="item">
@@ -6626,13 +6658,31 @@
   });
 
   // ==========================================
-  //  OPT-BODY 마크다운 볼드(**text**) 렌더링
+  //  마크다운 볼드(**text**) 렌더링 — opt-body + dek
   // ==========================================
-  document.querySelectorAll('.opt-body').forEach(body => {
-    const html = body.innerHTML;
+  document.querySelectorAll('.opt-body, .dek .dek-short, .dek .dek-more').forEach(el => {
+    const html = el.innerHTML;
     if (html.includes('**')) {
-      body.innerHTML = html.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
+      el.innerHTML = html.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
     }
+  });
+
+  // ==========================================
+  //  DEK 더보기/접기 (dek-short + dek-more 구조가 있는 경우만)
+  // ==========================================
+  document.querySelectorAll('.dek').forEach(dek => {
+    if (!dek.querySelector('.dek-more')) return;
+    if (dek.querySelector(':scope > .dek-toggle')) return;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'dek-toggle';
+    btn.textContent = '+ 더보기';
+    btn.addEventListener('click', () => {
+      const expanded = dek.classList.toggle('expanded');
+      btn.textContent = expanded ? '− 접기' : '+ 더보기';
+    });
+    dek.appendChild(document.createElement('br'));
+    dek.appendChild(btn);
   });
 
   // ==========================================
