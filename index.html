@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https://images.unsplash.com; connect-src 'self'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://unpkg.com; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https://images.unsplash.com https://*.tile.openstreetmap.org https://*.openstreetmap.org https://unpkg.com; connect-src 'self' https://*.tile.openstreetmap.org https://*.openstreetmap.org; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';" />
 <meta http-equiv="X-Content-Type-Options" content="nosniff" />
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Okinawa — Summer Issue</title>
@@ -14,6 +14,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous" defer></script>
 <style>
   html, body {
     overflow-x: hidden;
@@ -693,6 +695,49 @@
     margin-bottom: 14px;
     padding-top: 12px;
     border-top: 1px dashed rgba(0, 71, 255, 0.25);
+  }
+  .day-map {
+    width: 100%;
+    height: 280px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    background: #d9e8f0;
+    position: relative;
+  }
+  .day-map.empty { display: none; }
+  .day-map .leaflet-control-attribution {
+    font-size: 9px !important;
+    background: rgba(255,255,255,0.8) !important;
+  }
+  /* Leaflet 마커 라벨 — divIcon 기본 스타일 무력화 후 우리 디자인 적용 */
+  .leaflet-div-icon.map-marker-wrapper {
+    background: transparent;
+    border: 0;
+  }
+  .map-marker-label {
+    display: inline-block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    background: var(--blue);
+    padding: 5px 9px;
+    border-radius: 999px;
+    border: 2px solid #fff;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+  .map-marker-label.hotel {
+    background: var(--blue-ink);
+    color: var(--amber);
+  }
+  @media (max-width: 600px) {
+    .day-map { height: 220px; }
+  }
+  @media print {
+    .day-map { display: none !important; }
   }
   .day-route-actions { display: flex; flex-wrap: wrap; gap: 10px; }
   .day-route-btn {
@@ -7215,6 +7260,13 @@
     stops.appendChild(makeStop('End', hotel.endLabel, true));
     container.appendChild(stops);
 
+    // 미니 지도 (Leaflet)
+    const mapDiv = document.createElement('div');
+    mapDiv.className = 'day-map';
+    mapDiv.dataset.dayMap = dayId;
+    container.appendChild(mapDiv);
+    setTimeout(() => renderDayMap(dayId), 30);
+
     // summary
     const summary = document.createElement('div');
     summary.className = 'day-route-summary';
@@ -7255,12 +7307,195 @@
         optsEl.querySelectorAll(':scope > .opt').forEach(opt => opt.classList.remove('chosen', 'not-chosen'));
       });
       saveState(state);
+      // 지도 인스턴스 정리
+      if (leafletMaps[dayId]) {
+        leafletMaps[dayId].remove();
+        delete leafletMaps[dayId];
+      }
       renderDayRoute(dayId);
     });
     actions.appendChild(clearBtn);
 
     container.appendChild(actions);
   }
+
+  // ===== Leaflet 미니 지도 =====
+  // 좌표 dict — 옵션 카드의 .opt-place 또는 mapQuery로 매칭
+  const PLACE_COORDS = {
+    // ─ 호텔 ─
+    'ホテル オリオンモトブリゾート&スパ': [26.6917, 127.8788],
+    'ベッセルホテル カンパーナ沖縄': [26.3175, 127.7583],
+    // ─ 북부 명소 ─
+    '沖縄美ら海水族館': [26.6943, 127.8779],
+    '備瀬のフクギ並木': [26.6967, 127.8787],
+    '備瀬崎': [26.7040, 127.8770],
+    'エメラルドビーチ 沖縄': [26.6970, 127.8787],
+    'Kouri Island 古宇利島': [26.7017, 128.0202],
+    '今帰仁城跡': [26.6935, 127.9292],
+    '万座毛': [26.5083, 127.8508],
+    '瀬底ビーチ': [26.6500, 127.8625],
+    'オリオンハッピーパーク 名護': [26.6042, 127.9758],
+    '許田IC 沖縄自動車道': [26.5878, 127.9558],
+    // ─ 북부 식당 ─
+    'ブルーシール 牧港本店': [26.2742, 127.7250],
+    '焼肉もとぶ牧場 もとぶ店': [26.6608, 127.8917],
+    '海人料理 海邦丸 本部': [26.6833, 127.8700],
+    'ちぬまん 美ら海水族館前店': [26.6925, 127.8770],
+    'きしもと食堂 本店': [26.6708, 127.8708],
+    '宮里そば 名護': [26.5917, 127.9788],
+    'Cafe CAHAYA BULAN 備瀬': [26.7017, 127.8767],
+    'やちむん喫茶 シーサー園': [26.6633, 127.8800],
+    'Ocean Blue Cafe Churaumi Aquarium': [26.6943, 127.8779],
+    '沖縄美ら海水族館 4F レストラン イノー': [26.6943, 127.8779],
+    'ローソン 海洋博公園前店': [26.6940, 127.8800],
+    // ─ 차탄 ─
+    '美浜アメリカンビレッジ': [26.3158, 127.7558],
+    '北谷公園サンセットビーチ': [26.3258, 127.7505],
+    '安良波ビーチ': [26.3217, 127.7497],
+    'イオンモール沖縄ライカム': [26.3167, 127.7958],
+    'くら寿司 イオンモール沖縄ライカム店': [26.3167, 127.7958],
+    'スシロー 北谷店': [26.3170, 127.7625],
+    'Transit Cafe 砂辺 北谷': [26.3300, 127.7450],
+    'Zhyvago Coffee Works Okinawa': [26.3158, 127.7558],
+    'The Calif Kitchen Okinawa Depot Island': [26.3158, 127.7558],
+    'ドン・キホーテ 美浜店': [26.3158, 127.7558],
+    'ラウンドワン 沖縄ライカム店': [26.3167, 127.7958],
+    '美浜7plex': [26.3158, 127.7558],
+    // ─ 공항 ─
+    '那覇空港': [26.2058, 127.6458],
+  };
+
+  const DAY_HOTEL_COORDS = {
+    d1: { start: [26.6917, 127.8788], end: [26.6917, 127.8788] },
+    d2: { start: [26.6917, 127.8788], end: [26.6917, 127.8788] },
+    d3: { start: [26.6917, 127.8788], end: [26.3175, 127.7583] },
+  };
+
+  // 좌표 조회: place 텍스트 → resolveMapQuery → PLACE_COORDS, 매핑 없으면 호텔 좌표 fallback
+  function getCoords(place, fallbackHotelCoords) {
+    if (!place) return fallbackHotelCoords;
+    const q = resolveMapQuery(place);
+    if (q && typeof q === 'string' && !q.startsWith('DIR:') && PLACE_COORDS[q]) return PLACE_COORDS[q];
+    if (PLACE_COORDS[place]) return PLACE_COORDS[place];
+    return fallbackHotelCoords;
+  }
+
+  // Leaflet 인스턴스 캐시 (Day별 — 페이지 활성화 후 lazy init)
+  const leafletMaps = {};
+
+  function renderDayMap(dayId) {
+    const container = document.querySelector(`[data-day-map="${dayId}"]`);
+    if (!container) return;
+    const hotelCoords = DAY_HOTEL_COORDS[dayId];
+    if (!hotelCoords) return;
+
+    // Leaflet이 아직 로드되지 않았으면 잠시 후 재시도
+    if (typeof L === 'undefined') {
+      setTimeout(() => renderDayMap(dayId), 200);
+      return;
+    }
+
+    // 페이지가 hidden(0×0)이면 init하지 말고 active 시점까지 대기
+    const dayPage = container.closest('.page');
+    if (dayPage && !dayPage.classList.contains('active')) {
+      container.dataset.mapPending = 'true';
+      return;
+    }
+
+    const picks = getDayPicks(dayId);
+
+    // Picks 없으면 지도 숨김
+    if (!picks.length) {
+      container.classList.add('empty');
+      return;
+    }
+    container.classList.remove('empty');
+
+    // 동선 좌표: hotel.start → picks → hotel.end
+    const route = [hotelCoords.start];
+    picks.forEach(p => {
+      const c = getCoords(p.place, hotelCoords.start);
+      if (c) route.push(c);
+    });
+    route.push(hotelCoords.end);
+
+    // 기존 인스턴스가 있으면 제거하고 다시 (옵션 변경 시)
+    if (leafletMaps[dayId]) {
+      leafletMaps[dayId].remove();
+      delete leafletMaps[dayId];
+      while (container.firstChild) container.removeChild(container.firstChild);
+    }
+
+    const map = L.map(container, {
+      zoomControl: true,
+      scrollWheelZoom: false,
+      tap: true,
+      attributionControl: true
+    });
+    leafletMaps[dayId] = map;
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // 마커 — 시작·픽들·끝
+    const markerLabels = ['Start', ...picks.map((_, i) => String(i + 1)), 'End'];
+    const isHotelMarker = (i) => i === 0 || i === route.length - 1;
+    route.forEach((coord, i) => {
+      const lbl = markerLabels[i];
+      const div = document.createElement('div');
+      div.className = 'map-marker-label' + (isHotelMarker(i) ? ' hotel' : '');
+      div.textContent = lbl;
+      const icon = L.divIcon({
+        className: 'map-marker-wrapper',
+        html: div.outerHTML,
+        iconSize: null,
+        iconAnchor: [22, 12]
+      });
+      L.marker(coord, { icon }).addTo(map);
+    });
+
+    // 폴리라인 (동선 라인)
+    L.polyline(route, {
+      color: '#0047ff',
+      weight: 3,
+      opacity: 0.8,
+      dashArray: '6, 6'
+    }).addTo(map);
+
+    // 모든 마커가 보이도록 fit — invalidateSize를 fit 이전에 호출해 컨테이너 크기 정확 반영
+    const bounds = L.latLngBounds(route);
+    setTimeout(() => {
+      map.invalidateSize();
+      // 모든 마커가 같은 좌표면 fit이 의미 없음 (max zoom으로 줌인됨) → 그땐 setView
+      const ne = bounds.getNorthEast();
+      const sw = bounds.getSouthWest();
+      const isSinglePoint = (Math.abs(ne.lat - sw.lat) < 0.0001) && (Math.abs(ne.lng - sw.lng) < 0.0001);
+      if (isSinglePoint) {
+        map.setView([ne.lat, ne.lng], 14);
+      } else {
+        map.fitBounds(bounds, { padding: [40, 40] });
+      }
+    }, 80);
+  }
+
+  // 페이지 active 변경 시 보류 중인 지도 init (showPage 외부 hook)
+  function flushPendingMaps() {
+    document.querySelectorAll('.day-map[data-map-pending="true"]').forEach(c => {
+      const dayPage = c.closest('.page');
+      if (dayPage && dayPage.classList.contains('active')) {
+        delete c.dataset.mapPending;
+        const dayId = c.dataset.dayMap;
+        if (dayId) renderDayMap(dayId);
+      }
+    });
+  }
+  // 페이지 변경 감시 (.page에 active 추가될 때)
+  const pageObserver = new MutationObserver(flushPendingMaps);
+  document.querySelectorAll('main.sheet > .page').forEach(p => {
+    pageObserver.observe(p, { attributes: true, attributeFilter: ['class'] });
+  });
 
   // 페이지 로드 시 초기 렌더 (D1·D2·D3)
   ['d1', 'd2', 'd3'].forEach(d => renderDayRoute(d));
