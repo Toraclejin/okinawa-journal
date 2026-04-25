@@ -7387,11 +7387,15 @@
       return a;
     };
 
+    // 호텔 활동(별 보기·객실 휴식 등 매핑 실패) fallback은 도착 호텔(end)
+    // — D1은 시작=공항, 끝=호텔이므로 호텔 활동이 시작 좌표(공항)로 가면 안 됨
+    const pickFallback = (dayId === 'd1') ? hotelCoords.end : hotelCoords.start;
+
     let stopNum = 0;
     stops.appendChild(makeStop(++stopNum, 'Start', hotel.startLabel, true, hotelCoords.start));
     picks.forEach(p => {
       stops.appendChild(makeArrow());
-      const c = getCoords(p.place, hotelCoords.start);
+      const c = getCoords(p.place, pickFallback);
       stops.appendChild(makeStop(++stopNum, p.time || '·', p.title, false, c));
     });
     stops.appendChild(makeArrow());
@@ -7595,9 +7599,11 @@
     container.classList.remove('empty');
 
     // 동선 좌표: hotel.start → picks → hotel.end
+    // 호텔 활동(별 보기 등) fallback은 도착 호텔(end) — D1 공항→호텔 편도 대응
+    const pickFallback = (dayId === 'd1') ? hotelCoords.end : hotelCoords.start;
     const route = [hotelCoords.start];
     picks.forEach(p => {
-      const c = getCoords(p.place, hotelCoords.start);
+      const c = getCoords(p.place, pickFallback);
       if (c) route.push(c);
     });
     route.push(hotelCoords.end);
