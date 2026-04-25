@@ -2143,29 +2143,35 @@
   .opt-write.extra-empty .opt-clear-write {
     display: none !important;
   }
-  /* placeholder 내용 비우기 버튼 (× 모양, 우측 상단 — opt-remove와 같은 위치) */
+  /* placeholder 내용 비우기 버튼 — .opt-select와 동일 사이즈·테두리·SVG 아이콘 */
   .opt-clear-write {
     position: absolute;
-    top: 14px;
-    right: 56px; /* ✓ 버튼(.opt-select) 옆 */
-    width: 28px;
-    height: 28px;
-    border: none;
-    background: rgba(0, 71, 255, 0.08);
+    top: 16px;
+    right: 64px; /* .opt-select(width 40 + right 16) 옆 8px gap */
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    color: var(--blue);
-    font-size: 16px;
-    line-height: 1;
+    border: 2px solid var(--blue-100);
+    background: var(--white);
     cursor: pointer;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 4;
-    transition: background 0.15s ease;
+    color: var(--blue-100);
+    transition: all 0.25s cubic-bezier(0.22, 0.61, 0.36, 1);
+    z-index: 3;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
   }
-  .opt-clear-write:hover { background: rgba(0, 71, 255, 0.15); }
+  .opt-clear-write svg { width: 20px; height: 20px; pointer-events: none; }
+  .opt-clear-write:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+    transform: scale(1.08);
+  }
   @media (max-width: 600px) {
-    .opt-clear-write { width: 24px; height: 24px; right: 50px; top: 12px; font-size: 14px; }
+    .opt-clear-write { width: 36px; height: 36px; top: 14px; right: 56px; }
+    .opt-clear-write svg { width: 18px; height: 18px; }
   }
 
   /* 저장 상태 표시 */
@@ -6719,7 +6725,7 @@
       clr.type = 'button';
       clr.className = 'opt-clear-write';
       clr.setAttribute('aria-label', '내용 비우기');
-      clr.textContent = '×';
+      clr.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
       card.appendChild(clr);
     }
     // input 비어있으면 .extra-empty 클래스 (✓ + ✕ 동시 숨김)
