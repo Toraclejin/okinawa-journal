@@ -7549,8 +7549,17 @@
     const placeholder = btn.closest('.opt-write');
     if (placeholder) {
       if (placeholder.classList.contains('extra-empty')) return;
-      const slotKey = placeholder.dataset.writeKey;
-      if (!slotKey || !/^[a-zA-Z0-9_-]{1,128}$/.test(slotKey)) return;
+      // slotKey 추출 — dataset.writeKey 우선, 없으면 즉석 추출 (페이지 로드 처리 누락 케이스 fallback)
+      let slotKey = placeholder.dataset.writeKey;
+      if (!slotKey) {
+        const opEl = placeholder.closest('.options');
+        slotKey = opEl?.querySelector('.opt-add-btn')?.dataset.block || null;
+        if (slotKey) placeholder.dataset.writeKey = slotKey; // 보존
+      }
+      if (!slotKey || !/^[a-zA-Z0-9_-]{1,128}$/.test(slotKey)) {
+        console.warn('[opt-select] placeholder slotKey 추출 실패', { card: placeholder, dataset: { ...placeholder.dataset } });
+        return;
+      }
       if (!state.chosenWrites) state.chosenWrites = {};
       if (state.chosenWrites[slotKey]) {
         delete state.chosenWrites[slotKey];
