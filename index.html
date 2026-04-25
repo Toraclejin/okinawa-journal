@@ -614,6 +614,121 @@
   .dek-toggle:hover { opacity: 1; }
   .dek-toggle:active { opacity: 1; transform: translateY(1px); }
 
+  /* ========== Day Route 카드 (옵션 선택 → 동선 시각화) ========== */
+  .day-route {
+    margin: 28px 0;
+    padding: 22px 24px;
+    border: 1.5px solid var(--blue);
+    border-radius: 14px;
+    background: var(--page-tint);
+  }
+  .day-route-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .day-route-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--blue);
+  }
+  .day-route-empty {
+    padding: 14px 0;
+    font-family: 'Pretendard Variable', Pretendard, sans-serif;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--blue-deep);
+    opacity: 0.75;
+  }
+  .day-route-stops {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 8px;
+    margin-bottom: 14px;
+  }
+  .day-route-stops .route-stop {
+    display: inline-flex;
+    flex-direction: column;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: var(--page);
+    border: 1.5px solid var(--blue);
+    min-width: 0;
+  }
+  .day-route-stops .route-stop.hotel {
+    background: var(--blue);
+    color: var(--page);
+    border-color: var(--blue);
+  }
+  .day-route-stops .route-stop.hotel .rs-tag { color: var(--accent-soft); }
+  .day-route-stops .route-stop.hotel .rs-name { color: var(--page); }
+  .rs-tag {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blue);
+  }
+  .rs-name {
+    font-family: 'Pretendard Variable', Pretendard, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--blue-ink);
+    margin-top: 2px;
+    word-break: keep-all;
+  }
+  .route-arrow {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    color: var(--blue);
+    font-weight: 600;
+    user-select: none;
+  }
+  .day-route-summary {
+    font-family: 'Pretendard Variable', Pretendard, sans-serif;
+    font-size: 12px;
+    color: var(--blue-deep);
+    opacity: 0.78;
+    margin-bottom: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(0, 71, 255, 0.25);
+  }
+  .day-route-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .day-route-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: 1.5px solid var(--blue);
+    background: var(--blue);
+    color: var(--page);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.15s, background 0.15s;
+  }
+  .day-route-btn:hover { opacity: 0.85; }
+  .day-route-btn.secondary {
+    background: transparent;
+    color: var(--blue);
+  }
+  .day-route-btn.secondary:hover { background: rgba(0, 71, 255, 0.08); opacity: 1; }
+  @media (max-width: 600px) {
+    .day-route { padding: 18px 18px; }
+    .day-route-stops { gap: 4px 6px; }
+    .day-route-stops .route-stop { padding: 6px 10px; }
+    .rs-name { font-size: 12px; }
+    .day-route-btn { width: 100%; justify-content: center; }
+  }
+  @media print {
+    .day-route { break-inside: avoid; }
+    .day-route-actions { display: none !important; }
+  }
+
   /* ========== 호텔 체크인 카드 (Day opener 직후) ========== */
   .hotel-card {
     margin: 18px 0 28px;
@@ -4083,6 +4198,8 @@
     <p>첫날은 호텔 주변에서만 움직이는 게 좋음. Orion Motobu 바로 옆이 추라우미 수족관(도보 7분) · 에메랄드 비치(도보 2분) · 비세 후쿠기 나무길(도보 3분). 이 삼각형 안에서 대부분 해결됨. <strong>본부쵸는 농어촌이라 심야 식당·야시장 없음</strong> — 밤 콘텐츠는 호텔 + 편의점이 사실상 전부.</p>
   </div>
 
+  <div class="day-route" data-day-route="d1"></div>
+
   <div class="reader-note">
     <div class="rn-label">
       <span class="lbl">Day One · Your Notes</span>
@@ -4730,6 +4847,8 @@
     </div>
       <button type="button" class="opt-add-btn" data-block="d2-ts7">Add Another Option</button>
   </div>
+
+  <div class="day-route" data-day-route="d2"></div>
 
   <div class="reader-note">
     <div class="rn-label">
@@ -5425,6 +5544,8 @@
     <div class="n-label">Tip</div>
     <p>저녁 6시 이전에 도착하면 대기가 짧다. 입구 발권기에서 번호표를 뽑고 근처 상가를 한 바퀴 돌다 와도 됨.</p>
   </div>
+
+  <div class="day-route" data-day-route="d3"></div>
 
   <div class="reader-note">
     <div class="rn-label">
@@ -6981,7 +7102,168 @@
     if (next.length === 0) delete state.chosen[slotKey];
     else state.chosen[slotKey] = next;
     saveState(state);
+    // Day Route 카드 자동 갱신
+    const dayPage = btn.closest('.page')?.dataset.page;
+    if (dayPage) renderDayRoute(dayPage);
   });
+
+  // ==========================================
+  //  Day Route — 선택한 옵션 동선 시각화 + 구글맵 multi-stop
+  // ==========================================
+  const DAY_HOTEL = {
+    d1: { start: 'ホテル オリオンモトブリゾート&スパ', end: 'ホテル オリオンモトブリゾート&スパ', startLabel: 'Orion', endLabel: 'Orion' },
+    d2: { start: 'ホテル オリオンモトブリゾート&スパ', end: 'ホテル オリオンモトブリゾート&スパ', startLabel: 'Orion', endLabel: 'Orion' },
+    d3: { start: 'ホテル オリオンモトブリゾート&スパ', end: 'ベッセルホテル カンパーナ沖縄', startLabel: 'Orion', endLabel: 'Vessel' },
+  };
+
+  function getDayPicks(dayId) {
+    const page = document.querySelector(`.page[data-page="${dayId}"]`);
+    if (!page) return [];
+    const picks = [];
+    page.querySelectorAll('.options').forEach(optsEl => {
+      const slotKey = slotKeyOf(optsEl);
+      const chosen = state.chosen && state.chosen[slotKey];
+      if (!Array.isArray(chosen) || !chosen.length) return;
+      // 슬롯의 시간 라벨 (이전 형제 .time-slot에서)
+      let timeLabel = '';
+      let walker = optsEl.previousElementSibling;
+      while (walker) {
+        if (walker.classList && walker.classList.contains('time-slot')) {
+          timeLabel = walker.querySelector('.time-tag')?.textContent?.trim() || '';
+          break;
+        }
+        walker = walker.previousElementSibling;
+      }
+      const opts = optsEl.querySelectorAll(':scope > .opt');
+      chosen.forEach(idxStr => {
+        const i = parseInt(idxStr, 10);
+        if (!Number.isFinite(i)) return;
+        const opt = opts[i];
+        if (!opt) return;
+        const title = opt.querySelector('.opt-title')?.textContent?.trim() || '(이름 없음)';
+        const placeText = opt.querySelector('.opt-place')?.textContent?.trim() || '';
+        const mapQuery = placeText ? resolveMapQuery(placeText) : null;
+        // DIR sentinel은 동선 waypoint로 부적합 (장소가 아니라 경로)
+        const isDir = typeof mapQuery === 'string' && mapQuery.startsWith('DIR:');
+        picks.push({
+          time: timeLabel,
+          title,
+          place: placeText,
+          mapQuery: (mapQuery && !isDir) ? mapQuery : (placeText || title)
+        });
+      });
+    });
+    return picks;
+  }
+
+  function renderDayRoute(dayId) {
+    const container = document.querySelector(`[data-day-route="${dayId}"]`);
+    if (!container) return;
+    const hotel = DAY_HOTEL[dayId];
+    if (!hotel) return;
+    const picks = getDayPicks(dayId);
+
+    // 안전 재구성: textContent / createElement 만 사용 (innerHTML 안 씀)
+    while (container.firstChild) container.removeChild(container.firstChild);
+
+    const head = document.createElement('div');
+    head.className = 'day-route-head';
+    const titleEl = document.createElement('div');
+    titleEl.className = 'day-route-title';
+    titleEl.textContent = `Today's Route — ${dayId.toUpperCase()}`;
+    head.appendChild(titleEl);
+    container.appendChild(head);
+
+    if (!picks.length) {
+      const empty = document.createElement('div');
+      empty.className = 'day-route-empty';
+      empty.textContent = '아직 선택한 옵션이 없어요. 옵션 카드 우상단 ✓ 버튼으로 선택하면 오늘의 동선이 자동으로 만들어집니다.';
+      container.appendChild(empty);
+      return;
+    }
+
+    // chip 동선
+    const stops = document.createElement('div');
+    stops.className = 'day-route-stops';
+
+    const makeStop = (tagText, nameText, isHotel) => {
+      const stop = document.createElement('div');
+      stop.className = 'route-stop' + (isHotel ? ' hotel' : '');
+      const tag = document.createElement('span');
+      tag.className = 'rs-tag';
+      tag.textContent = tagText;
+      const name = document.createElement('span');
+      name.className = 'rs-name';
+      name.textContent = nameText;
+      stop.appendChild(tag);
+      stop.appendChild(name);
+      return stop;
+    };
+    const makeArrow = () => {
+      const a = document.createElement('span');
+      a.className = 'route-arrow';
+      a.textContent = '→';
+      return a;
+    };
+
+    stops.appendChild(makeStop('Start', hotel.startLabel, true));
+    picks.forEach(p => {
+      stops.appendChild(makeArrow());
+      stops.appendChild(makeStop(p.time || '·', p.title, false));
+    });
+    stops.appendChild(makeArrow());
+    stops.appendChild(makeStop('End', hotel.endLabel, true));
+    container.appendChild(stops);
+
+    // summary
+    const summary = document.createElement('div');
+    summary.className = 'day-route-summary';
+    const same = (hotel.start === hotel.end);
+    summary.textContent = `${picks.length}곳 정거장 · ${same ? '호텔에서 출발해 호텔로 복귀' : '호텔 이동 동선'} · 시간/거리는 구글맵에서 직접 확인`;
+    container.appendChild(summary);
+
+    // actions
+    const actions = document.createElement('div');
+    actions.className = 'day-route-actions';
+
+    // 구글맵 directions URL (driving + waypoints)
+    const waypoints = picks.map(p => p.mapQuery).filter(Boolean).join('|');
+    const url = `https://www.google.com/maps/dir/?api=1&travelmode=driving`
+      + `&origin=${encodeURIComponent(hotel.start)}`
+      + `&destination=${encodeURIComponent(hotel.end)}`
+      + (waypoints ? `&waypoints=${encodeURIComponent(waypoints)}` : '');
+
+    const mapsBtn = document.createElement('a');
+    mapsBtn.className = 'day-route-btn';
+    mapsBtn.target = '_blank';
+    mapsBtn.rel = 'noopener noreferrer';
+    mapsBtn.href = url;
+    mapsBtn.textContent = '구글맵에서 전체 경로 보기 ↗';
+    actions.appendChild(mapsBtn);
+
+    const clearBtn = document.createElement('button');
+    clearBtn.type = 'button';
+    clearBtn.className = 'day-route-btn secondary';
+    clearBtn.textContent = '오늘 선택 초기화';
+    clearBtn.addEventListener('click', () => {
+      if (!confirm(`${dayId.toUpperCase()} 선택 ${picks.length}개를 모두 해제할까요?`)) return;
+      const page = document.querySelector(`.page[data-page="${dayId}"]`);
+      if (!page) return;
+      page.querySelectorAll('.options').forEach(optsEl => {
+        const slotKey = slotKeyOf(optsEl);
+        if (slotKey && state.chosen && state.chosen[slotKey]) delete state.chosen[slotKey];
+        optsEl.querySelectorAll(':scope > .opt').forEach(opt => opt.classList.remove('chosen', 'not-chosen'));
+      });
+      saveState(state);
+      renderDayRoute(dayId);
+    });
+    actions.appendChild(clearBtn);
+
+    container.appendChild(actions);
+  }
+
+  // 페이지 로드 시 초기 렌더 (D1·D2·D3)
+  ['d1', 'd2', 'd3'].forEach(d => renderDayRoute(d));
 
   // ==========================================
   //  OPT-BODY 더보기/접기 (모바일 전용)
