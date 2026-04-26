@@ -747,9 +747,9 @@
     font-size: 9px !important;
     background: rgba(255,255,255,0.8) !important;
   }
-  /* 옵션 카드 — 선택 순서 번호 배지 (지도 마커 번호와 매칭) */
-  .opt[data-pick-num] { position: relative; }
-  .opt[data-pick-num]::before {
+  /* 옵션 카드 — 선택 순서 번호 배지 (사전 .opt + 추가 .opt-write 모두) */
+  .opt[data-pick-num], .opt-write[data-pick-num] { position: relative; }
+  .opt[data-pick-num]::before, .opt-write[data-pick-num]::before {
     content: attr(data-pick-num);
     position: absolute;
     top: -10px;
@@ -7667,17 +7667,18 @@
     },
   };
 
-  // 옵션 카드 우상단 번호 배지 — 지도 마커 1,2,3...과 매칭
+  // 옵션 카드 좌상단 번호 배지 — chip 마커와 동일 시퀀스
+  // 사전 .opt 는 chip·지도에 들어감, 추가 옵션(extras·placeholder)은 chip엔 없지만 번호는 이어서
   function assignPickNumbers(dayId) {
     const page = document.querySelector(`.page[data-page="${dayId}"]`);
     if (!page) return;
-    // 기존 번호 모두 제거
-    page.querySelectorAll('.opt[data-pick-num]').forEach(el => delete el.dataset.pickNum);
-    // pick 번호 부여 — chip Start(1)·End(N) 포함이므로 픽은 2부터 시작
-    // D3는 mid hotel(Vessel 체크인)이 2를 차지하므로 픽은 3부터
-    // (DIR sentinel은 지도 waypoint에 안 들어가므로 번호도 X)
+    // 기존 번호 모두 제거 (사전 + 추가 카드 모두)
+    page.querySelectorAll('.opt[data-pick-num], .opt-write[data-pick-num]').forEach(el => delete el.dataset.pickNum);
+
     const dayHotel = (typeof DAY_HOTEL !== 'undefined') ? DAY_HOTEL[dayId] : null;
-    let n = (dayHotel && dayHotel.midHotel) ? 2 : 1; // 다음 픽은 n+1
+    let n = (dayHotel && dayHotel.midHotel) ? 2 : 1; // 다음 = n+1 (Start=1, [Mid=2])
+
+    // [1] 사전 옵션 (.opt) — chip·지도에 들어가는 픽
     page.querySelectorAll('.options').forEach(optsEl => {
       const slotKey = slotKeyOf(optsEl);
       const chosen = state.chosen && state.chosen[slotKey];
@@ -7695,6 +7696,25 @@
         n += 1;
         opt.dataset.pickNum = String(n);
       });
+    });
+
+    // [2] placeholder (.opt-write — extra 아님) chosen → 이어서 번호
+    page.querySelectorAll('.options > .opt-write:not(.extra)').forEach(card => {
+      const slotKey = card.dataset.writeKey;
+      const title = card.querySelector('input[type="text"]')?.value?.trim();
+      if (!title || !slotKey || !state.chosenWrites || !state.chosenWrites[slotKey]) return;
+      n += 1;
+      card.dataset.pickNum = String(n);
+    });
+
+    // [3] 동적 extras (.opt-write.extra) chosen → 이어서 번호
+    page.querySelectorAll('.opt-write.extra').forEach(card => {
+      const title = card.querySelector('input[type="text"]')?.value?.trim();
+      if (!title) return;
+      const extraId = card.dataset.extra;
+      if (!extraId || !state.chosenExtras || !state.chosenExtras[extraId]) return;
+      n += 1;
+      card.dataset.pickNum = String(n);
     });
   }
 
@@ -7734,7 +7754,8 @@
     row.className = 'day-rating-row' + (isExtra ? ' extra' : '');
     const numEl = document.createElement('span');
     numEl.className = 'dr-num';
-    numEl.textContent = isExtra ? '+' : String(num);
+    // 사전·추가 모두 시퀀스 번호 (.extra 클래스로 점선 테두리 시각 구분)
+    numEl.textContent = String(num);
     const nameEl = document.createElement('span');
     nameEl.className = 'dr-name';
     nameEl.textContent = title;
@@ -8021,14 +8042,16 @@
         body.appendChild(buildRatingRow(num, p.title, p.ratingKey, false, targetEl));
       });
 
-      // 추가 옵션 평점 (별도 sub-title 후)
+      // 추가 옵션 평점 (사전 옵션 다음 시퀀스 번호 유지, sub-title로 시각 구분)
       if (extras.length) {
         const sub = document.createElement('div');
         sub.className = 'day-ratings-subtitle';
         sub.textContent = '+ 내가 추가한 옵션';
         body.appendChild(sub);
+        let extraNum = pickStartNum + picks.length;
         extras.forEach(e => {
-          body.appendChild(buildRatingRow(null, e.title, e.ratingKey, true, e.element));
+          body.appendChild(buildRatingRow(extraNum, e.title, e.ratingKey, true, e.element));
+          extraNum += 1;
         });
       }
 
