@@ -302,6 +302,53 @@
   - 회귀 사례: 화면 UI 에 오키나와 줌 SVG 추가했는데 `downloadConquerImage()` 미갱신 → 다운로드 이미지에서 오키나와 부분 누락
   - 룰: trip-conquer-card 시각 변경 시 화면 + canvas 모두 동일 commit 에 갱신 (DESIGN.md § Dual-render Components 참조)
 
+## ★ [Z] 스모크 테스트 — 핵심 init 경로 작동 확인 (필수, commit 전)
+
+### 회귀 사례 (2026-04-28, 38b55cb 로 fix)
+- showPage 안에 updateMissionCounter() 호출 추가 → 초기 IIFE 시 TDZ → 스크립트 전체 중단 → stamp grid 0/0
+- 자동 감지 부재로 사용자 보고 받기 전엔 회귀 인지 X
+- 상세: POSTMORTEM-2026-04-28.md
+
+### 절차 (preview 에서 한 번 실행)
+
+```js
+(() => {
+  const checks = {
+    DAY_HOTEL: typeof DAY_HOTEL,
+    DAY_HOTEL_COORDS: typeof DAY_HOTEL_COORDS,
+    MISSION_ID_RE: (() => { try { return typeof MISSION_ID_RE; } catch(e) { return 'TDZ'; } })(),
+    PAGE_IDS: Array.isArray(PAGE_IDS) && PAGE_IDS.length,
+    state: typeof state,
+    stampItems: document.querySelectorAll('.stamp-item').length,
+    mainMissions: typeof getMainMissions === 'function' ? getMainMissions().length : 'undef',
+    hiddenMissions: typeof getHiddenMissions === 'function' ? getHiddenMissions().length : 'undef',
+    progress: document.getElementById('stamp-collection-progress')?.textContent,
+  };
+  return checks;
+})();
+```
+
+### 기댓값 (PASS 조건)
+
+| key | expected |
+|---|---|
+| DAY_HOTEL | `'object'` |
+| DAY_HOTEL_COORDS | `'object'` |
+| MISSION_ID_RE | `'object'` (regex 타입 = object) |
+| PAGE_IDS | `8` (cover/prep/d1~d4/back/hidden) |
+| state | `'object'` |
+| stampItems | `9` (메인 9개 stamp grid 렌더됨) |
+| mainMissions | `9` |
+| hiddenMissions | `6` |
+| progress | `"X / 9"` (X = done 개수) |
+
+**하나라도 안 맞으면**: commit 보류 + fix 우선. console.error 추가 점검.
+
+### 룰 — init-path 함수 호출 시
+showPage / loadState / 초기 IIFE 등 init 경로에서 호출되는 함수에 후방 정의된 const/let 참조 함수를 추가할 땐 **반드시 try/catch defensive guard**. (DESIGN.md § Defensive Init-Path Pattern)
+
+---
+
 ## 수동 검증 [Q] — Hidden Mission 3단계 가시성 + 트리거
 
 ### 회귀 사례 (2026-04-28)
