@@ -2867,7 +2867,40 @@
     color: var(--white);
   }
   .opt-write.extra .opt-remove {
+    /* dynamic extra의 삭제 버튼 — .opt-select 옆에 같이 보이게 (z-index 충돌 회귀 fix 2026-04-27)
+       기본 .opt-remove (28×28, z-index:2) 가 .opt-select (40×40, z-index:3) 뒤에 가려지던 문제 */
     display: flex;
+    width: 40px;
+    height: 40px;
+    top: 16px;
+    right: 64px;          /* .opt-select(40+16=56) + 8px gap */
+    border-radius: 50%;
+    border: 2px solid var(--blue-100);
+    background: var(--white);
+    color: var(--blue-100);
+    font-size: 22px;
+    line-height: 1;
+    font-weight: 400;
+    z-index: 3;
+    transition: all 0.25s cubic-bezier(0.22, 0.61, 0.36, 1);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  @media (hover: hover) {
+    .opt-write.extra .opt-remove:hover {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: var(--white);
+      transform: scale(1.08);
+    }
+  }
+  /* extra-empty 상태에서 .opt-select 가 숨겨지면 .opt-remove 가 single 버튼이 되도록 자리 이동 */
+  .opt-write.extra.extra-empty .opt-remove {
+    right: 16px;
+  }
+  @media (max-width: 600px) {
+    .opt-write.extra .opt-remove { width: 36px; height: 36px; top: 14px; right: 56px; font-size: 20px; }
+    .opt-write.extra.extra-empty .opt-remove { right: 14px; }
   }
 
   /* + Add Another 버튼 - options 블록 내 마지막 요소로 */
@@ -8202,7 +8235,9 @@
     '万座毛': [26.5083, 127.8508],
     '瀬底ビーチ': [26.6500, 127.8625],
     'オリオンハッピーパーク 名護': [26.6042, 127.9758],
-    '許田IC 沖縄自動車道': [26.5878, 127.9558],
+    // 許田IC 沖縄自動車道 — 沖縄道 北단 IC, 名護市 許田. 이전 좌표 [26.5878, 127.9558]는
+    // 나고시 서쪽 바다 위에 떨어져서 마커가 바다 위에 떠 보임 → 道の駅許田 인근(陸地) 으로 수정 (2026-04-27)
+    '許田IC 沖縄自動車道': [26.5783, 127.9786],
     // ─ 북부 식당 ─
     'ブルーシール 牧港本店': [26.2742, 127.7250],
     '焼肉もとぶ牧場 もとぶ店': [26.6608, 127.8917],
