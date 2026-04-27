@@ -10189,12 +10189,22 @@
     try { if (typeof updateMissionCounter === 'function') updateMissionCounter(); } catch(_) {}
   }
 
+  // Hidden 탭 unlock 전엔 PAGE_IDS 에서 'hidden' 제외 → nav 끝이 'back' 으로 처리
+  // (좌우 화살표 + 하단 페이지네이션 + Hidden 으로 가는 다음 버튼 모두 hidden 잠긴 동안 X)
+  function getActivePageIds() {
+    if (typeof state !== 'undefined' && state && state.hiddenUnlocked) return PAGE_IDS;
+    return PAGE_IDS.filter(id => id !== 'hidden');
+  }
+
   function updateArrowsAndPagination(id) {
-    const idx = PAGE_IDS.indexOf(id);
+    const visible = getActivePageIds();
+    const idx = visible.indexOf(id);
     const prev = document.getElementById('page-prev');
     const next = document.getElementById('page-next');
-    prev.classList.toggle('disabled', idx <= 0);
-    next.classList.toggle('disabled', idx >= PAGE_IDS.length - 1);
+    // hidden 페이지에 직접 들어가있는데 unlock 안 된 경우 (idx === -1) → 좌우 화살표 모두 비활성
+    const isOrphan = idx < 0;
+    prev.classList.toggle('disabled', isOrphan || idx <= 0);
+    next.classList.toggle('disabled', isOrphan || idx >= visible.length - 1);
     // 활성 네비 버튼 스크롤 가시화
     const activeBtn = document.querySelector('.page-nav-btn.current');
     if (activeBtn) activeBtn.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
@@ -10218,6 +10228,7 @@
   }, { threshold: 0.01, rootMargin: '0px 0px -40px 0px' }) : null;
 
   function renderBottomPagination(id, idx) {
+    const visible = getActivePageIds();
     // 각 .page 맨 아래에 이전/다음 버튼 삽입 (없으면 생성)
     document.querySelectorAll('.page').forEach(pageEl => {
       let nav = pageEl.querySelector(':scope > .page-pagination');
@@ -10236,22 +10247,34 @@
         `;
         pageEl.appendChild(nav);
         nav.querySelector('.pg-prev').addEventListener('click', () => {
-          const cur = PAGE_IDS.indexOf(pageEl.dataset.page);
-          if (cur > 0) showPage(PAGE_IDS[cur - 1]);
+          const v = getActivePageIds();
+          const cur = v.indexOf(pageEl.dataset.page);
+          if (cur > 0) showPage(v[cur - 1]);
         });
         nav.querySelector('.pg-next').addEventListener('click', () => {
-          const cur = PAGE_IDS.indexOf(pageEl.dataset.page);
-          if (cur < PAGE_IDS.length - 1) showPage(PAGE_IDS[cur + 1]);
+          const v = getActivePageIds();
+          const cur = v.indexOf(pageEl.dataset.page);
+          if (cur < v.length - 1) showPage(v[cur + 1]);
         });
         if (paginationVisibilityObserver) paginationVisibilityObserver.observe(nav);
       }
-      const myIdx = PAGE_IDS.indexOf(pageEl.dataset.page);
+      const myId = pageEl.dataset.page;
+      const myIdx = visible.indexOf(myId);
       const prevBtn = nav.querySelector('.pg-prev');
       const nextBtn = nav.querySelector('.pg-next');
-      prevBtn.classList.toggle('hidden', myIdx <= 0);
-      nextBtn.classList.toggle('hidden', myIdx >= PAGE_IDS.length - 1);
-      if (myIdx > 0) prevBtn.querySelector('.pg-title').textContent = PAGES[myIdx - 1].label;
-      if (myIdx < PAGE_IDS.length - 1) nextBtn.querySelector('.pg-title').textContent = PAGES[myIdx + 1].label;
+      const isOrphan = myIdx < 0; // hidden 페이지인데 unlock 안 된 상태 — 둘 다 숨김
+      prevBtn.classList.toggle('hidden', isOrphan || myIdx <= 0);
+      nextBtn.classList.toggle('hidden', isOrphan || myIdx >= visible.length - 1);
+      if (!isOrphan) {
+        if (myIdx > 0) {
+          const prevLabel = (PAGES.find(p => p.id === visible[myIdx - 1]) || {}).label || '';
+          prevBtn.querySelector('.pg-title').textContent = prevLabel;
+        }
+        if (myIdx < visible.length - 1) {
+          const nextLabel = (PAGES.find(p => p.id === visible[myIdx + 1]) || {}).label || '';
+          nextBtn.querySelector('.pg-title').textContent = nextLabel;
+        }
+      }
     });
   }
 
@@ -10260,14 +10283,16 @@
     btn.addEventListener('click', () => showPage(btn.dataset.nav));
   });
 
-  // 좌우 화살표 클릭
+  // 좌우 화살표 클릭 — getActivePageIds (hidden 잠금 시 'hidden' 제외) 사용
   document.getElementById('page-prev').addEventListener('click', () => {
-    const idx = PAGE_IDS.indexOf(currentPageId());
-    if (idx > 0) showPage(PAGE_IDS[idx - 1]);
+    const v = getActivePageIds();
+    const idx = v.indexOf(currentPageId());
+    if (idx > 0) showPage(v[idx - 1]);
   });
   document.getElementById('page-next').addEventListener('click', () => {
-    const idx = PAGE_IDS.indexOf(currentPageId());
-    if (idx < PAGE_IDS.length - 1) showPage(PAGE_IDS[idx + 1]);
+    const v = getActivePageIds();
+    const idx = v.indexOf(currentPageId());
+    if (idx < v.length - 1) showPage(v[idx + 1]);
   });
 
   // TOC 앵커 (#d1, #d2, ..., #pack) 클릭 가로채서 페이지 전환으로
@@ -12541,6 +12566,8 @@
     if (typeof saveState === 'function') saveState(state);
     // CTA 숨김, hidden tab 의 locked 클래스 제거
     updateHiddenUnlockUI();
+    // hidden 탭 등장 → 좌우 화살표·하단 페이지네이션 새로 계산 (getActivePageIds 가 'hidden' 포함)
+    try { updateArrowsAndPagination(currentPageId()); } catch(_) {}
     // 화려한 티켓 발급 풀스크린
     fireTicketIssued();
   }
