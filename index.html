@@ -7979,7 +7979,9 @@
       }
 
       // 사진 미션 자동 완료 — targetId 가 photo-mission 카드와 매칭되면 mission done
+      // 보안: targetId 가 selector 안에 들어가므로 정규식 검증 필수 (selector injection 차단)
       try {
+        if (!/^[a-zA-Z0-9_-]{1,64}$/.test(targetId)) return;
         const photoMissionCard = document.querySelector(
           `.mission-card.photo-mission[data-photo-mission="${targetId}"]`
         );
@@ -9840,14 +9842,16 @@
   // ==========================================
   // 모든 미션 = standalone .mission-card[data-mission] + .opt[data-mission]
   // DOM 순서대로 수집 — Day 페이지 순서 + 페이지 내 시간 순서 자동 반영
-  // (예: d1-boarding → d1-hotel → d2-churaumi → d2-kouri → d3-vessel → d3-sunset → d4-departure)
+  // 보안: missionId 정규식 검증 — querySelector selector injection / 부정 입력 차단
+  const MISSION_ID_RE = /^[a-zA-Z0-9_-]{1,32}$/;
   function getAllMissions() {
     const all = document.querySelectorAll('.mission-card[data-mission], .opt[data-mission]');
     const out = [];
     const seen = new Set();
     all.forEach(el => {
       const id = el.dataset.mission;
-      if (!id || seen.has(id)) return;
+      // 정규식 검증 — DOM 변조 / 비정상 attribute 무력화
+      if (!id || !MISSION_ID_RE.test(id) || seen.has(id)) return;
       seen.add(id);
       out.push({
         el,
@@ -9942,7 +9946,9 @@
 
       // 도장 클릭 → 해당 미션 카드 페이지로 이동 + 카드로 스크롤
       // standalone .mission-card 또는 .opt[data-mission] 둘 다 지원
+      // 보안: id 는 getAllMissions()에서 이미 regex 검증됨 — selector injection 안전
       item.addEventListener('click', () => {
+        if (!MISSION_ID_RE.test(id)) return; // 방어적 재검증
         const targetCard = document.querySelector(
           `.mission-card[data-mission="${id}"], .opt[data-mission="${id}"]`
         );
