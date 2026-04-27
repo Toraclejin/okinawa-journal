@@ -955,8 +955,9 @@
   }
 
   /* ========== 호텔 체크인 카드 (Day opener 직후) ========== */
+  /* margin: 18px 0 — 위·아래 mission-card 와 동일한 18px 으로 통일 (margin collapse 18px) */
   .hotel-card {
-    margin: 18px 0 28px;
+    margin: 18px 0;
     padding: 22px 24px;
     border: 1.5px solid var(--blue);
     border-radius: 14px;
@@ -2826,6 +2827,25 @@
     background: var(--amber);
     color: var(--blue-ink);
   }
+  /* .opt[data-mission] (Churaumi · Kouri · Chatan sunset) 용 — mission-tag 와 동일 톤 */
+  .mission-num-pill {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--blue);
+    color: #fff;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin: 6px 0 10px;
+  }
+  .opt[data-mission].chosen .mission-num-pill,
+  .opt[data-mission].selected .mission-num-pill {
+    background: var(--amber);
+    color: var(--blue-ink);
+  }
   .mission-title {
     font-family: 'Fraunces', serif;
     font-style: italic;
@@ -3549,6 +3569,29 @@
   .stamp-item.collected .stamp-day-tag {
     color: var(--blue-ink);
     opacity: 0.8;
+  }
+  /* 좌상단 mission 번호 badge (1~9) — 미션 카드 ↔ stamp 그리드 매핑용 */
+  .stamp-num-badge {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #fff;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    letter-spacing: 0;
+  }
+  .stamp-item.collected .stamp-num-badge {
+    background: var(--blue-ink);
+    color: var(--amber);
   }
   .stamp-name {
     font-family: 'Pretendard Variable', Pretendard, sans-serif;
@@ -10894,7 +10937,63 @@
     const progEl = document.getElementById('stamp-collection-progress');
     if (progEl) progEl.textContent = `${done} / ${items.length}`;
   }
+
+  // ==========================================
+  //  미션 번호 매기기 — 1~9 (getAllMissions 순서, prep → d1 → d2 → d3 → d4)
+  //  • 표준 미션 카드 (.mission-card): .mission-tag 텍스트 prefix 변경 ("Mission · X" → "Mission 3 · X")
+  //  • .opt[data-mission] 카드: .mission-num-pill 별도 주입 ("Mission 5 · 고래상어 — 만났어!")
+  //  • 마무리 페이지 stamp-grid: .stamp-num-badge 주입 (좌상단 작은 원, 1~9)
+  //  단일 source of truth = getAllMissions() 순서
+  // ==========================================
+  function assignMissionNumbers() {
+    const missions = (typeof getAllMissions === 'function') ? getAllMissions() : [];
+    missions.forEach((m, i) => {
+      const num = i + 1;
+      m.el.dataset.missionNum = String(num);
+      if (m.kind === 'standalone') {
+        const tag = m.el.querySelector('.mission-tag');
+        if (!tag) return;
+        // 원본 텍스트 캐시 (assignMissionNumbers 가 여러 번 호출돼도 중복 prefix 방지)
+        if (!tag.dataset.origText) tag.dataset.origText = tag.textContent.trim();
+        const orig = tag.dataset.origText;
+        // "Mission · Departure" → "Mission 2 · Departure"
+        // "Mission · Pre-Trip" → "Mission 1 · Pre-Trip"
+        const updated = /^Mission(\s|·)/i.test(orig)
+          ? orig.replace(/^Mission(?!\s\d)/i, `Mission ${num}`)
+          : `Mission ${num} · ${orig}`;
+        tag.textContent = updated;
+      } else if (m.kind === 'opt') {
+        // .opt[data-mission] 에 mission-num-pill 주입 (없으면)
+        let pill = m.el.querySelector(':scope > .mission-num-pill');
+        if (!pill) {
+          pill = document.createElement('span');
+          pill.className = 'mission-num-pill';
+          // opt-badge 다음 위치에 삽입 (없으면 맨 앞)
+          const badge = m.el.querySelector(':scope > .opt-badge');
+          if (badge && badge.nextSibling) m.el.insertBefore(pill, badge.nextSibling);
+          else m.el.insertBefore(pill, m.el.firstChild);
+        }
+        const label = m.el.dataset.missionLabel || (m.el.querySelector('.opt-title')?.textContent?.trim() || '');
+        pill.textContent = `Mission ${num}${label ? ' · ' + label : ''}`;
+      }
+    });
+    // Stamp grid items — 좌상단 번호 badge
+    document.querySelectorAll('.stamp-item').forEach(item => {
+      const id = item.dataset.mission;
+      if (!id) return;
+      const idx = missions.findIndex(mm => mm.id === id);
+      if (idx < 0) return;
+      let badge = item.querySelector('.stamp-num-badge');
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'stamp-num-badge';
+        item.appendChild(badge);
+      }
+      badge.textContent = String(idx + 1);
+    });
+  }
   buildStampGrid();
+  assignMissionNumbers();
 
   // ==========================================
   //  TRIP COMPLETE — 마지막 미션 클리어 시 더 화려한 풀스크린 (C안)
