@@ -3325,6 +3325,40 @@
   .mc-confetti.tc-confetti span:nth-child(28) { left: 18%; background: var(--blue);  animation-delay: 0.8s; }
   .mc-confetti.tc-confetti span:nth-child(29) { left: 72%; background: var(--amber); animation-delay: 0.9s; }
   .mc-confetti.tc-confetti span:nth-child(30) { left: 50%; background: var(--frame); animation-delay: 0.35s; }
+  /* 컨페티 31~60 — 더 화려한 트립 컴플리트 */
+  .mc-confetti.tc-confetti span:nth-child(n+31):nth-child(-n+60) {
+    width: 11px; height: 15px; animation-duration: 2.2s;
+  }
+  .mc-confetti.tc-confetti span:nth-child(31) { left: 3%;  background: var(--blue);  animation-delay: 0.05s; }
+  .mc-confetti.tc-confetti span:nth-child(32) { left: 9%;  background: var(--amber); animation-delay: 0.45s; }
+  .mc-confetti.tc-confetti span:nth-child(33) { left: 16%; background: var(--frame); animation-delay: 0.95s; }
+  .mc-confetti.tc-confetti span:nth-child(34) { left: 22%; background: var(--amber); animation-delay: 1.0s;  }
+  .mc-confetti.tc-confetti span:nth-child(35) { left: 28%; background: var(--blue);  animation-delay: 0.65s; }
+  .mc-confetti.tc-confetti span:nth-child(36) { left: 33%; background: var(--frame); animation-delay: 0.15s; }
+  .mc-confetti.tc-confetti span:nth-child(37) { left: 39%; background: var(--amber); animation-delay: 0.85s; }
+  .mc-confetti.tc-confetti span:nth-child(38) { left: 44%; background: var(--blue);  animation-delay: 0.30s; }
+  .mc-confetti.tc-confetti span:nth-child(39) { left: 48%; background: var(--frame); animation-delay: 1.1s;  }
+  .mc-confetti.tc-confetti span:nth-child(40) { left: 53%; background: var(--amber); animation-delay: 0.20s; }
+  .mc-confetti.tc-confetti span:nth-child(41) { left: 58%; background: var(--blue);  animation-delay: 1.05s; }
+  .mc-confetti.tc-confetti span:nth-child(42) { left: 63%; background: var(--frame); animation-delay: 0.75s; }
+  .mc-confetti.tc-confetti span:nth-child(43) { left: 68%; background: var(--amber); animation-delay: 0.40s; }
+  .mc-confetti.tc-confetti span:nth-child(44) { left: 73%; background: var(--blue);  animation-delay: 1.2s;  }
+  .mc-confetti.tc-confetti span:nth-child(45) { left: 78%; background: var(--frame); animation-delay: 0.55s; }
+  .mc-confetti.tc-confetti span:nth-child(46) { left: 82%; background: var(--amber); animation-delay: 0.10s; }
+  .mc-confetti.tc-confetti span:nth-child(47) { left: 86%; background: var(--blue);  animation-delay: 0.90s; }
+  .mc-confetti.tc-confetti span:nth-child(48) { left: 91%; background: var(--frame); animation-delay: 1.15s; }
+  .mc-confetti.tc-confetti span:nth-child(49) { left: 95%; background: var(--amber); animation-delay: 0.25s; }
+  .mc-confetti.tc-confetti span:nth-child(50) { left: 6%;  background: var(--frame); animation-delay: 1.3s;  }
+  .mc-confetti.tc-confetti span:nth-child(51) { left: 12%; background: var(--amber); animation-delay: 1.4s;  }
+  .mc-confetti.tc-confetti span:nth-child(52) { left: 26%; background: var(--blue);  animation-delay: 1.5s;  }
+  .mc-confetti.tc-confetti span:nth-child(53) { left: 36%; background: var(--frame); animation-delay: 1.45s; }
+  .mc-confetti.tc-confetti span:nth-child(54) { left: 47%; background: var(--amber); animation-delay: 1.35s; }
+  .mc-confetti.tc-confetti span:nth-child(55) { left: 57%; background: var(--blue);  animation-delay: 1.55s; }
+  .mc-confetti.tc-confetti span:nth-child(56) { left: 66%; background: var(--frame); animation-delay: 1.6s;  }
+  .mc-confetti.tc-confetti span:nth-child(57) { left: 75%; background: var(--amber); animation-delay: 1.25s; }
+  .mc-confetti.tc-confetti span:nth-child(58) { left: 84%; background: var(--blue);  animation-delay: 1.7s;  }
+  .mc-confetti.tc-confetti span:nth-child(59) { left: 90%; background: var(--frame); animation-delay: 1.45s; }
+  .mc-confetti.tc-confetti span:nth-child(60) { left: 97%; background: var(--amber); animation-delay: 1.65s; }
   @media (max-width: 600px) {
     .mc-card.trip-card .tc-stars { font-size: 56px; }
     .mc-card.trip-card .mc-title { font-size: 40px; }
@@ -3548,16 +3582,121 @@
     100% { opacity: 1; transform: translateY(0); }
   }
 
-  /* 작은 ★ 우상단 — 절제 */
-  .trip-done-msg::before {
-    content: '✺';
+  /* === 인증 뱃지 (TRIP CONQUERED) === */
+  .trip-done-msg .td-conquer {
+    text-align: center;
+    padding: 22px 18px 24px;
+    margin: 0 0 24px;
+    background: linear-gradient(180deg, var(--blue-ink) 0%, var(--blue-deep) 100%);
+    border-radius: 14px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .trip-done-msg .td-conquer::before {
+    content: '';
     position: absolute;
-    top: 22px;
-    right: 28px;
-    font-size: 18px;
-    color: #c9a23c;
-    opacity: 0.55;
+    inset: 0;
+    background: radial-gradient(ellipse at top, rgba(255, 196, 0, 0.18) 0%, transparent 65%);
     pointer-events: none;
+  }
+  .trip-done-msg .td-conquer-mark {
+    font-size: 38px;
+    color: var(--amber);
+    line-height: 1;
+    margin-bottom: 6px;
+    text-shadow: 0 4px 18px rgba(255, 196, 0, 0.55);
+    animation: td-mark-spin 3s ease-in-out infinite;
+  }
+  @keyframes td-mark-spin {
+    0%, 100% { transform: rotate(-8deg) scale(1); }
+    50% { transform: rotate(8deg) scale(1.1); }
+  }
+  .trip-done-msg .td-conquer-tag {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 6px;
+  }
+  .trip-done-msg .td-conquer-title {
+    font-family: 'Pretendard Variable', Pretendard, sans-serif;
+    font-weight: 900;
+    font-size: 28px;
+    color: #fff;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .trip-done-msg .td-conquer-date {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  /* === 통계 grid === */
+  .trip-done-msg .td-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 0 0 26px;
+  }
+  .trip-done-msg .td-stat {
+    text-align: center;
+    padding: 14px 8px 12px;
+    background: #fff;
+    border: 1.5px solid #e9c965;
+    border-radius: 10px;
+  }
+  .trip-done-msg .td-stat-num {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 26px;
+    line-height: 1;
+    color: var(--blue-ink);
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+  .trip-done-msg .td-stat-lbl {
+    font-family: 'Pretendard Variable', Pretendard, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--blue-deep);
+    opacity: 0.75;
+  }
+
+  /* === 마지막 한 마디 — 컴팩트하게 통합 === */
+  .trip-done-msg .td-headline-block {
+    padding: 0;
+  }
+
+  /* === 스크린샷 CTA === */
+  .trip-done-msg .td-share {
+    margin-top: 24px;
+    padding: 14px 16px;
+    background: rgba(0, 71, 255, 0.07);
+    border: 1.5px dashed var(--blue);
+    border-radius: 10px;
+    text-align: center;
+    font-family: 'Pretendard Variable', Pretendard, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--blue);
+    letter-spacing: -0.005em;
+  }
+  .trip-done-msg .td-share-icon {
+    margin-right: 6px;
+    font-size: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .trip-done-msg .td-conquer-mark { font-size: 32px; }
+    .trip-done-msg .td-conquer-title { font-size: 24px; }
+    .trip-done-msg .td-stats { gap: 8px; grid-template-columns: repeat(2, 1fr); }
+    .trip-done-msg .td-stat-num { font-size: 24px; }
+    .trip-done-msg .td-share { font-size: 13px; padding: 12px 14px; }
   }
 
   .trip-done-msg .td-eyebrow {
@@ -7316,21 +7455,47 @@
   </div>
 
   <!-- ========== 트립 완료 회고 (모든 미션 완수 시 등장) ==========
-       매거진 후기 톤 — Pretendard 한글 일관, 색 highlight 제거, 자연 줄바꿈 -->
+       인증 뱃지 + 통계 + 회고 + 스크린샷 CTA — 11살 친화 보상 통합 -->
   <div class="back-intro trip-done-msg" data-state="trip-done" hidden>
-    <div class="td-eyebrow"><span class="td-mark">★</span>Mission Complete</div>
-    <h3 class="td-headline">마지막 한 마디</h3>
-    <div class="td-rule"></div>
 
-    <p class="td-body">계획은 지도일 뿐.</p>
-    <p class="td-body">그날 컨디션에 따라 원하는 선택은 원하는 데로 했잖아?</p>
-    <p class="td-body">선택이 마음에 안 들었어도 괜찮아. 그 과정에서 뭔가를 배웠을 테니.</p>
+    <!-- 인증 뱃지 (게임 클리어 화면 톤) -->
+    <div class="td-conquer">
+      <div class="td-conquer-mark">★</div>
+      <div class="td-conquer-tag">TRIP CONQUERED</div>
+      <div class="td-conquer-title">오키나와 정복!</div>
+      <div class="td-conquer-date">5.10 — 5.13 · 2026</div>
+    </div>
 
-    <p class="td-body td-emphasis">미션도, 선택도, 여행 중 느낀 모든 것이 다 추억과 성장의 순간이었어.</p>
+    <!-- 여행 통계 (state 자동 집계 — JS에서 채움) -->
+    <div class="td-stats" id="td-stats">
+      <div class="td-stat"><div class="td-stat-num" data-stat="missions">0</div><div class="td-stat-lbl">도장</div></div>
+      <div class="td-stat"><div class="td-stat-num" data-stat="rating">—</div><div class="td-stat-lbl">평균 별점</div></div>
+      <div class="td-stat"><div class="td-stat-num" data-stat="photos">0</div><div class="td-stat-lbl">사진</div></div>
+      <div class="td-stat"><div class="td-stat-num" data-stat="notes">0</div><div class="td-stat-lbl">메모</div></div>
+    </div>
 
-    <div class="td-cta">
-      이제 아래 빈 칸에 느낀 점을 채우면 이 여행책이 완성돼.<br/>
-      <span class="td-cta-go">완성해보자 ↓</span>
+    <!-- 마지막 한 마디 -->
+    <div class="td-headline-block">
+      <div class="td-eyebrow"><span class="td-mark">★</span>Last Words</div>
+      <h3 class="td-headline">마지막 한 마디</h3>
+      <div class="td-rule"></div>
+
+      <p class="td-body">계획은 지도일 뿐.</p>
+      <p class="td-body">그날 컨디션에 따라 원하는 선택은 원하는 데로 했잖아?</p>
+      <p class="td-body">선택이 마음에 안 들었어도 괜찮아. 그 과정에서 뭔가를 배웠을 테니.</p>
+
+      <p class="td-body td-emphasis">미션도, 선택도, 여행 중 느낀 모든 것이 다 추억과 성장의 순간이었어.</p>
+
+      <div class="td-cta">
+        이제 아래 빈 칸에 느낀 점을 채우면 이 여행책이 완성돼.<br/>
+        <span class="td-cta-go">완성해보자 ↓</span>
+      </div>
+    </div>
+
+    <!-- 스크린샷 CTA — 자랑용 -->
+    <div class="td-share">
+      <span class="td-share-icon">📷</span>
+      이 화면 스크린샷 찍어 가족 단톡에 자랑해!
     </div>
   </div>
 
@@ -10295,6 +10460,8 @@
     if (introDefault && introTripDone) {
       introDefault.hidden = allDone;
       introTripDone.hidden = !allDone;
+      // 통계 grid 갱신 (도장·별점·사진·메모)
+      if (allDone && typeof updateTripStats === 'function') updateTripStats();
     }
   }
   // 카운터 클릭 → 마무리 페이지 도장 그리드로 이동 (단일 동작 — 컬렉션 보기)
@@ -10453,11 +10620,36 @@
       sub.textContent = '잘 다녀왔어. 다음 여행에서 또 보자.';
       card.appendChild(sub);
 
-      // 컨페티 30개 (TRIP은 더 많이)
+      // 컨페티 60개 (TRIP은 더 화려하게)
       const conf = document.createElement('div');
       conf.className = 'mc-confetti tc-confetti';
-      for (let i = 0; i < 30; i++) conf.appendChild(document.createElement('span'));
+      for (let i = 0; i < 60; i++) conf.appendChild(document.createElement('span'));
       card.appendChild(conf);
+
+      // 사운드 — 짧은 chime (Web Audio API, user gesture 후라 OK)
+      try {
+        if (window.AudioContext || window.webkitAudioContext) {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          const ctx = new AC();
+          const now = ctx.currentTime;
+          // 도·미·솔·도 4음 짧은 멜로디 (C5, E5, G5, C6)
+          const notes = [523.25, 659.25, 783.99, 1046.5];
+          notes.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0, now + i * 0.12);
+            gain.gain.linearRampToValueAtTime(0.18, now + i * 0.12 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.12 + 0.4);
+            osc.connect(gain).connect(ctx.destination);
+            osc.start(now + i * 0.12);
+            osc.stop(now + i * 0.12 + 0.42);
+          });
+          // 0.6초 후 close (메모리 정리)
+          setTimeout(() => { try { ctx.close(); } catch(_) {} }, 1200);
+        }
+      } catch(_) {}
 
       overlay.appendChild(card);
       document.body.appendChild(overlay);
@@ -10528,6 +10720,39 @@
       // fallback — 어떤 이유로든 fire 실패 시 일반 풀스크린
       if (typeof fireMissionComplete === 'function') fireMissionComplete(title);
     }
+  }
+
+  // 여행 통계 자동 집계 — trip-done-msg 안 td-stats grid 채우기
+  // state.missions, state.ratings, state.photos, state.texts 에서 추출
+  function updateTripStats() {
+    try {
+      const tripDone = document.querySelector('.trip-done-msg');
+      if (!tripDone) return;
+      // 도장 (완료 미션 수)
+      const missions = state.missions || {};
+      const missionCount = Object.values(missions).filter(m => m && m.done).length;
+      // 평균 별점 (별점 매긴 항목들의 평균, 0~5)
+      const ratings = state.ratings || {};
+      const ratingValues = Object.values(ratings).filter(v => typeof v === 'number' && v > 0);
+      const avgRating = ratingValues.length
+        ? (ratingValues.reduce((a, b) => a + b, 0) / ratingValues.length).toFixed(1)
+        : '—';
+      // 사진 (모든 target 합산)
+      const photos = state.photos || {};
+      const photoCount = Object.values(photos).reduce((sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0);
+      // 메모 (작성된 텍스트 입력 수)
+      const texts = state.texts || {};
+      const noteCount = Object.values(texts).filter(v => typeof v === 'string' && v.trim().length > 0).length;
+      // DOM 갱신 (textContent — XSS 안전)
+      const setStat = (key, val) => {
+        const el = tripDone.querySelector(`[data-stat="${key}"]`);
+        if (el) el.textContent = String(val);
+      };
+      setStat('missions', missionCount);
+      setStat('rating', avgRating);
+      setStat('photos', photoCount);
+      setStat('notes', noteCount);
+    } catch(_) {}
   }
 
   // 마지막 미션 완료 후 — 마무리 페이지 자동 이동 + trip-done-msg 화려한 등장 트리거
