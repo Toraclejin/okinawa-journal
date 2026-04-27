@@ -1,5 +1,27 @@
 # Learning — 오키나와 매거진 만들면서 배운 것
 
+> **Level 4 / 종합 회고.** 이 프로젝트의 Level 0~3 (CONCEPT·PRD·CLAUDE·DESIGN·ROUTE·MISSIONS·VERIFICATION·TODO) 모든 결정의 회고를 통합. 다음 프로젝트에서 같은 함정 안 밟기 위한 최종 학습 문서.
+
+## 이 문서의 위치
+
+- 위계: `DOC-MAP.md` 의 Level 4 (최종)
+- 입력: 다른 모든 docs + `git log` + 실제 가족 사용 경험
+- 산출: 다음 시즌 (Volume II) 또는 다른 프로젝트 시작 시 첫 참조 자료
+- 갱신 시점: 큰 회귀 해결 후 즉시 + 출발 후 가족 사용 후기
+
+## 목차 (계획)
+
+> 현재는 § 1, § 2 만 작성됨 (CSS·모바일 함정).
+> 출발 (2026-05-10) 전후로 § 3 ~ § 7 완성 예정.
+
+- § 1. **모바일 CSS 함정** — clamp, minmax(0, 1fr), grid-area 깊이 (작성 완료)
+- § 2. **상태 관리 회귀** — 3-namespace, sanitizeImportedState 화이트리스트 (작성 완료)
+- § 3. **미션 시스템** (TODO) — 9개 인덱싱, .mission-card vs .opt[data-mission] 분리, getAllMissions 단일 소스
+- § 4. **동선 mid-hotel** (TODO) — afterMission DOM 위치 기준, 3-call-sites consistency rule, fixed position → dynamic 회귀
+- § 5. **장소 검증 프로세스** (TODO) — 출발 후 수정 불가 전제, 공식 → Tabelog → 블로그 강도, 좌표 land-check
+- § 6. **문서 위계 정리** (TODO) — 처음에 모든 룰을 CLAUDE.md 에 몰아넣었다 꼬여서 Level 0~4 분리한 회고
+- § 7. **가족 실제 사용 후기 종합** (TODO — 출발 후) — 어떤 미션이 잘 작동했나, 어떤 정보가 안 보였나
+
 ## 왜 이 문서를 쓰는가
 
 이 프로젝트에서 **내가 왜 같은 실수를 반복했고, 어떻게 해결했나**를 복습용으로 남김.
@@ -295,3 +317,24 @@ HTML, CSS, JavaScript가 전부 한 파일 안에 들어있음. 프레임워크 
 
 작고 단순한 걸 작고 단순하게 만드는 기술이, 복잡한 걸 관리하는 기술보다 어려울 때가 많음.
 "왜 React 안 쓰지?"보다 "왜 React를 쓰지?"를 먼저 물어야 함.
+
+---
+
+## 참조 (위계)
+
+이 회고가 출처로 삼은 다른 문서들:
+
+- 위로 (Level 0~3) → `DOC-MAP.md` (전체 인덱스)
+- 비전 → `CONCEPT.md` · `PRD.md`
+- 운영 룰 → `CLAUDE.md`
+- 도메인 → `DESIGN.md` · `ROUTE.md` · `MISSIONS.md`
+- 검증 → `VERIFICATION.md` · `TODO.md`
+
+이 문서가 입력 받는 source:
+- 모든 위 docs 의 핵심 결정·회귀·해결책
+- `git log` (무엇을 고쳤나)
+- 가족 실제 사용 후기 (출발 후)
+
+이 문서가 출력하는 곳:
+- 다음 시즌 (Volume II) 시작 시 첫 참조
+- 다른 정적 매거진 프로젝트의 출발점

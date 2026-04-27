@@ -1,6 +1,19 @@
 # Okinawa Journal — Claude Code Guide
 
+> **Level 1 — Project Guide.** 이 문서는 Claude 의 모든 작업 진입점.
+> 위로 가면: `CONCEPT.md` (왜 만드나) + `PRD.md` (뭘 만드나)
+> 아래로 가면: `DESIGN.md` / `ROUTE.md` / `MISSIONS.md` (도메인별 구체)
+> 운영: `VERIFICATION.md` (검증) + `TODO.md` (백로그)
+> 회고: `learning.md` (Level 0~3 통합)
+> 인덱스: `DOC-MAP.md` (이 모든 것의 마스터 표)
+
 가족 공유용 여행 매거진 (오키나와 3박 4일). 단일 정적 HTML, 가족들이 여행 전/중/후 읽고 기록하는 용도.
+
+**작업 시작 전 룰**:
+1. 처음 보는 영역이면 → `DOC-MAP.md` 영향 매트릭스 → 어떤 *.md 같이 봐야 하는지 확인
+2. 코드 수정 → 영향 받는 도메인 docs (`DESIGN/ROUTE/MISSIONS`) 도 같이 갱신
+3. 새 문서 추가 → `DOC-MAP.md` 표·다이어그램에 등록 (안 하면 미아)
+4. 출발 (2026-05-10) 후엔 콘텐츠 동결 — 모든 검증·확정은 그 전에
 
 ## 여행 개요
 
@@ -20,29 +33,45 @@
 - 호스팅: GitHub Pages (`main` 브랜치 push → 자동 배포, 1~2분)
 - 외부 의존: Google Fonts (Archivo Black / Fraunces / Space Grotesk), Pretendard CDN, Unsplash 이미지
 
-## 파일 구조
+## 파일 구조 (위계 순)
 
 ```
-index.html          단일 파일 (HTML + CSS + JS 한 덩어리)
-japan-map.svg       마무리 페이지 일본 지도 누끼 (Ozean 제거 버전)
+[CODE]
+  index.html          단일 파일 (HTML + CSS + JS 한 덩어리)
+  japan-map.svg       마무리 페이지 일본 지도 누끼 (Ozean 제거 버전)
 
-DOC-MAP.md          ★ 마스터 인덱스 — 모든 문서 + 참조 관계 + 변경 영향 매트릭스
-DESIGN.md           아키텍처·상태 모델·디자인 토큰·페이지 구조·Auth·Export/Import
-ROUTE.md            구글맵 동선 시스템 (DAY_HOTEL, midHotel, computeMidInsertIdx, 3-call-sites rule)
-MISSIONS.md         미션 시스템 (9개 + 자동 번호 + stamp grid + trip-conquer-card)
-VERIFICATION.md     회귀 검증 절차 (자동 console eval + 수동 모바일 체크)
-TODO.md             미완료 작업 백로그
-learning.md         개발 과정 회고 (사용자용)
-CLAUDE.md           이 파일 (Claude 세션용 가이드 — 빠른 참조)
+[LEVEL 0 — VISION]
+  CONCEPT.md          기획서 — vision, audience, fixed facts, success criteria
+  PRD.md              제품 요구사항 — functional + non-functional + risks
 
-.claude/launch.json npx serve 로 로컬 프리뷰 (포트 8765)
+[LEVEL 1 — PROJECT GUIDE]
+  CLAUDE.md           이 파일 (모든 Claude 작업 진입점, 빠른 룰북)
+
+[LEVEL 2 — IMPLEMENTATION]
+  DESIGN.md           아키텍처·상태 모델·디자인 토큰·Auth·Export/Import
+  ROUTE.md            동선 시스템 (DAY_HOTEL, midHotel, 3-call-sites rule)
+  MISSIONS.md         미션 시스템 (9개·번호·stamp grid·trip-conquer)
+
+[LEVEL 3 — OPERATIONS]
+  VERIFICATION.md     회귀 검증 절차 (자동 console eval + 수동 모바일)
+  TODO.md             백로그 (Level 별 분류)
+
+[LEVEL 4 — KNOWLEDGE]
+  learning.md         종합 회고 (Level 0~3 + 코드 통합 학습)
+
+[INDEX]
+  DOC-MAP.md          ★ 모든 문서 + 위계 + 참조 관계 + 영향 매트릭스
+
+[INFRA]
+  .claude/launch.json npx serve 로 로컬 프리뷰 (포트 8765)
 ```
 
-**문서 룰**:
-- **코드 수정 전** → `DOC-MAP.md` 변경 영향 매트릭스 확인 → 어떤 *.md 같이 봐야 하는지 파악
-- **코드 수정 후** → 영향 받은 *.md 같이 갱신 (스토리·표·예시 코드)
-- **새 문서 추가 시** → `DOC-MAP.md` 표 + 다이어그램에 등록 (안 등록하면 미아)
-- 새 미션·새 픽·새 페이지·새 state 필드 → 각 영역별 체크리스트 (`MISSIONS.md`, `ROUTE.md`, `DESIGN.md`)
+**문서 작업 룰**:
+- **코드 수정 전** → `DOC-MAP.md` 변경 영향 매트릭스 → 같이 봐야 할 docs 파악
+- **코드 수정 후** → 영향 받은 Level 2 도메인 docs + Level 3 VERIFICATION 갱신
+- **새 문서 추가** → `DOC-MAP.md` 표·다이어그램에 등록 (안 등록하면 위계 망가짐)
+- **큰 결정 변경** → Level 0 (CONCEPT/PRD) 까지 거슬러 갱신
+- 영역별 체크리스트는 각 Level 2 문서 끝부분 — 새 미션은 `MISSIONS.md`, 새 픽은 `ROUTE.md`, 새 state 필드는 `DESIGN.md`
 
 ## index.html 레이아웃 (상단→하단)
 
