@@ -7025,9 +7025,9 @@
     <div class="back-intro trip-done-msg" data-state="trip-done" hidden>
       <div class="td-ribbon">★ Trip Complete</div>
       <p class="td-line">
-        고래상어 만나고, 호텔 두 곳 들렀고,<br/>
-        바다 다리 건너고, 마지막 일몰까지 봤지?<br/>
-        <strong>이 여행은 너만의 도장 일기로 남았어.</strong>
+        비행기 타고, 호텔 두 곳 들르고, 가족 사진 한 장,<br/>
+        고래상어 만나고, 바다 다리 건너고, 차탄 일몰까지 —<br/>
+        <strong>도장 다 모은 너의 여행, 완벽했어.</strong>
       </p>
       <p class="td-sign">또 가자, 오키나와 — Family ✺</p>
     </div>
@@ -7080,7 +7080,8 @@
 <div class="photo-uploading" id="photo-uploading">사진 추가 중…</div>
 
 <!-- 숨김 파일 입력 -->
-<input type="file" id="photo-upload-input" accept="image/*" capture="environment" class="hidden-input" />
+<!-- capture 속성 제거: 사진첩·카메라·파일 모두 OS chooser에서 선택 가능 (이전엔 카메라만 강제) -->
+<input type="file" id="photo-upload-input" accept="image/*" class="hidden-input" />
 
 
 <script>
@@ -10022,7 +10023,9 @@
 
       const detail = document.createElement('div');
       detail.className = 'mc-detail';
-      detail.textContent = '오키나와 5개 도장 모두 모았어 ✨';
+      // 미션 총 개수를 동적으로 — 미션 추가/삭제 시 자동 반영
+      const totalMissions = (typeof getAllMissions === 'function') ? getAllMissions().length : 0;
+      detail.textContent = `오키나와 ${totalMissions}개 도장 모두 모았어 ✨`;
       card.appendChild(detail);
 
       const sub = document.createElement('div');
