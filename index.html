@@ -3504,35 +3504,72 @@
   }
 
   /* ========== 트립 완료 회고 (도장 다 모으면 등장) ==========
-     매거진 마지막 페이지의 한 마디 — 절제된 매거진 타이포 (Fraunces 이탤릭 본문, 가는 hairline) */
+     미션 카드 비주얼 톤 (앰버 dashed + 골드 그라디언트 + float + glow) — 화려한 클라이맥스
+     단, 타이포는 매거진 톤 유지 (Archivo Black + Fraunces italic, 자연 줄바꿈) */
   .trip-done-msg {
     position: relative;
-    margin: 22px 16px 22px;
-    padding: 0;
-    background: transparent;
-    animation: trip-done-fadein 0.6s ease-out;
+    margin: 0;
+    padding: 30px 26px 26px;
+    border: 2.5px dashed var(--amber);
+    border-radius: 20px;
+    background: linear-gradient(135deg, #fffaeb 0%, #ffe680 50%, #fffaeb 100%);
+    background-size: 220% 220%;
+    box-shadow: 0 12px 36px rgba(255, 196, 0, 0.34);
+    overflow: hidden;
+    animation:
+      trip-done-fadein 0.9s cubic-bezier(0.34, 1.56, 0.64, 1),
+      td-shimmer 6s ease-in-out infinite,
+      td-float 3.6s ease-in-out infinite;
   }
   @keyframes trip-done-fadein {
-    0% { opacity: 0; transform: translateY(8px); }
-    100% { opacity: 1; transform: translateY(0); }
+    0% { opacity: 0; transform: translateY(20px) scale(0.96); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
   }
+  @keyframes td-shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  @keyframes td-float {
+    0%, 100% { transform: translateY(0); box-shadow: 0 12px 36px rgba(255, 196, 0, 0.34); }
+    50% { transform: translateY(-3px); box-shadow: 0 18px 44px rgba(255, 196, 0, 0.5); }
+  }
+  /* 좌상단 큰 ★ 마크 */
+  .trip-done-msg::before {
+    content: '★';
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    font-size: 28px;
+    color: var(--amber);
+    text-shadow: 0 4px 12px rgba(255, 196, 0, 0.55);
+    transform: rotate(8deg);
+    animation: td-star-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes td-star-pulse {
+    0%, 100% { transform: rotate(8deg) scale(1); }
+    50% { transform: rotate(-4deg) scale(1.15); }
+  }
+
   .trip-done-msg .td-eyebrow {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: var(--blue-ink);
+    color: var(--amber);
     font-family: 'Space Grotesk', sans-serif;
     font-size: 10.5px;
-    font-weight: 700;
-    letter-spacing: 0.28em;
+    font-weight: 800;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--blue);
-    margin-bottom: 12px;
-    opacity: 0.7;
+    margin-bottom: 16px;
   }
   .trip-done-msg .td-headline {
     font-family: 'Archivo Black', sans-serif;
     font-size: 30px;
-    line-height: 1.05;
+    line-height: 1.0;
     color: var(--blue-ink);
     letter-spacing: -0.02em;
-    margin: 0 0 16px;
+    margin: 0 0 14px;
     text-transform: uppercase;
   }
   .trip-done-msg .td-headline em {
@@ -3545,46 +3582,80 @@
   }
   .trip-done-msg .td-rule {
     height: 2px;
-    width: 40px;
+    width: 44px;
     background: var(--blue);
-    margin: 0 0 22px;
+    margin: 0 0 20px;
   }
   .trip-done-msg .td-body {
     font-family: 'Fraunces', serif;
     font-style: italic;
     font-weight: 500;
-    font-size: 17px;
+    font-size: 16.5px;
     line-height: 1.7;
     color: var(--blue-ink);
-    margin: 0 0 16px;
+    margin: 0 0 14px;
   }
   .trip-done-msg .td-body em {
     font-style: italic;
     font-weight: 700;
     color: var(--blue);
   }
+  /* CTA — 아래 reader-note 로 시선 유도 */
   .trip-done-msg .td-body.td-cta {
-    margin-top: 22px;
-    padding-top: 18px;
-    border-top: 1px solid rgba(0, 71, 255, 0.15);
+    margin-top: 20px;
+    padding: 16px 18px;
+    background: rgba(0, 71, 255, 0.08);
+    border-radius: 12px;
+    border-left: 3px solid var(--blue);
+    font-style: italic;
+  }
+  .trip-done-msg .td-body.td-cta em {
+    font-weight: 800;
   }
   .trip-done-msg .td-sign {
-    margin-top: 18px;
+    margin-top: 16px;
     font-family: 'Space Grotesk', sans-serif;
     font-size: 12px;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.22em;
     color: var(--blue-deep);
-    opacity: 0.6;
+    opacity: 0.7;
     text-align: right;
   }
   @media (max-width: 600px) {
-    .trip-done-msg { margin: 18px 14px; }
+    .trip-done-msg { padding: 26px 20px 22px; }
+    .trip-done-msg::before { font-size: 22px; top: 14px; right: 18px; }
     .trip-done-msg .td-headline { font-size: 26px; }
-    .trip-done-msg .td-body { font-size: 16px; line-height: 1.68; }
+    .trip-done-msg .td-body { font-size: 15.5px; line-height: 1.68; }
   }
 
   /* 토글: data-state 속성으로 control */
   .back-intro[hidden] { display: none !important; }
+
+  /* trip-done-msg 가 숨김 상태 (미션 미완료) — stamp-collection ↔ reader-note 간격 확장 */
+  .back .stamp-collection + .trip-done-msg[hidden] + .reader-note {
+    margin-top: 72px !important;
+  }
+
+  /* 마지막 미션 직후 자동 nav 시 — trip-done-msg 강한 재등장 (just-revealed) */
+  .trip-done-msg.just-revealed {
+    animation:
+      td-reveal-burst 1.0s cubic-bezier(0.34, 1.56, 0.64, 1),
+      td-shimmer 6s ease-in-out infinite,
+      td-float 3.6s ease-in-out infinite;
+  }
+  @keyframes td-reveal-burst {
+    0%   { opacity: 0; transform: translateY(40px) scale(0.85); box-shadow: 0 0 0 0 rgba(255, 196, 0, 0); }
+    50%  { opacity: 1; transform: translateY(-6px) scale(1.04); box-shadow: 0 24px 60px rgba(255, 196, 0, 0.7); }
+    100% { opacity: 1; transform: translateY(0) scale(1); box-shadow: 0 12px 36px rgba(255, 196, 0, 0.34); }
+  }
+  .trip-done-msg.just-revealed::before {
+    animation: td-star-spin 1.0s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes td-star-spin {
+    0%   { transform: rotate(-180deg) scale(0); opacity: 0; }
+    60%  { transform: rotate(20deg) scale(1.4); opacity: 1; }
+    100% { transform: rotate(8deg) scale(1); opacity: 1; }
+  }
 
   /* ========== Info 모달 ========== */
   .modal-bg {
@@ -7236,7 +7307,6 @@
     <p class="td-body td-cta">
       이제 아래 빈 칸에 느낀 점을 채우면 이 여행책이 완성돼. <em>완성해보자.</em>
     </p>
-    <div class="td-sign">— Family ✺</div>
   </div>
 
   <!-- ========== 여행 전체 베스트 메모 (D4에서 옮겨옴 — 조카가 끝까지 보게) ========== -->
@@ -8327,13 +8397,13 @@
             // 카운터 + 도장 그리드 갱신
             if (typeof updateMissionCounter === 'function') updateMissionCounter();
             if (typeof refreshStampGrid === 'function') refreshStampGrid();
-            // 모든 미션 완료 체크 → TRIP COMPLETE
+            // 모든 미션 완료 체크 → 마무리 페이지 자동 nav (사진 미션이 마지막인 경우)
             const allMissions = (typeof getAllMissions === 'function') ? getAllMissions() : [];
             const allDone = allMissions.length > 0 && allMissions.every(mi =>
               state.missions && state.missions[mi.id] && state.missions[mi.id].done
             );
-            if (allDone && typeof fireTripComplete === 'function') {
-              setTimeout(fireTripComplete, 2400);
+            if (allDone && typeof navToBackAndReveal === 'function') {
+              setTimeout(navToBackAndReveal, 2400);
             }
           }
         }
@@ -10415,11 +10485,30 @@
         state.missions && state.missions[m.id] && state.missions[m.id].done
       );
       if (allDone) {
-        // fireMissionComplete 가 1.8초 만에 끝나니, 그 후에 TRIP COMPLETE 띄우기
-        setTimeout(fireTripComplete, 2400);
+        // 마지막 미션 → MISSION COMPLETE 끝나면 자동 마무리 페이지 nav + trip-done-msg 화려한 등장
+        setTimeout(navToBackAndReveal, 2400);
       }
     });
   }, true);
+
+  // 마지막 미션 완료 후 — 마무리 페이지 자동 이동 + trip-done-msg 화려한 등장 트리거
+  function navToBackAndReveal() {
+    try {
+      const navBack = [...document.querySelectorAll('.page-nav-btn')].find(b => b.dataset.nav === 'back');
+      if (navBack) navBack.click();
+      else { try { location.hash = '#back'; } catch(_) {} }
+      // 페이지 전환 후 trip-done-msg 로 부드럽게 스크롤 + 화려한 등장 애니메이션 재발화
+      setTimeout(() => {
+        const td = document.querySelector('.trip-done-msg');
+        if (!td || td.hidden) return;
+        td.classList.remove('just-revealed');
+        void td.offsetWidth;
+        td.classList.add('just-revealed');
+        td.scrollIntoView({ block: 'start', behavior: 'smooth' });
+        setTimeout(() => td.classList.remove('just-revealed'), 1800);
+      }, 700);
+    } catch(_) {}
+  }
 
   // 미션 클릭 / 취소 후 카운터·그리드 즉시 갱신
   document.addEventListener('click', (e) => {
