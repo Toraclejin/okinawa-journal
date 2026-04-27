@@ -3397,6 +3397,18 @@
   /* 미션이 0개일 때(혹은 cover/back 페이지) 배지 숨김 */
   .mission-counter.hidden { opacity: 0; pointer-events: none; transform: translateY(8px); }
 
+  /* 스크롤 중 + 페이지 하단 페이지네이션 노출 시 자동 숨김 — 툴바와 동일 동작 */
+  .mission-counter.scrolling {
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+  }
+  .mission-counter.pagination-in-view {
+    opacity: 0;
+    transform: translateY(140%);
+    pointer-events: none;
+  }
+
   /* ========== 마무리 페이지 도장 컬렉션 ========== */
   .stamp-collection {
     margin: 36px 0 28px;
@@ -7839,14 +7851,17 @@
     if (e.currentTarget && e.currentTarget.blur) e.currentTarget.blur();
   });
 
-  // 모바일 스크롤 중 툴바 자동 숨김 (400ms 멈추면 다시 나타남)
+  // 모바일 스크롤 중 툴바 + 미션 카운터 자동 숨김 (400ms 멈추면 다시 나타남)
   const toolbarEl = document.getElementById('toolbar');
+  const counterElForScroll = document.getElementById('mission-counter');
   let toolbarHideTimer;
   window.addEventListener('scroll', () => {
     toolbarEl.classList.add('scrolling');
+    if (counterElForScroll) counterElForScroll.classList.add('scrolling');
     clearTimeout(toolbarHideTimer);
     toolbarHideTimer = setTimeout(() => {
       toolbarEl.classList.remove('scrolling');
+      if (counterElForScroll) counterElForScroll.classList.remove('scrolling');
     }, 400);
   }, { passive: true });
 
@@ -8394,9 +8409,10 @@
     renderBottomPagination(id, idx);
   }
 
-  // 페이지네이션이 뷰에 들어오면 툴바 자동 숨김 (모바일 클릭 간섭 방지)
+  // 페이지네이션이 뷰에 들어오면 툴바 + 미션 카운터 자동 숨김 (모바일 클릭 간섭 방지)
   const paginationVisibilityObserver = ('IntersectionObserver' in window) ? new IntersectionObserver((entries) => {
     const toolbar = document.getElementById('toolbar');
+    const counter = document.getElementById('mission-counter');
     if (!toolbar) return;
     // active 페이지의 pagination이 뷰에 있을 때만 숨김
     const anyIntersecting = entries.some(e => {
@@ -8405,6 +8421,7 @@
       return page && page.classList.contains('active');
     });
     toolbar.classList.toggle('pagination-in-view', anyIntersecting);
+    if (counter) counter.classList.toggle('pagination-in-view', anyIntersecting);
   }, { threshold: 0.01, rootMargin: '0px 0px -40px 0px' }) : null;
 
   function renderBottomPagination(id, idx) {
