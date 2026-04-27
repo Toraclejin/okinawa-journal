@@ -12106,29 +12106,10 @@
       for (let i = 0; i < 60; i++) conf.appendChild(document.createElement('span'));
       card.appendChild(conf);
 
-      // 사운드 — 짧은 chime (Web Audio API, user gesture 후라 OK)
+      // 사운드 — 통일된 부드러운 띠리링 (도-미-솔 sine chime, 11살 깜짝 놀라지 않음)
+      // ★ 모든 알림·축하 사운드는 playGentleChime() 단일 함수 사용 (사운드 톤 통일 룰)
       try {
-        if (window.AudioContext || window.webkitAudioContext) {
-          const AC = window.AudioContext || window.webkitAudioContext;
-          const ctx = new AC();
-          const now = ctx.currentTime;
-          // 도·미·솔·도 4음 짧은 멜로디 (C5, E5, G5, C6)
-          const notes = [523.25, 659.25, 783.99, 1046.5];
-          notes.forEach((freq, i) => {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.value = freq;
-            gain.gain.setValueAtTime(0, now + i * 0.12);
-            gain.gain.linearRampToValueAtTime(0.18, now + i * 0.12 + 0.02);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.12 + 0.4);
-            osc.connect(gain).connect(ctx.destination);
-            osc.start(now + i * 0.12);
-            osc.stop(now + i * 0.12 + 0.42);
-          });
-          // 0.6초 후 close (메모리 정리)
-          setTimeout(() => { try { ctx.close(); } catch(_) {} }, 1200);
-        }
+        if (typeof playGentleChime === 'function') playGentleChime();
       } catch(_) {}
 
       overlay.appendChild(card);
@@ -12211,9 +12192,11 @@
   // ==========================================
   //  HIDDEN MISSION 시스템 — d1-hotel 클리어 시 unlock + 화려한 티켓 발급
   // ==========================================
-  // "띠링~" 부드러운 chime — 깜짝 놀라지 않는 톤 (sweep + boom 제거, sine 만)
-  // 도(C5) - 미(E5) - 솔(G5) 부드러운 상승 화음 (0.3s 짧고 산뜻)
-  function playHiddenUnlockSound() {
+  // === 통일된 알림·축하 사운드 — "띠리링" 부드러운 chime ===
+  // ★ 룰: 모든 미션 완료·해금·축하 사운드는 이 함수 하나로 통일 (사용자 11살 친화 톤)
+  // 도(C5) - 미(E5) - 솔(G5) 부드러운 상승 sine chime (0.4s, 볼륨 0.14)
+  // 호출 위치: fireMissionComplete / fireTripComplete / fireTicketIssued / fireFamilyMaster
+  function playGentleChime() {
     try {
       const AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) return;
@@ -12253,7 +12236,7 @@
         overlay.querySelector('.ht-content')?.appendChild(conf);
       }
       overlay.classList.add('active');
-      playHiddenUnlockSound();
+      playGentleChime(); // 통일된 띠리링 사운드
       // 1.7초 후 페이드 아웃
       setTimeout(() => {
         overlay.classList.remove('active');
@@ -12261,37 +12244,16 @@
     } catch(_) {}
   }
 
-  // FAMILY MASTER 풀스크린 (6/6 완료) — TRIP COMPLETE 와 다른 톤
+  // FAMILY MASTER 풀스크린 (6/6 완료) — 메인 9/9 와 시각만 다름, 사운드는 동일 띠리링
   function fireFamilyMaster() {
     try {
       const overlay = document.getElementById('family-master-overlay');
       if (!overlay) return;
       overlay.classList.add('active');
-      // 다른 사운드 — 미-솔-시-미 (장조)
-      try {
-        const AC = window.AudioContext || window.webkitAudioContext;
-        if (AC) {
-          const ctx = new AC();
-          const now = ctx.currentTime;
-          const notes = [659.25, 783.99, 987.77, 1318.5]; // E5 G5 B5 E6
-          notes.forEach((freq, i) => {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.value = freq;
-            const start = now + i * 0.13;
-            gain.gain.setValueAtTime(0, start);
-            gain.gain.linearRampToValueAtTime(0.2, start + 0.03);
-            gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.5);
-            osc.connect(gain).connect(ctx.destination);
-            osc.start(start);
-            osc.stop(start + 0.55);
-          });
-          setTimeout(() => { try { ctx.close(); } catch(_) {} }, 1500);
-        }
-      } catch(_) {}
+      // ★ 사운드 톤 통일 룰: 모든 알림·축하는 playGentleChime() 단일 함수
+      try { if (typeof playGentleChime === 'function') playGentleChime(); } catch(_) {}
       setTimeout(() => overlay.classList.remove('active'), 2200);
-      // 패밀리 마스터 메시지 (Hidden 페이지 안) 노출
+      // 패밀리 레전드 메시지 (Hidden 페이지 안) 노출
       const msg = document.getElementById('family-master-msg');
       if (msg) msg.hidden = false;
     } catch(_) {}
@@ -12370,14 +12332,14 @@
     if (yesBtn) yesBtn.textContent = '🗝 YES — 지금 풀게';
     if (noBtn) noBtn.textContent = 'NO — 나중에 풀게';
   }
-  // 티켓 풀스크린 텍스트도 이름 반영
+  // 티켓 풀스크린 텍스트 — 이름 반영 + "도전 시작" 톤 (정중·게이머 모두 어울림)
   function updateTicketOverlayText() {
     const tag = document.querySelector('#hidden-ticket-overlay .ht-tag');
     const title = document.querySelector('#hidden-ticket-overlay .ht-title');
     const body = document.querySelector('#hidden-ticket-overlay .ht-body');
-    if (tag) tag.textContent = 'HIDDEN MISSION 해금!';
-    if (title) title.textContent = `${getTravelerName()}님, 시크릿 레벨 풀렸다!`;
-    if (body) body.innerHTML = '비밀 미션 6개 — 가족이랑 같이 하는 게임 챌린지 🎮';
+    if (tag) tag.textContent = '🎫 SECRET MISSION 해금';
+    if (title) title.textContent = 'Secret Mission 도전 시작!';
+    if (body) body.innerHTML = `<strong>${getTravelerName()}님</strong>께서 Secret Mission 6개에 도전을 시작하셨습니다 — 가족이랑 함께 🎮`;
   }
 
   // 히든 카운터 (Hidden 페이지) 갱신
@@ -12392,7 +12354,26 @@
     el.textContent = String(done);
   }
 
-  // 모달·CTA 이벤트 와이어
+  // ★ 잠긴 Hidden 탭 클릭 — capture phase 에서 가로채기
+  // 이전 회귀 (2026-04-28): 일반 nav-btn click 핸들러가 먼저 발동해 showPage('hidden') 로 이동 →
+  //                        그 다음 modal 뜸 = 사용자가 NO 눌러도 이미 페이지 이동된 상태
+  // fix: capture phase + stopImmediatePropagation 로 nav-btn 핸들러 자체를 차단
+  document.addEventListener('click', (e) => {
+    const tab = e.target.closest('.nav-hidden-tab');
+    if (!tab) return;
+    if (tab.classList.contains('locked')) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation(); // 다른 click 핸들러 (showPage 등) 발동 차단
+      if (state.missions && state.missions['d1-hotel'] && state.missions['d1-hotel'].done) {
+        showHiddenUnlockModal();
+      } else {
+        alert('🎫 Hidden Mission 잠금 해제 조건:\n\nDay 1 호텔 도착 미션 (Mission 3) 을 먼저 클리어해야 티켓이 발급돼!');
+      }
+    }
+  }, true); // capture = true → 다른 핸들러보다 먼저 실행
+
+  // 모달·CTA 이벤트 와이어 (bubble phase)
   document.addEventListener('click', (e) => {
     if (e.target.closest('#hum-yes')) {
       hideHiddenUnlockModal();
@@ -12407,22 +12388,9 @@
       unlockHiddenMissions();
       return;
     }
-    // Hidden 탭 클릭 — locked 일 때는 안내 메시지 또는 modal
+    // Hidden 탭 unlocked 시 — 한 번 들어가면 NEW 배지 사라짐
     const tab = e.target.closest('.nav-hidden-tab');
-    if (tab && tab.classList.contains('locked')) {
-      e.preventDefault();
-      e.stopPropagation();
-      // d1-hotel done 이라면 unlock modal, 아니면 안내
-      if (state.missions && state.missions['d1-hotel'] && state.missions['d1-hotel'].done) {
-        showHiddenUnlockModal();
-      } else {
-        // 11살한테 친절 — D1 호텔 도착 미션 클리어 필요 안내
-        alert('🎫 Hidden Mission 잠금 해제 조건:\n\nDay 1 호텔 도착 미션 (Mission 3) 을 먼저 클리어해야 티켓이 발급돼!');
-      }
-      return;
-    }
     if (tab && !tab.classList.contains('locked')) {
-      // 한 번 들어가면 NEW 배지 사라짐
       tab.classList.add('seen');
     }
   });
