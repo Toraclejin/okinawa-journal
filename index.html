@@ -3554,6 +3554,23 @@
     text-transform: uppercase;
   }
   /* 모두 완료 — 골드 배경 + 펄스 */
+  /* Hidden 페이지 진입 시 — 카운터 위젯 그린 톤 (메인 카운터와 시각 구분) */
+  .mission-counter.hidden-mode {
+    border-color: #16a085;
+    color: #0e6b56;
+    background: linear-gradient(135deg, #fff 0%, #ebf9f3 100%);
+  }
+  .mission-counter.hidden-mode .mc-star { color: #16a085; }
+  .mission-counter.hidden-mode .mc-count { color: #0e6b56; }
+  .mission-counter.hidden-mode .mc-label { color: #16a085; }
+  .mission-counter.hidden-mode.all-done {
+    background: linear-gradient(135deg, #16a085 0%, #0e6b56 100%);
+    border-color: #0e6b56;
+  }
+  .mission-counter.hidden-mode.all-done .mc-star,
+  .mission-counter.hidden-mode.all-done .mc-count,
+  .mission-counter.hidden-mode.all-done .mc-label { color: #fff; }
+
   .mission-counter.all-done {
     background: var(--amber);
     border-color: var(--amber);
@@ -4118,6 +4135,19 @@
     flex: 1;
     font-weight: 500;
     line-height: 1.4;
+  }
+  /* How Excited? 별점 (방문한 곳 리스트) — 우측 정렬, 작게 */
+  .visited-list .vl-item-stars {
+    flex-shrink: 0;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    color: var(--amber);
+    letter-spacing: 0.02em;
+    margin-left: 8px;
+    white-space: nowrap;
+  }
+  @media (max-width: 600px) {
+    .visited-list .vl-item-stars { font-size: 11px; }
   }
   .visited-list .vl-empty {
     padding: 14px 0;
@@ -5011,6 +5041,53 @@
     .page-nav-btn.current::after { left: 11px; right: 11px; height: 2px; }
   }
 
+  /* === 🌧 날씨 백업 버튼 — 야외 미션 (차탄 선셋 등) 못 봤을 때 그래도 클리어 === */
+  /* 11살 친화 — "비·바람 때문에" 직관적 단어, 메인 ✓ 버튼 보다 작고 부드럽게 */
+  .weather-backup {
+    margin: 14px 0 4px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e1e8f0 100%);
+    border: 1.5px dashed #6b7c93;
+    border-radius: 10px;
+  }
+  .weather-backup .wb-hint {
+    margin: 0 0 8px;
+    font-family: 'Pretendard Variable', Pretendard, sans-serif;
+    font-size: 12.5px;
+    color: #4a5568;
+    line-height: 1.45;
+  }
+  .weather-backup .wb-hint strong { color: #2d3748; }
+  .weather-backup .wb-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 14px;
+    background: #fff;
+    color: #4a5568;
+    border: 1.5px solid #6b7c93;
+    border-radius: 999px;
+    font-family: 'Pretendard Variable', Pretendard, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: background 0.15s, color 0.15s, transform 0.15s;
+  }
+  .weather-backup .wb-btn:hover {
+    background: #6b7c93;
+    color: #fff;
+    transform: translateY(-1px);
+  }
+  /* 미션 weather 플래그 켜져 있을 때 — 작은 🌧 배지 (도장 우측 상단 옆) */
+  .opt[data-mission].chosen[data-weather-done] .opt-badge::after,
+  .mission-card.completed[data-weather-done]::before {
+    content: '🌧';
+    margin-left: 6px;
+    font-size: 14px;
+  }
+
   /* === 마무리 페이지 히든 unlock CTA — d1-hotel done 후 unlock 안 했을 때 상시 노출 === */
   .hidden-unlock-cta {
     margin: 32px 0 0;
@@ -5480,7 +5557,114 @@
   }
   .hidden-write .hw-area:focus { outline: none; border-style: solid; }
 
-  /* 5/5 완료 시 메시지 */
+  /* === Family Legend 인증 카드 (Hidden 6/6) — 마무리 trip-conquer-card 와 동일 패턴, 그린+골드 톤 === */
+  .legend-card {
+    position: relative;
+    margin: 28px 0 16px;
+    padding: 36px 28px 28px;
+    background: linear-gradient(180deg, #0e6b56 0%, #16a085 100%);
+    border-radius: 22px;
+    box-shadow: 0 16px 44px rgba(14, 107, 86, 0.4);
+    color: #fff;
+    overflow: hidden;
+    animation: legend-card-fadein 0.7s ease-out;
+  }
+  .legend-card[hidden] { display: none !important; }
+  @keyframes legend-card-fadein {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .legend-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 200px;
+    background: radial-gradient(ellipse at top, rgba(255, 196, 0, 0.25), transparent 70%);
+    pointer-events: none;
+  }
+  .legend-card > * { position: relative; z-index: 1; }
+  .lc-header { text-align: center; margin-bottom: 22px; }
+  .lc-medal {
+    font-size: 72px;
+    line-height: 1;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 6px 14px rgba(255, 196, 0, 0.45));
+    animation: lc-medal-bob 2.4s ease-in-out infinite;
+  }
+  @keyframes lc-medal-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  .lc-tag {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px; font-weight: 800; letter-spacing: 0.32em;
+    color: #ffc400; margin-bottom: 8px;
+  }
+  .lc-title {
+    font-family: 'Pretendard Variable', Pretendard, sans-serif;
+    font-size: 34px; font-weight: 900; color: #fff;
+    margin-bottom: 8px; letter-spacing: -0.02em;
+  }
+  .lc-date {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px; color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 0.15em;
+  }
+  .lc-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 22px; }
+  .lc-stat {
+    text-align: center; padding: 14px 8px 12px;
+    background: rgba(255, 196, 0, 0.16);
+    border: 1.5px solid #ffc400;
+    border-radius: 12px;
+  }
+  .lc-stat.lc-stat-hero {
+    background: rgba(255, 196, 0, 0.24);
+    border-width: 2px;
+    box-shadow: 0 4px 14px rgba(255, 196, 0, 0.3);
+  }
+  .lc-stat-num {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 26px; line-height: 1; color: #ffc400;
+    margin-bottom: 5px; letter-spacing: -0.02em;
+  }
+  .lc-stat-hero .lc-stat-num { font-size: 28px; }
+  .lc-stat-lbl {
+    font-family: 'Pretendard Variable', Pretendard, sans-serif;
+    font-size: 11px; font-weight: 700; color: #ffc400; opacity: 0.92;
+  }
+  .lc-stat-hero .lc-stat-lbl strong { font-weight: 800; }
+  .lc-action-row { text-align: center; margin-top: 18px; }
+  .lc-download-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 13px 22px;
+    background: #ffc400; color: #0e6b56; border: none;
+    border-radius: 999px;
+    font-family: 'Pretendard Variable', Pretendard, sans-serif;
+    font-size: 14px; font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(255, 196, 0, 0.4);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .lc-download-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(255, 196, 0, 0.55); }
+  .lc-share-hint {
+    font-family: 'Pretendard Variable', Pretendard, sans-serif;
+    font-size: 11.5px; color: rgba(255, 255, 255, 0.7); margin: 10px 0 0;
+  }
+  @media (max-width: 600px) {
+    .legend-card { padding: 30px 22px 24px; margin: 22px 0 12px; }
+    .lc-medal { font-size: 60px; }
+    .lc-title { font-size: 28px; }
+    .lc-stat-num { font-size: 22px; }
+    .lc-stat-hero .lc-stat-num { font-size: 24px; }
+    .lc-stat-lbl { font-size: 10px; }
+  }
+
+  /* 6/6 완료 시 메시지 */
   .family-master-msg {
     margin: 24px 0 0;
     padding: 28px 24px 24px;
@@ -8207,7 +8391,7 @@
       </div>
     </div>
 
-    <div class="opt" data-mission="d3-chatan-sunset" data-mission-label="차탄 선셋 — 봤어!">
+    <div class="opt" data-mission="d3-chatan-sunset" data-mission-label="차탄 선셋 — 봤어!" data-weather-backup="true">
       <span class="opt-badge amber"><span class="dot"></span>Option 3 · 마지막 밤바다</span>
       <div class="opt-title">Sunset Beach <em>야간 산책</em></div>
       <div class="opt-place">Chatan Park Sunset Beach · 호텔 도보 1분</div>
@@ -8219,6 +8403,11 @@
         <li><strong>공기</strong>신선한 해변 바람</li>
         <li><strong>추천</strong>대욕장 콤보</li>
       </ul>
+      <!-- 🌧 야외 미션 — 비·바람 등 날씨 못 도와줄 때 백업 버튼 (미션은 클리어, weather 플래그) -->
+      <div class="weather-backup" data-target-mission="d3-chatan-sunset">
+        <p class="wb-hint"><strong>🌧 비·바람 때문에 못 봤어?</strong> 그래도 괜찮아 — 누르면 미션은 클리어돼.</p>
+        <button type="button" class="wb-btn">🌧 날씨 때문에 못 봤어 (그래도 클리어)</button>
+      </div>
       <div class="opt-rating">
         <span class="r-lbl">How excited?</span>
         <div class="opt-dots" data-key="d3-night-sunset">
@@ -8796,7 +8985,46 @@
       <div class="mission-timestamp"></div>
     </div>
 
-    <!-- 6/6 완료 시 패밀리 레전드 메시지 -->
+    <!-- 6/6 완료 시 패밀리 레전드 인증 카드 (다운로드 가능) — 마무리 페이지 trip-conquer-card 와 동일 패턴 -->
+    <div class="legend-card" id="legend-card" hidden>
+      <!-- 헤더 — 그린 톤 메달 영역 -->
+      <div class="lc-header">
+        <div class="lc-medal">🏆</div>
+        <div class="lc-tag">FAMILY LEGEND</div>
+        <div class="lc-title">패밀리 레전드!</div>
+        <div class="lc-date">5.10 — 5.13 · 2026</div>
+      </div>
+
+      <!-- 통계 grid 4칸 (그린 톤) -->
+      <div class="lc-stats">
+        <div class="lc-stat lc-stat-hero">
+          <div class="lc-stat-num" data-stat="legend-frac">0/0</div>
+          <div class="lc-stat-lbl"><strong>SECRET COMPLETE!</strong></div>
+        </div>
+        <div class="lc-stat">
+          <div class="lc-stat-num" data-stat="legend-massage">—</div>
+          <div class="lc-stat-lbl">아빠 안마 / 엄마 짐</div>
+        </div>
+        <div class="lc-stat">
+          <div class="lc-stat-num" data-stat="legend-culture">—</div>
+          <div class="lc-stat-lbl">시사 · 물고기</div>
+        </div>
+        <div class="lc-stat">
+          <div class="lc-stat-num" data-stat="legend-language">—</div>
+          <div class="lc-stat-lbl">일본어 · 주문</div>
+        </div>
+      </div>
+
+      <!-- 다운로드 액션 -->
+      <div class="lc-action-row">
+        <button type="button" class="lc-download-btn" id="lc-download-btn">
+          <span>↓ 인증 이미지 다운로드</span>
+        </button>
+        <p class="lc-share-hint">또는 스크린샷 찍어 친구한테 자랑해 🎮</p>
+      </div>
+    </div>
+
+    <!-- 6/6 완료 시 메시지 (인증 카드 밑) -->
     <div class="family-master-msg" id="family-master-msg" hidden>
       <div class="fm-eyebrow">🏆 FAMILY LEGEND</div>
       <h3 class="fm-headline">진짜 잘 했어 — 시크릿 레벨 6번 다 클리어.</h3>
@@ -9235,8 +9463,8 @@
       }
     }
 
-    // missions: { missionId: { done: true, at?: number } }
-    // missionId는 SAFE_KEY, done은 boolean, at은 finite number
+    // missions: { missionId: { done: true, at?: number, weather?: 'bad' } }
+    // missionId는 SAFE_KEY, done은 boolean, at은 finite number, weather 는 'bad' 만 허용 (야외 미션 백업)
     if (isPlainObject(raw.missions)) {
       clean.missions = Object.create(null);
       for (const k of Object.keys(raw.missions)) {
@@ -9246,6 +9474,7 @@
         const entry = Object.create(null);
         if (m.done === true) entry.done = true;
         if (typeof m.at === 'number' && Number.isFinite(m.at) && m.at > 0) entry.at = m.at;
+        if (m.weather === 'bad') entry.weather = 'bad';
         if (entry.done) clean.missions[k] = entry;
       }
     }
@@ -9955,6 +10184,8 @@
     if (location.hash.slice(1) !== id) {
       history.replaceState(null, '', `#${id}`);
     }
+    // ★ 페이지 전환 시 카운터 위젯 context 갱신 (Hidden 페이지 → SECRET, 그 외 → MISSION)
+    if (typeof updateMissionCounter === 'function') updateMissionCounter();
   }
 
   function updateArrowsAndPagination(id) {
@@ -11875,37 +12106,60 @@
   function updateMissionCounter() {
     const counter = document.getElementById('mission-counter');
     if (!counter) return;
-    // 메인 9개만 카운트 (히든은 별도 시퀀스)
-    const mainMissions = getMainMissions();
-    const total = mainMissions.length;
+    // ★ 카운터 위젯 context-aware — Hidden 페이지면 Hidden 6 카운트, 그 외엔 메인 9 카운트
+    const currentPageEl = document.querySelector('.page.active');
+    const isHiddenPage = currentPageEl?.dataset?.page === 'hidden';
+    const targetMissions = isHiddenPage ? getHiddenMissions() : getMainMissions();
+    const total = targetMissions.length;
     if (total === 0) {
       counter.classList.add('hidden');
       return;
     }
     let done = 0;
-    mainMissions.forEach(m => {
+    targetMissions.forEach(m => {
       if (state.missions && state.missions[m.id] && state.missions[m.id].done) done += 1;
     });
     const countEl = counter.querySelector('.mc-count');
+    const labelEl = counter.querySelector('.mc-label');
     if (countEl) countEl.textContent = `${done}/${total}`;
+    if (labelEl) labelEl.textContent = isHiddenPage ? 'SECRET' : 'MISSION';
+    counter.classList.toggle('hidden-mode', isHiddenPage); // CSS 그린 톤 토글
     counter.classList.remove('hidden');
     const allDone = (done === total && total > 0);
     counter.classList.toggle('all-done', allDone);
 
-    // back 페이지 인트로 + 인증 카드 + 방문 리스트 토글 — 도장 다 모았으면 등장
+    // back 페이지 인트로 + 인증 카드 + 방문 리스트 토글 — 메인 9 다 모았을 때만
+    // (Hidden 페이지에서 카운터가 6/6 됐다고 trip-conquer 띄우면 안 됨)
+    const allMainDone = !isHiddenPage && allDone;
+    const mainMissions = getMainMissions();
+    const mainDoneCount = mainMissions.filter(m =>
+      state.missions && state.missions[m.id] && state.missions[m.id].done
+    ).length;
+    const mainAllDone = (mainDoneCount === mainMissions.length && mainMissions.length > 0);
     const introDefault = document.querySelector('.back-intro[data-state="default"]');
     const introTripDone = document.querySelector('.back-intro[data-state="trip-done"]');
     const conquerCard = document.getElementById('trip-conquer-card');
     const visitedList = document.getElementById('visited-list');
-    if (introDefault) introDefault.hidden = allDone;
-    if (introTripDone) introTripDone.hidden = !allDone;
-    if (conquerCard) conquerCard.hidden = !allDone;
-    if (visitedList) visitedList.hidden = !allDone;
+    if (introDefault) introDefault.hidden = mainAllDone;
+    if (introTripDone) introTripDone.hidden = !mainAllDone;
+    if (conquerCard) conquerCard.hidden = !mainAllDone;
+    if (visitedList) visitedList.hidden = !mainAllDone;
     // 통계 grid 갱신 (도장·만족도·사진·방문 곳) + 방문 리스트
-    if (allDone && typeof updateTripStats === 'function') updateTripStats();
+    if (mainAllDone && typeof updateTripStats === 'function') updateTripStats();
+    // Hidden 6/6 완료 시 인증 카드 등장
+    const hiddenMissions = getHiddenMissions();
+    const hiddenDoneCount = hiddenMissions.filter(m =>
+      state.missions && state.missions[m.id] && state.missions[m.id].done
+    ).length;
+    const hiddenAllDone = (hiddenDoneCount === hiddenMissions.length && hiddenMissions.length > 0);
+    const legendCard = document.getElementById('legend-card');
+    const familyMasterMsg = document.getElementById('family-master-msg');
+    if (legendCard) legendCard.hidden = !hiddenAllDone;
+    if (familyMasterMsg) familyMasterMsg.hidden = !hiddenAllDone;
+    if (hiddenAllDone && typeof updateLegendStats === 'function') updateLegendStats();
     // 히든 unlock UI 갱신 — d1-hotel done 시 마무리 CTA 노출, hidden tab 갱신
     if (typeof updateHiddenUnlockUI === 'function') updateHiddenUnlockUI();
-    // 히든 카운터 갱신 (Hidden 페이지 진입 시)
+    // 히든 카운터 (Hidden 페이지 안 헤더) 갱신
     if (typeof updateHiddenCounter === 'function') updateHiddenCounter();
   }
   // 카운터 클릭 → 마무리 페이지 도장 그리드로 이동 (단일 동작 — 컬렉션 보기)
@@ -12375,6 +12629,138 @@
     el.textContent = String(done);
   }
 
+  // === Family Legend 인증 카드 통계 (Hidden 6/6 완료 시) ===
+  // 4칸: 6/6 SECRET + 가족 본딩 (h1+h2) + 문화·학습 (h3+h4) + 언어 (h5+h6)
+  function updateLegendStats() {
+    try {
+      const card = document.getElementById('legend-card');
+      if (!card) return;
+      const hidden = getHiddenMissions();
+      const isDone = id => !!(state.missions && state.missions[id] && state.missions[id].done);
+      const total = hidden.length;
+      const done = hidden.filter(m => isDone(m.id)).length;
+      const massage = (isDone('hidden-h1-massage') ? 1 : 0) + (isDone('hidden-h2-bag') ? 1 : 0);
+      const culture = (isDone('hidden-h3-shisa') ? 1 : 0) + (isDone('hidden-h4-fish') ? 1 : 0);
+      const language = (isDone('hidden-h5-japanese') ? 1 : 0) + (isDone('hidden-h6-order') ? 1 : 0);
+      const setStat = (key, val) => {
+        const el = card.querySelector(`[data-stat="${key}"]`);
+        if (el) el.textContent = String(val);
+      };
+      setStat('legend-frac', `${done}/${total}`);
+      setStat('legend-massage', `${massage}/2`);
+      setStat('legend-culture', `${culture}/2`);
+      setStat('legend-language', `${language}/2`);
+    } catch(_) {}
+  }
+
+  // === Family Legend 인증 이미지 다운로드 (Canvas, 1080×1240, 그린+골드 톤) ===
+  // ★ UI ↔ Canvas Parity 룰 (DESIGN.md § Dual-render Components):
+  //   legend-card 화면 변경 시 이 함수도 같은 commit 에 갱신 필수
+  function downloadLegendImage() {
+    try {
+      // [필수] 통계 fresh 보장
+      if (typeof updateLegendStats === 'function') updateLegendStats();
+      const W = 1080, H = 1240;
+      const canvas = document.createElement('canvas');
+      canvas.width = W; canvas.height = H;
+      const ctx = canvas.getContext('2d');
+      // 배경 — 그린 그라디언트
+      const bg = ctx.createLinearGradient(0, 0, 0, H);
+      bg.addColorStop(0, '#0e6b56');
+      bg.addColorStop(1, '#16a085');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, H);
+      // 위쪽 골드 글로우
+      const glow = ctx.createRadialGradient(W/2, 0, 0, W/2, 0, 700);
+      glow.addColorStop(0, 'rgba(255,196,0,0.32)');
+      glow.addColorStop(1, 'rgba(255,196,0,0)');
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, W, 700);
+
+      // [1] 메달 🏆 큰 이모지 — Canvas 기본 emoji rendering 사용
+      ctx.font = '180px "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🏆', W/2, 220);
+
+      // [2] FAMILY LEGEND tag
+      ctx.fillStyle = '#ffc400';
+      ctx.font = '800 32px "Space Grotesk", sans-serif';
+      ctx.fillText('FAMILY LEGEND', W/2, 380);
+
+      // [3] 패밀리 레전드!
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '900 86px "Pretendard Variable", Pretendard, sans-serif';
+      ctx.fillText('패밀리 레전드!', W/2, 480);
+
+      // [4] 날짜
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.font = '600 28px "Space Grotesk", sans-serif';
+      ctx.fillText('5.10 — 5.13 · 2026', W/2, 540);
+
+      // [5] 통계 grid 4칸
+      const card = document.getElementById('legend-card');
+      const get = key => card?.querySelector(`[data-stat="${key}"]`)?.textContent || '—';
+      const stats = [
+        { num: get('legend-frac'), lbl: 'SECRET COMPLETE!', hero: true },
+        { num: get('legend-massage'), lbl: '아빠 안마 / 엄마 짐', hero: false },
+        { num: get('legend-culture'), lbl: '시사 · 물고기', hero: false },
+        { num: get('legend-language'), lbl: '일본어 · 주문', hero: false },
+      ];
+      const gridX = 110, gridY = 640, cellW = 420, cellH = 130, gap = 20;
+      stats.forEach((s, i) => {
+        const col = i % 2, row = Math.floor(i / 2);
+        const x = gridX + col * (cellW + gap);
+        const y = gridY + row * (cellH + gap);
+        // box — amber 톤
+        ctx.fillStyle = s.hero ? 'rgba(255,196,0,0.28)' : 'rgba(255,196,0,0.18)';
+        ctx.strokeStyle = '#ffc400';
+        ctx.lineWidth = s.hero ? 3 : 2;
+        roundRect(ctx, x, y, cellW, cellH, 18);
+        ctx.fill();
+        ctx.stroke();
+        // num
+        ctx.fillStyle = '#ffc400';
+        ctx.font = '900 ' + (s.hero ? '52' : '46') + 'px "Archivo Black", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(s.num, x + cellW/2, y + 50);
+        // lbl
+        ctx.fillStyle = '#ffc400';
+        ctx.font = (s.hero ? '800' : '700') + ' 20px "Pretendard Variable", Pretendard, sans-serif';
+        ctx.fillText(s.lbl, x + cellW/2, y + 100);
+      });
+
+      // [6] Footer
+      ctx.fillStyle = 'rgba(255,255,255,0.55)';
+      ctx.font = '500 22px "Pretendard Variable", Pretendard, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText('Family Journal · Vol. I · Okinawa · Secret Mission', W/2, 1180);
+
+      // 다운로드
+      canvas.toBlob((blob) => {
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'okinawa-family-legend.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }, 'image/png', 0.95);
+    } catch (err) {
+      alert('이미지 저장 실패. 스크린샷으로 저장해 주세요.');
+    }
+  }
+  // 다운로드 버튼 wiring
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('#lc-download-btn')) {
+      downloadLegendImage();
+    }
+  });
+
   // ★ 잠긴 Hidden 탭 클릭 — capture phase 에서 가로채기
   // 이전 회귀 (2026-04-28): 일반 nav-btn click 핸들러가 먼저 발동해 showPage('hidden') 로 이동 →
   //                        그 다음 modal 뜸 = 사용자가 NO 눌러도 이미 페이지 이동된 상태
@@ -12437,9 +12823,10 @@
         candidates.forEach(el => {
           let title = '';
           let timeLabel = '';
+          let rating = 0; // 0 = 별점 없음, 1~5 = How Excited?
           let isVisited = false;
           if (el.classList.contains('mission-card')) {
-            // standalone 미션 (호텔/비행기/사진)
+            // standalone 미션 (호텔/비행기/사진) — 별점 없음
             const id = el.dataset.mission;
             if (state.missions && state.missions[id] && state.missions[id].done) {
               isVisited = true;
@@ -12449,7 +12836,7 @@
               timeLabel = (tparts[1] || tparts[0] || '').trim();
             }
           } else if (el.classList.contains('opt')) {
-            // 사전 옵션 — chosen 됐는지 확인
+            // 사전 옵션 — chosen 됐는지 확인 + How Excited 별점 가져오기
             const optionsEl = el.closest('.options');
             if (!optionsEl) return;
             const slotKey = (typeof slotKeyOf === 'function') ? slotKeyOf(optionsEl) : null;
@@ -12468,13 +12855,18 @@
                 }
                 walker = walker.previousElementSibling;
               }
+              // How Excited? 별점 — opt-dots data-key → state.ratings
+              const ratingKey = el.querySelector('.opt-dots')?.dataset.key;
+              if (ratingKey && state.ratings && typeof state.ratings[ratingKey] === 'number') {
+                rating = state.ratings[ratingKey] | 0;
+              }
             }
           }
           if (isVisited && title) {
             // 중복 검사 (.opt[data-mission] 은 chosen + mission 둘 다라 한 번 더 들어올 수 있음)
             const dupKey = `${dayId}|${title}`;
             if (!items.some(i => i._key === dupKey)) {
-              items.push({ time: timeLabel, title, _key: dupKey });
+              items.push({ time: timeLabel, title, rating, _key: dupKey });
             }
           }
         });
@@ -12570,6 +12962,14 @@
           title.className = 'vl-item-title';
           title.textContent = it.title;
           li.appendChild(title);
+          // ★ How Excited? 별점 표시 (.opt 출신 only — mission-card 는 별점 X)
+          if (typeof it.rating === 'number' && it.rating > 0) {
+            const stars = document.createElement('span');
+            stars.className = 'vl-item-stars';
+            stars.setAttribute('aria-label', `${it.rating}점`);
+            stars.textContent = '★'.repeat(it.rating) + '☆'.repeat(Math.max(0, 5 - it.rating));
+            li.appendChild(stars);
+          }
           ul.appendChild(li);
         });
         group.appendChild(ul);
@@ -12975,17 +13375,31 @@
             const timeWidth = ctx.measureText(it.time).width;
             titleX = 140 + timeWidth + 24; // 24px gap after time
           }
-          // Title
+          // ★ How Excited 별점 (오른쪽 끝에 정렬) — 별점 있으면 truncate 폭에서 빼야 겹침 방지
+          let starsText = '';
+          let starsWidth = 0;
+          if (typeof it.rating === 'number' && it.rating > 0) {
+            starsText = '★'.repeat(it.rating) + '☆'.repeat(Math.max(0, 5 - it.rating));
+            ctx.font = '700 18px "Space Grotesk", sans-serif';
+            starsWidth = ctx.measureText(starsText).width;
+          }
+          // Title (별점 폭 + 우측 padding 30 만큼 빼서 truncate)
           ctx.fillStyle = '#000a33';
           ctx.font = '600 22px "Pretendard Variable", Pretendard, sans-serif';
           ctx.textAlign = 'left';
-          // Truncate based on remaining canvas width (right padding 80)
           let title = it.title;
-          const maxTitleWidth = W - titleX - 80;
+          const maxTitleWidth = W - titleX - (starsWidth > 0 ? starsWidth + 30 : 80);
           while (title.length > 4 && ctx.measureText(title).width > maxTitleWidth) {
             title = title.slice(0, -2) + '…';
           }
           ctx.fillText(title, titleX, y + itemH/2);
+          // 별점 그리기 (있을 때만, 오른쪽 끝)
+          if (starsText) {
+            ctx.fillStyle = '#ffc400';
+            ctx.font = '700 18px "Space Grotesk", sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText(starsText, W - 30, y + itemH/2);
+          }
           y += itemH;
         });
         y += 24; // gap between days
