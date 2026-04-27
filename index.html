@@ -8456,17 +8456,11 @@
     if (id && PAGE_IDS.includes(id)) showPage(id, { skipScroll: false });
   });
 
-  // 초기 로드: 해시 > localStorage > cover
+  // 초기 로드: URL 해시 > 표지 (localStorage 기억 무시 — 항상 표지부터 시작)
+  // 직접 #d2 같은 해시로 접속 시는 그 페이지로, 그 외는 무조건 표지
   (function initPage() {
     const hashId = location.hash.slice(1);
-    let initId = 'cover';
-    if (hashId && PAGE_IDS.includes(hashId)) initId = hashId;
-    else {
-      try {
-        const saved = localStorage.getItem('okinawa-journal-page');
-        if (saved && PAGE_IDS.includes(saved)) initId = saved;
-      } catch(e){}
-    }
+    const initId = (hashId && PAGE_IDS.includes(hashId)) ? hashId : 'cover';
     showPage(initId, { skipScroll: true });
   })();
 
