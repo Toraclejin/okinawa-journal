@@ -7770,7 +7770,7 @@
     <p class="back-intro" data-state="default">
       이 여행책엔 <strong>★ 미션 도장 9개</strong>가 페이지마다 숨어있어. 하나씩 찾아 ✓ 도장 찍어봐.<br/>
       <em>9개 다 모은 순간 — 너만 볼 수 있는 히든 엔딩이 펼쳐져.</em><br/>
-      어떤 말일지는… 직접 다 모아서 봐.
+      어떤 엔딩일지는… 직접 다 모아서 봐.
     </p>
   </div>
 
@@ -11429,12 +11429,21 @@
           roundRect(ctx, x, y, boxW, boxH, 18);
           ctx.stroke();
           ctx.restore();
-          // SVG 그리기 — 박스 안 padding 55px (오키나와 모양에 여유롭게 감싸이도록)
-          const pad = 55;
-          const drawW = boxW - pad * 2;
-          const aspect = 3000 / 3035; // okinawa-mainland.svg viewBox
-          const drawH = drawW / aspect;
-          const drawX = x + pad;
+          // SVG 그리기 — 박스 가로·세로 모두 여유 padding (~40px) + aspect 유지 contain
+          // 화면 SVG 의 padding 24/28/22 (~14%) 와 비슷한 비율로 fill (~73%)
+          const pad = 40;
+          const innerW = boxW - pad * 2;
+          const innerH = boxH - pad * 2;
+          const aspect = 3000 / 3035; // okinawa-mainland.svg ≈ 거의 정사각형
+          let drawW, drawH;
+          if (innerW / innerH > aspect) {
+            drawH = innerH;
+            drawW = drawH * aspect;
+          } else {
+            drawW = innerW;
+            drawH = drawW / aspect;
+          }
+          const drawX = x + (boxW - drawW) / 2;
           const drawY = y + (boxH - drawH) / 2;
           const off = document.createElement('canvas');
           off.width = Math.ceil(drawW);
@@ -11506,8 +11515,9 @@
       ctx.closePath();
       ctx.fill();
 
-      // [3] 오키나와 본도 줌 박스 — 비동기 SVG 로드
-      await drawOkinawaZoomToCanvas(ctx, W/2, 490, 360, 280);
+      // [3] 오키나와 본도 줌 박스 — 정사각형 (320×320) 으로 변경 → 화면 SVG 와 동일한 fill 비율
+      // (이전 360×280 에서는 Okinawa 가 가로 너무 좁고 위·아래 빠듯)
+      await drawOkinawaZoomToCanvas(ctx, W/2, 510, 320, 320);
 
       // [4] OKINAWA · 본도 라벨
       ctx.fillStyle = '#ffc400';
@@ -11515,23 +11525,23 @@
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.letterSpacing = '0.32em';
-      ctx.fillText('OKINAWA · 본도', W/2, 800);
+      ctx.fillText('OKINAWA · 본도', W/2, 855);
 
       // [5] TRIP CONQUERED tag
       ctx.fillStyle = '#ffc400';
       ctx.font = '800 32px "Space Grotesk", sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('TRIP CONQUERED', W/2, 870);
+      ctx.fillText('TRIP CONQUERED', W/2, 920);
 
       // [6] 오키나와 정복!
       ctx.fillStyle = '#ffffff';
       ctx.font = '900 90px "Pretendard Variable", Pretendard, sans-serif';
-      ctx.fillText('오키나와 정복!', W/2, 970);
+      ctx.fillText('오키나와 정복!', W/2, 1010);
 
       // [7] 날짜
       ctx.fillStyle = 'rgba(255,255,255,0.78)';
       ctx.font = '600 28px "Space Grotesk", sans-serif';
-      ctx.fillText('5.10 — 5.13 · 2026', W/2, 1025);
+      ctx.fillText('5.10 — 5.13 · 2026', W/2, 1065);
 
       // [8] 통계 grid 4칸
       const card = document.querySelector('.trip-conquer-card');
@@ -11542,7 +11552,7 @@
         { num: get('photos'), lbl: '사진', hero: false },
         { num: get('visited'), lbl: '방문한 곳', hero: false },
       ];
-      const gridX = 110, gridY = 1100, cellW = 420, cellH = 130, gap = 20;
+      const gridX = 110, gridY = 1140, cellW = 420, cellH = 130, gap = 20;
       stats.forEach((s, i) => {
         const col = i % 2, row = Math.floor(i / 2);
         const x = gridX + col * (cellW + gap);
@@ -11566,12 +11576,12 @@
         ctx.fillText(s.lbl, x + cellW/2, y + 100);
       });
 
-      // Footer — stats grid (gridY=1100, 2 rows of 130 + gap 20 = ends at y=1380) 보다 충분히 아래
+      // Footer — stats grid (gridY=1140, 2 rows of 130 + gap 20 = ends at y=1420) 보다 충분히 아래
       ctx.fillStyle = 'rgba(255,255,255,0.5)';
       ctx.font = '500 22px "Pretendard Variable", Pretendard, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'alphabetic';
-      ctx.fillText('Family Journal · Vol. I · Okinawa', W/2, 1500);
+      ctx.fillText('Family Journal · Vol. I · Okinawa', W/2, 1540);
 
       // Download
       canvas.toBlob((blob) => {
