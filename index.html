@@ -2907,38 +2907,9 @@
   /* 완료 시 chosen ✓ 버튼 숨김 — 골드 도장 stamp 가 단일 시각 */
   .opt[data-mission].mission-done .opt-select { display: none !important; }
 
-  /* 완료 시 태그 텍스트 바꿈 (CSS only — JS 변경 X) — "★ MISSION" → "✓ 다녀왔어" 느낌 */
-  .opt[data-mission].mission-done .opt-mission-tag {
-    background: #fff;
-    color: var(--blue-ink);
-    border: 1.5px solid var(--blue-ink);
-  }
-  .opt[data-mission].mission-done .opt-mission-tag .omt-star { display: none; }
-  .opt[data-mission].mission-done .opt-mission-tag::before {
-    content: '✓';
-    font-size: 13px;
-    line-height: 1;
-    margin-right: 4px;
-  }
-  /* 텍스트 자체를 "다녀왔어" 로 — 두번째 span은 JS로 'Mission' 이라 적혀있는데 visually 가림하고 새 텍스트 ::after */
-  .opt[data-mission].mission-done .opt-mission-tag > span:last-child {
-    visibility: hidden;
-    position: relative;
-  }
-  .opt[data-mission].mission-done .opt-mission-tag > span:last-child::after {
-    content: '다녀왔어';
-    visibility: visible;
-    position: absolute;
-    left: 0;
-    top: 0;
-    white-space: nowrap;
-  }
-  /* 다크 카드 — 흰 배경 태그 위치 색 그대로 OK (대비 유지) */
-  .opt.highlight[data-mission].mission-done .opt-mission-tag {
-    background: var(--amber);
-    color: var(--blue-ink);
-    border: none;
-  }
+  /* 완료 시 ★ MISSION 태그 자체를 숨김 — 픽 번호 배지(3 등)와 겹침 회피
+     골드 도장 stamp + COMPLETED 타임스탬프 + undo 버튼이 완료 시각 충분 */
+  .opt[data-mission].mission-done .opt-mission-tag { display: none; }
 
   /* 도장 stamp (대형 ✓ 우측 상단) */
   .opt[data-mission] .opt-mission-stamp { display: none; }
@@ -4471,6 +4442,8 @@
     box-shadow: 0 14px 40px rgba(0, 71, 255, 0.22) !important;
     border-color: var(--blue) !important;
   }
+  /* "✓ 이걸로" pill 전역 제거 — ✓ 버튼 색 변화 만으로 chosen 시각 충분 (2026-04-27) */
+  .opt-chosen-mark { display: none !important; }
   .opt.chosen .opt-chosen-mark {
     opacity: 1;
     transform: translateY(0);
@@ -9754,21 +9727,23 @@
   //  미션 카운터 배지 (진행률 + 다음 미션으로 점프)
   // ==========================================
   // 모든 미션 = standalone .mission-card[data-mission] + .opt[data-mission]
+  // DOM 순서대로 수집 — Day 페이지 순서 + 페이지 내 시간 순서 자동 반영
+  // (예: d1-boarding → d1-hotel → d2-churaumi → d2-kouri → d3-vessel → d3-sunset → d4-departure)
   function getAllMissions() {
+    const all = document.querySelectorAll('.mission-card[data-mission], .opt[data-mission]');
     const out = [];
-    document.querySelectorAll('.mission-card[data-mission]').forEach(c => {
-      out.push({ el: c, id: c.dataset.mission, kind: 'standalone' });
-    });
-    document.querySelectorAll('.opt[data-mission]').forEach(c => {
-      out.push({ el: c, id: c.dataset.mission, kind: 'opt' });
-    });
-    // missionId 중복 제거 (안전)
     const seen = new Set();
-    return out.filter(m => {
-      if (seen.has(m.id)) return false;
-      seen.add(m.id);
-      return true;
+    all.forEach(el => {
+      const id = el.dataset.mission;
+      if (!id || seen.has(id)) return;
+      seen.add(id);
+      out.push({
+        el,
+        id,
+        kind: el.classList.contains('mission-card') ? 'standalone' : 'opt'
+      });
     });
+    return out;
   }
 
   function updateMissionCounter() {
