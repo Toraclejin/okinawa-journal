@@ -2545,6 +2545,137 @@
     }
   }
 
+  /* ========== 가족 인증 게이트 — 캐주얼 차단 (4자리 숫자 SHA-256) ========== */
+  .auth-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: linear-gradient(135deg, var(--blue-ink) 0%, var(--blue-deep) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    transition: opacity 0.4s ease;
+  }
+  .auth-gate[hidden] { display: none !important; }
+  .auth-gate.fade { opacity: 0; pointer-events: none; }
+  .auth-card {
+    max-width: 380px;
+    width: 100%;
+    padding: 38px 32px;
+    background: #fff;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    animation: auth-card-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes auth-card-in {
+    0% { transform: translateY(20px) scale(0.95); opacity: 0; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+  }
+  .auth-card.shake { animation: auth-shake 0.4s; }
+  @keyframes auth-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+  .auth-mark {
+    font-size: 36px;
+    color: var(--amber);
+    line-height: 1;
+    margin-bottom: 14px;
+  }
+  .auth-title {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 26px;
+    color: var(--blue-ink);
+    margin: 0 0 14px;
+    letter-spacing: -0.01em;
+  }
+  .auth-question {
+    font-family: 'Pretendard Variable', Pretendard, sans-serif;
+    font-size: 15px;
+    color: var(--blue-deep);
+    margin: 0 0 20px;
+    line-height: 1.5;
+  }
+  .auth-question em {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--blue);
+    font-weight: 600;
+  }
+  .auth-input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid var(--blue);
+    border-radius: 12px;
+    background: #fff;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--blue-ink);
+    text-align: center;
+    letter-spacing: 0.4em;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+  .auth-input:focus {
+    border-color: var(--amber);
+    box-shadow: 0 0 0 4px rgba(255, 196, 0, 0.25);
+  }
+  .auth-submit {
+    width: 100%;
+    margin-top: 14px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: none;
+    background: var(--blue);
+    color: #fff;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  @media (hover: hover) {
+    .auth-submit:hover { background: var(--blue-deep); transform: translateY(-1px); }
+  }
+  .auth-submit:active { transform: translateY(0); }
+  .auth-error {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(220, 38, 38, 0.08);
+    border: 1px solid rgba(220, 38, 38, 0.25);
+    color: #b91c1c;
+    font-family: 'Pretendard Variable', Pretendard, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .auth-error[hidden] { display: none !important; }
+  .auth-hint {
+    margin-top: 18px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--blue-deep);
+    opacity: 0.55;
+  }
+  /* 인증 안 된 상태 — 본문 시각만 가림 (gate가 z-index로 덮음, 백업) */
+  body:not(.unlocked) > main,
+  body:not(.unlocked) > .toolbar,
+  body:not(.unlocked) > .page-arrow,
+  body:not(.unlocked) > .page-nav,
+  body:not(.unlocked) > #mission-counter {
+    visibility: hidden;
+  }
+
   /* ========== 미션 시스템 (게임적 인증 layer) ==========
      미션 = 여행에서 "내가 했다" 한 번뿐인 인증 액션
      옵션 ✓ (toggle)와 다름 — 동선 chip / 지도 마커에 영향 X
@@ -4585,6 +4716,19 @@
 </style>
 </head>
 <body>
+
+<!-- ========== 가족 인증 게이트 (캐주얼 차단 — 4자리 숫자 비번) ========== -->
+<div class="auth-gate" id="auth-gate" hidden>
+  <div class="auth-card">
+    <div class="auth-mark">★</div>
+    <h2 class="auth-title">가족만 들어와</h2>
+    <p class="auth-question">건우 생일이 뭐였더라? <em>MMDD 4자리</em></p>
+    <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" class="auth-input" placeholder="0000" autocomplete="off" aria-label="4자리 비밀번호" />
+    <button type="button" class="auth-submit">들어가기</button>
+    <div class="auth-error" hidden></div>
+    <div class="auth-hint">예: 4월 27일이면 0427</div>
+  </div>
+</div>
 
 <div class="frame-deco top-left">Okinawa ✦ 2026</div>
 <div class="frame-deco top-right">Vol. I</div>
@@ -7085,6 +7229,107 @@
 
 
 <script>
+  // ==========================================
+  //  가족 인증 게이트 (캐주얼 차단)
+  //  - "0430" 4자리 숫자 → SHA-256 hash 검증
+  //  - 30일 TTL localStorage 저장 (재로그인 안 물음)
+  //  - 10회 실패 시 60초 lockout
+  //  - F12로 hash 보면 4자리 brute force 가능 (가족용 캐주얼 차단 한정)
+  // ==========================================
+  (async function authGate() {
+    const ANSWER_HASH = 'b6c76afc9374390004c2998480613a0fd5d17f12554d529589e8869e2988d047';
+    const AUTH_KEY = 'okinawa-auth-v1';
+    const TTL_MS = 30 * 86400 * 1000; // 30일
+
+    async function sha256(text) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function isAuthorized() {
+      try {
+        const raw = localStorage.getItem(AUTH_KEY);
+        if (!raw) return false;
+        const saved = JSON.parse(raw);
+        if (!saved || saved.h !== ANSWER_HASH) return false;
+        if (typeof saved.at !== 'number' || Date.now() - saved.at > TTL_MS) return false;
+        return true;
+      } catch { return false; }
+    }
+
+    if (isAuthorized()) {
+      document.body.classList.add('unlocked');
+      return;
+    }
+
+    // 게이트 표시
+    const gate = document.getElementById('auth-gate');
+    if (!gate) { document.body.classList.add('unlocked'); return; }
+    gate.hidden = false;
+
+    const card = gate.querySelector('.auth-card');
+    const input = gate.querySelector('.auth-input');
+    const submit = gate.querySelector('.auth-submit');
+    const errorEl = gate.querySelector('.auth-error');
+
+    let attempts = 0;
+    let lockedUntil = 0;
+
+    async function tryAuth() {
+      if (Date.now() < lockedUntil) return;
+      const v = (input.value || '').trim();
+      if (!/^\d{4}$/.test(v)) {
+        errorEl.textContent = '4자리 숫자로 입력해 주세요.';
+        errorEl.hidden = false;
+        return;
+      }
+      try {
+        const h = await sha256(v);
+        if (h === ANSWER_HASH) {
+          // 성공
+          try {
+            localStorage.setItem(AUTH_KEY, JSON.stringify({ h, at: Date.now() }));
+          } catch (_) {}
+          gate.classList.add('fade');
+          setTimeout(() => {
+            gate.hidden = true;
+            document.body.classList.add('unlocked');
+          }, 400);
+        } else {
+          // 실패
+          attempts++;
+          input.value = '';
+          card.classList.remove('shake');
+          void card.offsetWidth; // reflow → 애니메이션 재발화
+          card.classList.add('shake');
+          if (attempts >= 10) {
+            lockedUntil = Date.now() + 60000;
+            errorEl.textContent = '시도 너무 많아요. 1분 후 다시.';
+            attempts = 0;
+          } else {
+            errorEl.textContent = '틀렸어요. 다시 시도해 주세요.';
+          }
+          errorEl.hidden = false;
+          input.focus();
+        }
+      } catch (err) {
+        // crypto.subtle 미지원 / 기타 오류
+        errorEl.textContent = '브라우저가 너무 오래된 것 같아요.';
+        errorEl.hidden = false;
+      }
+    }
+
+    submit.addEventListener('click', tryAuth);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); tryAuth(); }
+    });
+    // 4자리 입력 완료 자동 시도
+    input.addEventListener('input', () => {
+      if (/^\d{4}$/.test(input.value)) tryAuth();
+    });
+    input.focus();
+  })();
+
   // ==========================================
   //  저장 시스템 (localStorage)
   // ==========================================
