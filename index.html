@@ -11506,12 +11506,20 @@
         const title = card.querySelector('.mission-title')?.textContent?.trim() || '';
         celebrateMission(title);  // 마지막 미션이면 fireTripComplete + auto nav, 아니면 fireMissionComplete
 
-        // d1-hotel 첫 done 시 — 히든 미션 unlock 모달 (한 번만, hiddenUnlocked === false 일 때)
+        // d1-hotel 첫 done 시 — 히든 미션 해금 cinematic + 모달 (11살 도파민 흐름)
         // ⚠️ 변수명 주의: 이 wireMissionCards 안에서는 'missionId' 사용 (이전에 'id' 라 써서 항상 false 였던 회귀 fix)
+        // 흐름: MISSION COMPLETE (2.1s) → 🎫 TICKET ISSUED 풀스크린 cinematic (1.7s, 사운드+confetti)
+        //      → YES/NO 모달 ("진행할래?")
         if (missionId === 'd1-hotel' && !state.hiddenUnlocked) {
-          // celebrateMission (1.8초 풀스크린) 끝난 후 모달 등장
+          // [Step 1] MISSION COMPLETE 끝나면 (2.1초 후) → 🎫 cinematic 실행
           setTimeout(() => {
-            if (typeof showHiddenUnlockModal === 'function' && !state.hiddenUnlocked) showHiddenUnlockModal();
+            if (state.hiddenUnlocked) return; // YES 이미 누른 경우 skip
+            if (typeof fireTicketIssued === 'function') fireTicketIssued();
+            // [Step 2] cinematic 끝나면 (1.9초 후) → YES/NO 모달 등장
+            setTimeout(() => {
+              if (state.hiddenUnlocked) return;
+              if (typeof showHiddenUnlockModal === 'function') showHiddenUnlockModal();
+            }, 1900);
           }, 2100);
         }
         // CTA 버튼·tab UI 갱신
@@ -12139,11 +12147,13 @@
     } catch(_) {}
   }
 
-  // 티켓 발급 풀스크린 (1.5초) + confetti + sound
+  // 티켓 발급 풀스크린 (1.7초) + confetti + sound — 사용자 이름 반영
   function fireTicketIssued() {
     try {
       const overlay = document.getElementById('hidden-ticket-overlay');
       if (!overlay) return;
+      // 텍스트 동적 갱신 (이름 변경 시 즉시 반영)
+      if (typeof updateTicketOverlayText === 'function') updateTicketOverlayText();
       // 컨페티 그린 톤 30개 동적 추가
       let conf = overlay.querySelector('.ht-confetti');
       if (!conf) {
@@ -12247,6 +12257,12 @@
     }
   }
 
+  // 사용자 이름 — state.texts['traveler-name'] 우선, 없으면 '남건우' fallback (조카 본명)
+  function getTravelerName() {
+    const raw = (state.texts && state.texts['traveler-name']) || '';
+    return (typeof raw === 'string' && raw.trim()) ? raw.trim() : '남건우';
+  }
+
   // 모달 텍스트 동적 갱신 — 사용자 이름 반영
   function updateUnlockModalText() {
     const modal = document.getElementById('hidden-unlock-modal');
@@ -12254,8 +12270,7 @@
     const titleEl = modal.querySelector('#hum-title');
     const bodyEl = modal.querySelector('.hum-body');
     if (!titleEl || !bodyEl) return;
-    const rawName = (state.texts && state.texts['traveler-name']) || '';
-    const name = (typeof rawName === 'string' && rawName.trim()) ? rawName.trim() : '조카';
+    const name = getTravelerName();
     // d1-hotel done 후 첫 진입 / 자물쇠 재클릭 모두 동일 텍스트
     titleEl.textContent = `${name}님께서 Hidden Mission을 활성화시키셨습니다`;
     bodyEl.innerHTML = '비밀 보너스 미션 6개가 풀릴 수 있어.<br/>가족이랑 같이 하는 미션 — 메인 9개랑 별도야.<br/><br/><strong>Hidden Mission을 진행하시겠습니까?</strong>';
@@ -12264,6 +12279,15 @@
     const noBtn = modal.querySelector('#hum-no');
     if (yesBtn) yesBtn.textContent = '🗝 YES — 지금 풀게';
     if (noBtn) noBtn.textContent = 'NO — 나중에 풀게';
+  }
+  // 티켓 풀스크린 텍스트도 이름 반영
+  function updateTicketOverlayText() {
+    const tag = document.querySelector('#hidden-ticket-overlay .ht-tag');
+    const title = document.querySelector('#hidden-ticket-overlay .ht-title');
+    const body = document.querySelector('#hidden-ticket-overlay .ht-body');
+    if (tag) tag.textContent = 'HIDDEN MISSION 해금!';
+    if (title) title.textContent = `${getTravelerName()}님, 시크릿 레벨 풀렸다!`;
+    if (body) body.innerHTML = '비밀 미션 6개 — 가족이랑 같이 하는 게임 챌린지 🎮';
   }
 
   // 히든 카운터 (Hidden 페이지) 갱신
