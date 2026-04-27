@@ -10185,7 +10185,8 @@
       history.replaceState(null, '', `#${id}`);
     }
     // ★ 페이지 전환 시 카운터 위젯 context 갱신 (Hidden 페이지 → SECRET, 그 외 → MISSION)
-    if (typeof updateMissionCounter === 'function') updateMissionCounter();
+    // try/catch — 초기 로드 시 (showPage 가 IIFE 에서 호출됨) MISSION_ID_RE 등 TDZ 회피
+    try { if (typeof updateMissionCounter === 'function') updateMissionCounter(); } catch(_) {}
   }
 
   function updateArrowsAndPagination(id) {
