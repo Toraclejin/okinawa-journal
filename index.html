@@ -8999,7 +8999,7 @@
       <div class="lc-stats">
         <div class="lc-stat lc-stat-hero">
           <div class="lc-stat-num" data-stat="legend-frac">0/0</div>
-          <div class="lc-stat-lbl"><strong>SECRET COMPLETE!</strong></div>
+          <div class="lc-stat-lbl"><strong>SECRET MISSION COMPLETE!</strong></div>
         </div>
         <div class="lc-stat">
           <div class="lc-stat-num" data-stat="legend-massage">—</div>
@@ -12747,7 +12747,7 @@
       const card = document.getElementById('legend-card');
       const get = key => card?.querySelector(`[data-stat="${key}"]`)?.textContent || '—';
       const stats = [
-        { num: get('legend-frac'), lbl: 'SECRET COMPLETE!', hero: true },
+        { num: get('legend-frac'), lbl: 'SECRET MISSION COMPLETE!', hero: true },
         { num: get('legend-massage'), lbl: 'Team Crew · 팀 케어', hero: false },
         { num: get('legend-culture'), lbl: 'Discovery · 발견', hero: false },
         { num: get('legend-language'), lbl: 'Solo Run · 솔로', hero: false },
