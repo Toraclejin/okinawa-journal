@@ -9226,9 +9226,15 @@
     }
   }
 
-  function saveState(state) {
+  // Defensive: 인자 누락 시 외부 closure state fallback (이전엔 localStorage 가 "undefined" 문자열로 corruption)
+  function saveState(stateToSave) {
+    const target = (stateToSave && typeof stateToSave === 'object') ? stateToSave : state;
+    if (!target || typeof target !== 'object') {
+      console.warn('saveState: no valid state to save, skipping');
+      return;
+    }
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(target));
       showSaved();
     } catch(e) {
       console.warn('Save failed', e);
