@@ -3056,39 +3056,46 @@
   }
   .mission-card.completed .mission-timestamp { display: block; }
 
-  /* 미션 도장 + hint — 가로로 나란히 (flex container) */
+  /* 미션 도장 + hint — 세로 layout (hint 가 항상 버튼 아래, ↑ 위 가리킴)
+     이전 회귀: row+wrap 으로 좁은 화면에서 hint 가 버튼 아래로 떨어졌는데
+                ← 화살표가 좌측 빈 공간을 가리켜 어색.
+     해결: column 강제 + ↑ 화살표 + 상하 점프 애니. 모든 화면 폭에서 일관. */
   .mission-action-row {
     display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
-  /* 미완료 미션 hint — "여기를 눌러!" 펄스 */
+  /* 미완료 미션 hint — 버튼 아래 부드러운 sub-text (버튼 자체가 강한 펄스로 강조됨) */
   .mission-hint {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
+    margin-left: 14px; /* 버튼 좌측 padding 과 align — ↑ 가 버튼 안쪽 정도 가리킴 */
     font-family: 'Fraunces', serif;
     font-style: italic;
-    font-size: 14px;
-    color: var(--blue);
+    font-size: 13px;
+    color: var(--blue-deep);
+    opacity: 0.65; /* muted — 버튼 강조와 비교해 부드럽게 */
     animation: mission-hint-pulse 2s ease-in-out infinite;
     white-space: nowrap;
   }
   .mission-card.completed .mission-hint { display: none; }
   .mission-hint::before {
-    content: '←';
-    font-size: 18px;
+    content: '↑';
+    font-size: 16px;
     font-weight: 700;
-    animation: mission-hint-arrow 1.5s ease-in-out infinite;
+    color: var(--blue);
+    opacity: 0.9;
+    animation: mission-hint-arrow-up 1.4s ease-in-out infinite;
   }
   @keyframes mission-hint-pulse {
-    0%, 100% { opacity: 0.7; }
-    50% { opacity: 1; }
+    0%, 100% { opacity: 0.55; }
+    50%      { opacity: 0.85; }
   }
-  @keyframes mission-hint-arrow {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(-6px); }
+  @keyframes mission-hint-arrow-up {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-4px); }
   }
 
   @media (max-width: 600px) {
