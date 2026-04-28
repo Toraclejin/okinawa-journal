@@ -42,6 +42,14 @@
     --coral:      #0047ff;   /* 코랄 → 블루로 통일 */
     --lime:       #ffc400;   /* 라임 → 앰버로 통일 */
     --white:      #ffffff;
+
+    /* === Box Gap 토큰 === 페이지 안 박스 컴포넌트 (.hidden-unlock-cta, .legend-card,
+       .family-master-msg, .weather-backup, .trip-conquer-card 등) 의 margin 통일.
+       한 곳 바꾸면 전체 통일 — DESIGN.md § Design Tokens § Box Gap 참조.
+       회귀 방지 룰: 박스 추가 시 직접 px 박지 말고 변수 사용. */
+    --box-gap-tight:  12px;  /* 밀접한 박스 (sub-section, 같은 시리즈 박스) */
+    --box-gap-md:     24px;  /* 기본 박스 간격 (대부분 박스 사이) */
+    --box-gap-loose:  40px;  /* 큰 섹션 분리 (메인 ↔ 보조 영역) */
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -5064,7 +5072,7 @@
   /* === 🌧 날씨 백업 버튼 — 야외 미션 (차탄 선셋 등) 못 봤을 때 그래도 클리어 === */
   /* 11살 친화 — "비·바람 때문에" 직관적 단어, 메인 ✓ 버튼 보다 작고 부드럽게 */
   .weather-backup {
-    margin: 14px 0 4px;
+    margin: var(--box-gap-tight) 0; /* 같은 .opt 안 sub-block — tight 간격 */
     padding: 12px 14px;
     background: linear-gradient(135deg, #f0f4f8 0%, #e1e8f0 100%);
     border: 1.5px dashed #6b7c93;
@@ -5113,8 +5121,9 @@
 
   /* === 마무리 페이지 히든 unlock CTA — d1-hotel done 후 unlock 안 했을 때 상시 노출 === */
   .hidden-unlock-cta {
-    /* 도장 박스 바로 위 위치 — 위쪽 자연 흐름, 아래쪽 ~2cm (76px) 간격 강제 */
-    margin: 24px 0 76px;
+    /* 부모 .back 가 flex gap:16px 자동 적용 — margin 은 추가 spacing 만.
+       gap 16 (flex) + margin 12 (tight) = 28px 박스 간 시각 간격 (사용자 요청 "10→3") */
+    margin: 0 0 var(--box-gap-tight);
     padding: 24px 22px 22px;
     background: linear-gradient(135deg, #ebf9f3 0%, #d1f0e1 100%);
     border: 2px dashed #16a085;
@@ -5584,7 +5593,7 @@
   /* === Family Legend 인증 카드 (Hidden 6/6) — 마무리 trip-conquer-card 와 동일 패턴, 그린+골드 톤 === */
   .legend-card {
     position: relative;
-    margin: 28px 0 16px;
+    margin: var(--box-gap-md) 0 var(--box-gap-tight); /* 위 24, 아래 12 (family-master-msg 가 바로 붙음) */
     padding: 36px 28px 28px;
     background: linear-gradient(180deg, #0e6b56 0%, #16a085 100%);
     border-radius: 22px;
@@ -5688,7 +5697,7 @@
     font-size: 11.5px; color: rgba(255, 255, 255, 0.7); margin: 10px 0 0;
   }
   @media (max-width: 600px) {
-    .legend-card { padding: 30px 22px 24px; margin: 22px 0 12px; }
+    .legend-card { padding: 30px 22px 24px; margin: var(--box-gap-md) 0 var(--box-gap-tight); }
     .lc-medal { font-size: 60px; }
     .lc-title { font-size: 28px; }
     .lc-stat-num { font-size: 22px; }
@@ -5698,7 +5707,7 @@
 
   /* 6/6 완료 시 메시지 */
   .family-master-msg {
-    margin: 8px 0 0;
+    margin: var(--box-gap-tight) 0 0; /* legend-card 바로 아래 sub-section — tight (12px) */
     padding: 28px 24px 24px;
     background: linear-gradient(180deg, #ebf9f3 0%, #fff 100%);
     border: 1.5px solid #16a085;

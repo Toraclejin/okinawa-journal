@@ -231,6 +231,8 @@
 | 만지는 것 | 같이 봐야 할 것 |
 |---|---|
 | 디자인 토큰 변경 | `DESIGN.md` § Design Tokens (alias 추적!) → `learning.md` § 1 (--coral → --blue 회귀) |
+| 박스 간격 (`--box-gap-*`) 변경 | `DESIGN.md` § Box Gap → 모든 박스 (.hidden-unlock-cta, .legend-card, .family-master-msg, .weather-backup) 일괄 영향 — flex 컨텍스트 주의 |
+| 새 박스 컴포넌트 추가 | `DESIGN.md` § Box Gap 변수 사용 (직접 px 박지 말 것) → 새 박스 등록 + 적용 대상 표 갱신 |
 | 어휘 변경 (PRO TRAVELER 등) | 모든 등장 위치 grep → `CONCEPT.md` § 페르소나 부합 → `learning.md` § 12 |
 | 사운드 변경 | `learning.md` § 9·12 (띠링 vs 삐이익) → 11살 톤 검수 |
 | 강조 스타일 (highlighter 등) | `learning.md` § 11·12 |

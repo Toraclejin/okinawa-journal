@@ -94,6 +94,8 @@ type State = {
 
 ## 디자인 토큰 (CSS 변수)
 
+### 색상
+
 ```css
 --frame: #7ce0d3;        /* 민트 — 페이지 바깥 프레임 */
 --page: #ffffff;
@@ -106,7 +108,30 @@ type State = {
 --coral, --lime: 레거시 (각각 blue, amber로 통일)
 ```
 
-폰트:
+### Box Gap (페이지 안 박스 컴포넌트 margin 통일)
+
+```css
+--box-gap-tight:  12px;  /* 밀접한 박스 (sub-section, 같은 시리즈) */
+--box-gap-md:     24px;  /* 기본 박스 간격 (대부분 박스 사이) */
+--box-gap-loose:  40px;  /* 큰 섹션 분리 (메인 ↔ 보조 영역) */
+```
+
+**적용 대상**: `.hidden-unlock-cta` · `.legend-card` · `.family-master-msg` · `.weather-backup`. 추후 박스 컴포넌트 추가 시 직접 px 박지 말고 변수 사용.
+
+**flex 컨텍스트 주의**: `.page` (`.cover/.prep/.d1/.../.hidden`) 의 wrapper (예: `.back`) 는 `display: flex; gap: 16px` 임. 즉 자식 박스 간 자동 16px gap 추가됨. 이 상황에선 박스 margin = **추가** spacing 으로 동작:
+- `margin: 0` → 박스 간 시각 gap = 16px (flex 만)
+- `margin-bottom: var(--box-gap-tight)` (12) → 시각 gap = 28px (16 + 12)
+- `margin-bottom: var(--box-gap-md)` (24) → 시각 gap = 40px (16 + 24)
+
+**non-flex 컨텍스트** (예: hidden 페이지의 legend-card → family-master-msg sibling): 토큰 그대로 = 시각 gap.
+
+**왜 이렇게 분리?**
+- 한 곳 (`:root`) 바꾸면 전체 통일 — 매거진 톤 일괄 조정 가능
+- 사용자 피드백 ("간격이 너무 멀다 / 좁다") 시 `--box-gap-md` 만 수정 — 모든 박스 동시 반영
+- 새 박스 추가 시 직접 px 박지 말 것 (룰 위반 시 통일 깨짐)
+
+### 폰트
+
 - **Archivo Black** — 대형 디스플레이 (OKINAWA, DAY ONE)
 - **Fraunces** — 이탤릭 세리프 (강조·부제)
 - **Space Grotesk** — 영문 UI (라벨·버튼)
