@@ -4132,10 +4132,11 @@
     width: auto;
     height: auto;
     color: var(--amber);
-    font-size: 14px;
+    font-size: 18px;
     line-height: 1;
     top: 9px;
-    left: -22px;
+    left: -23px;
+    text-shadow: 0 1px 2px rgba(0, 31, 102, 0.18);
   }
   .visited-list .vl-item-time {
     font-family: 'Space Grotesk', sans-serif;
@@ -13497,7 +13498,7 @@
           // Bullet — 미션이면 ★, 옵션이면 ● (amber)
           if (it.isMission) {
             ctx.fillStyle = '#ffc400';
-            ctx.font = '700 22px "Space Grotesk", sans-serif';
+            ctx.font = '700 29px "Space Grotesk", sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText('★', 110, y + itemH/2);
