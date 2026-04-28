@@ -5610,6 +5610,14 @@
   }
   .legend-card > * { position: relative; z-index: 1; }
   .lc-header { text-align: center; margin-bottom: 22px; }
+  /* 오키나와 본도 SVG (header 데코, 트로피 위) — cream silhouette only */
+  .lc-okinawa-svg {
+    display: block;
+    width: 140px;
+    height: auto;
+    margin: 0 auto 6px;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.18));
+  }
   .lc-medal {
     font-size: 72px;
     line-height: 1;
@@ -12790,7 +12798,46 @@
   // === Family Legend 인증 이미지 다운로드 (Canvas, 1080×1240, 그린+골드 톤) ===
   // ★ UI ↔ Canvas Parity 룰 (DESIGN.md § Dual-render Components):
   //   legend-card 화면 변경 시 이 함수도 같은 commit 에 갱신 필수
-  function downloadLegendImage() {
+  // 오키나와 본도 silhouette 만 — legend card header 용 (boxless, cream tone)
+  // drawOkinawaZoomToCanvas (trip-conquer 용) 와 다른 이유: 박스/dashed border/spotlight 없이 본도 shape 만
+  function drawOkinawaSilhouetteToCanvas(ctx, cx, topY, size) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          // okinawa-mainland.svg viewBox 3000×3035 → 거의 정사각형
+          const aspect = 3000 / 3035;
+          const drawH = size;
+          const drawW = drawH * aspect;
+          const drawX = cx - drawW / 2;
+          const drawY = topY;
+          // off-screen canvas: SVG 로드 후 source-atop 으로 cream tint 입힘 (UI .lc-oki-img 와 동일 톤)
+          const off = document.createElement('canvas');
+          off.width = Math.ceil(drawW);
+          off.height = Math.ceil(drawH);
+          const offCtx = off.getContext('2d');
+          offCtx.drawImage(img, 0, 0, drawW, drawH);
+          offCtx.globalCompositeOperation = 'source-atop';
+          offCtx.fillStyle = 'rgba(254, 254, 233, 0.95)'; // cream
+          offCtx.fillRect(0, 0, drawW, drawH);
+          // 부드러운 drop shadow (UI filter: drop-shadow 등가)
+          ctx.save();
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.22)';
+          ctx.shadowBlur = 14;
+          ctx.shadowOffsetY = 6;
+          ctx.drawImage(off, drawX, drawY);
+          ctx.restore();
+          resolve();
+        } catch(e) { resolve(); }
+      };
+      img.onerror = () => resolve();
+      img.src = 'okinawa-mainland.svg';
+    });
+  }
+
+  // ★ UI ↔ Canvas Parity: legend-card 의 .lc-okinawa-svg + .lc-medal 두 요소를 모두 그려야 함.
+  //   image() 로딩이 비동기라 함수 자체가 async — 호출자(click 핸들러)는 await 하지 않음 OK (fire-and-forget)
+  async function downloadLegendImage() {
     try {
       // [필수] 통계 fresh 보장
       if (typeof updateLegendStats === 'function') updateLegendStats();
@@ -12811,26 +12858,30 @@
       ctx.fillStyle = glow;
       ctx.fillRect(0, 0, W, 700);
 
-      // [1] 메달 🏆 큰 이모지 — Canvas 기본 emoji rendering 사용
-      ctx.font = '180px "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
+      // [0] 오키나와 본도 SVG — 트로피 위 header 데코 (cream silhouette)
+      // 위치: top 60, height 200 → 60~260 영역, 트로피(380) 와 안 겹침
+      await drawOkinawaSilhouetteToCanvas(ctx, W/2, 60, 200);
+
+      // [1] 메달 🏆 큰 이모지 — 오키나와 SVG 아래로 살짝 내려감
+      ctx.font = '170px "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('🏆', W/2, 220);
+      ctx.fillText('🏆', W/2, 380);
 
       // [2] PRO TRAVELER tag
       ctx.fillStyle = '#ffc400';
       ctx.font = '800 32px "Space Grotesk", sans-serif';
-      ctx.fillText('PRO TRAVELER', W/2, 380);
+      ctx.fillText('PRO TRAVELER', W/2, 510);
 
       // [3] 프로 트래블러!
       ctx.fillStyle = '#ffffff';
-      ctx.font = '900 86px "Pretendard Variable", Pretendard, sans-serif';
-      ctx.fillText('프로 트래블러!', W/2, 480);
+      ctx.font = '900 80px "Pretendard Variable", Pretendard, sans-serif';
+      ctx.fillText('프로 트래블러!', W/2, 595);
 
       // [4] 날짜
       ctx.fillStyle = 'rgba(255,255,255,0.85)';
-      ctx.font = '600 28px "Space Grotesk", sans-serif';
-      ctx.fillText('5.10 — 5.13 · 2026', W/2, 540);
+      ctx.font = '600 26px "Space Grotesk", sans-serif';
+      ctx.fillText('5.10 — 5.13 · 2026', W/2, 650);
 
       // [5] 통계 grid 4칸 — 11살 친구한테 자랑할 톤 (성취 카테고리)
       const card = document.getElementById('legend-card');
@@ -12841,7 +12892,7 @@
         { num: get('legend-culture'), lbl: 'Discovery · 발견', hero: false },
         { num: get('legend-language'), lbl: 'Solo Run · 솔로', hero: false },
       ];
-      const gridX = 110, gridY = 640, cellW = 420, cellH = 130, gap = 20;
+      const gridX = 110, gridY = 730, cellW = 420, cellH = 130, gap = 20;
       stats.forEach((s, i) => {
         const col = i % 2, row = Math.floor(i / 2);
         const x = gridX + col * (cellW + gap);
