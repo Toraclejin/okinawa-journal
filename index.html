@@ -5113,7 +5113,8 @@
 
   /* === 마무리 페이지 히든 unlock CTA — d1-hotel done 후 unlock 안 했을 때 상시 노출 === */
   .hidden-unlock-cta {
-    margin: 32px 0 0;
+    /* 도장 박스 바로 위 위치 — 위쪽 자연 흐름, 아래쪽 ~2cm (76px) 간격 강제 */
+    margin: 24px 0 76px;
     padding: 24px 22px 22px;
     background: linear-gradient(135deg, #ebf9f3 0%, #d1f0e1 100%);
     border: 2px dashed #16a085;
@@ -8754,6 +8755,17 @@
     </p>
   </div>
 
+  <!-- 히든 미션 unlock CTA — d1-hotel done 후 unlock 안 했을 때 마무리 페이지에 상시 노출.
+       "나중에" 눌렀어도 언제든 다시 풀 수 있게 안전망. 도장 박스 위 ~2cm 간격으로 떠있음.
+       NO 모달 → 자동으로 이 위치로 스크롤 (showPage('back') + scrollIntoView). -->
+  <div class="hidden-unlock-cta" id="hidden-unlock-cta" hidden>
+    <div class="huc-icon">🎫</div>
+    <div class="huc-tag">TICKET PENDING</div>
+    <h3 class="huc-title">히든 미션 풀기 — 가족 보너스 6개</h3>
+    <p class="huc-body">호텔 도착 미션 클리어해서 티켓이 발급됐어. 풀어볼래? 가족이랑 같이 하는 비밀 임무 6개야.</p>
+    <button type="button" class="huc-btn" id="hidden-unlock-cta-btn">🗝 지금 풀기</button>
+  </div>
+
   <!-- ========== 미션 도장 컬렉션 (도장 그리드, JS로 동적 채움) ========== -->
   <div class="stamp-collection" id="stamp-collection">
     <div class="stamp-collection-head">
@@ -8886,16 +8898,6 @@
   <div class="back-sig">
     <span>The Family Journal · Vol. I</span>
     <span>Okinawa, Spring 2026</span>
-  </div>
-
-  <!-- 히든 미션 unlock CTA — d1-hotel done 후 unlock 안 했을 때 마무리 페이지에 상시 노출.
-       "나중에" 눌렀어도 언제든 다시 풀 수 있게 안전망 -->
-  <div class="hidden-unlock-cta" id="hidden-unlock-cta" hidden>
-    <div class="huc-icon">🎫</div>
-    <div class="huc-tag">TICKET PENDING</div>
-    <h3 class="huc-title">히든 미션 풀기 — 가족 보너스 6개</h3>
-    <p class="huc-body">호텔 도착 미션 클리어해서 티켓이 발급됐어. 풀어볼래? 가족이랑 같이 하는 비밀 임무 6개야.</p>
-    <button type="button" class="huc-btn" id="hidden-unlock-cta-btn">🗝 지금 풀기</button>
   </div>
 </section>
 
@@ -12989,6 +12991,19 @@
     }
     if (e.target.closest('#hum-no')) {
       hideHiddenUnlockModal();
+      // NO = "나중에 풀게" — 마무리 페이지로 이동해 CTA 박스 위치를 보여줌.
+      // 사용자가 언제든 "지금 풀기" 다시 누를 수 있게 안내. CTA 박스는 도장 그리드 위 ~2cm.
+      // 흐름: 모달 닫힘 → showPage('back') → CTA 가 노출돼 있을 때만 부드럽게 스크롤.
+      try {
+        if (typeof showPage === 'function') showPage('back');
+        // 페이지 전환 애니메이션 (300ms 정도) 끝난 후 스크롤 — 단계 2 (d1-hotel done && !unlock) 보장
+        setTimeout(() => {
+          const cta = document.getElementById('hidden-unlock-cta');
+          if (cta && !cta.hidden) {
+            cta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 380);
+      } catch(_) {}
       return;
     }
     if (e.target.closest('#hidden-unlock-cta-btn')) {
