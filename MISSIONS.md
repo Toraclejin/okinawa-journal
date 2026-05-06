@@ -5,19 +5,20 @@
 
 ## 9개 미션 일람 (1~9)
 
-`getAllMissions()` 가 PAGE_IDS 순서 (prep → d1 → d2 → d3 → d4) 로 정렬한 결과:
+`getAllMissions()` 가 PAGE_IDS 순서 (prep → d1 → d2 → d3 → d4) 로 정렬한 결과 (메인 10):
 
 | # | ID | 페이지 | 라벨 | 카드 타입 |
 |---|---|---|---|---|
 | 1 | `prep-ready` | prep | Pre-Trip · 여행 준비 완료! | `.mission-card` |
-| 2 | `d1-boarding` | d1 | Departure · 인천 → 오키나와 비행기 ✈️ | `.mission-card.boarding` |
-| 3 | `d1-hotel` | d1 | Check-in 15:00 · Hotel Orion Motobu — 도착! | `.mission-card` |
-| 4 | `d1-family-photo` | d1 | Family Photo · 가족 첫 사진 — 찍었어! | `.mission-card.photo-mission` |
-| 5 | `d2-churaumi` | d2 | 고래상어 — 만났어! | `.opt[data-mission]` (Today's Main) |
-| 6 | `d2-kouri-bridge` | d2 | 코우리 대교 — 건넜어! | `.opt[data-mission]` |
-| 7 | `d3-vessel` | d3 | Check-in 13:00 · Vessel Campana — 도착! | `.mission-card` |
-| 8 | `d3-chatan-sunset` | d3 | 차탄 선셋 — 봤어! | `.opt[data-mission]` |
-| 9 | `d4-departure` | d4 | Going Home · 오키나와 → 인천 ✈️ | `.mission-card.boarding.final` |
+| 2 | `prep-japanese` | prep | Pre-Trip · 출발 전 일본어 3개 연습 | `.mission-card` (Trip Tip LANGUAGE 탭과 cross-jump) |
+| 3 | `d1-boarding` | d1 | Departure · 인천 → 오키나와 비행기 ✈️ | `.mission-card.boarding` |
+| 4 | `d1-hotel` | d1 | Check-in 15:00 · Hotel Orion Motobu — 도착! | `.mission-card` (Hidden Mission 트리거) |
+| 5 | `d1-family-photo` | d1 | Family Photo · 가족 첫 사진 — 찍었어! | `.mission-card.photo-mission` |
+| 6 | `d2-churaumi` | d2 | 고래상어 — 만났어! | `.opt[data-mission]` (Today's Main) |
+| 7 | `d2-kouri-bridge` | d2 | 코우리 대교 — 건넜어! | `.opt[data-mission]` |
+| 8 | `d3-vessel` | d3 | Check-in 13:00 · Vessel Campana — 도착! | `.mission-card` |
+| 9 | `d3-chatan-sunset` | d3 | 차탄 선셋 — 봤어! | `.opt[data-mission]` |
+| 10 | `d4-departure` | d4 | Going Home · 오키나와 → 인천 ✈️ | `.mission-card.boarding.final` |
 
 ## 두 종류 미션 카드
 
@@ -191,7 +192,7 @@ e.g.  d1-hotel, d2-churaumi, d3-vessel, prep-ready
 
 ## Hidden Mission System (Bonus 6 — 트리거: d1-hotel 도장)
 
-> **별도 namespace** 로 메인 9개와 완전 분리 운영. 11살 조카 도파민 설계.
+> **별도 namespace** 로 메인 10개와 완전 분리 운영. 11살 조카 도파민 설계.
 
 ### 흐름 (d1-hotel ✓ 클릭 시)
 
@@ -286,9 +287,9 @@ setTimeout(() => {
 | `hidden-h5-japanese` | 일본어 인사 | ありがとう / こんにちは / おいしい 3개 사용 |
 | `hidden-h6-order` | BOSS — 도전 | 현지 상점에서 직접 주문 1번 |
 
-### 보상 (메인 9 vs 히든 6 분리)
+### 보상 (메인 10 vs 히든 6 분리)
 
-| | 메인 9개 | 히든 6개 |
+| | 메인 10개 | 히든 6개 |
 |---|---|---|
 | 색감 | 골드 + 다크 네이비 | 그린 + 다크 네이비 |
 | 풀스크린 라벨 | "TRIP CONQUERED · 오키나와 정복!" | "FAMILY LEGEND · 패밀리 레전드!" |
@@ -309,7 +310,7 @@ setTimeout(() => {
 ### 새 Hidden Mission 추가 시 체크리스트
 
 - [ ] `<div class="mission-card hidden-mission" data-mission="hidden-hN-..." data-mission-type="bonus">`
-- [ ] `data-mission-type="bonus"` 빠뜨리면 메인 9 카운터에 들어감 (회귀 위험)
+- [ ] `data-mission-type="bonus"` 빠뜨리면 메인 10 카운터에 들어감 (회귀 위험)
 - [ ] Hidden 페이지 6/6 카운터 갱신 위해 `getHiddenMissions().length` 자동 적용
 - [ ] `mission-tag-hidden` 클래스 (그린 톤)
 - [ ] `MISSIONS.md` 일람표 업데이트

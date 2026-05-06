@@ -225,6 +225,8 @@
 | 페이지 추가/삭제 | `PAGE_IDS` → `<nav>` → `DESIGN.md` § Page Structure → `PRD.md` F-01 |
 | Hidden 탭 nav 차단 | `getActivePageIds()` → 좌우 화살표 + 하단 페이지네이션 + capture phase click 핸들러 |
 | 페이지네이션 spacing | `.page-pagination` 전역 — 모든 페이지 영향 → `learning.md` § 11 |
+| Trip Tip 탭 추가/제거 | `.tip-tab-btn` + `.tip-panel` (data-tab/data-panel 일치) → `activateTipTab()` 함수 → `DESIGN.md` § Page Structure |
+| Cross-page jump 버튼 추가 | `data-jump-to="page:target"` 형식 (page / tab / mission / selector) → 단일 핸들러가 모두 처리 |
 
 ### 4.6 디자인 / 톤
 
@@ -262,7 +264,8 @@
 |---|---|---|
 | `<style>` 디자인 토큰 | `:root {`, `.page-nav`, `.day` | DESIGN.md § Design Tokens |
 | `<head>` 보안 | `Content-Security-Policy` | DESIGN.md § 보안, CLAUDE.md |
-| 페이지 8개 | `<div class="page" data-page="..."` | DESIGN.md § Page Structure, PRD.md F-01 |
+| 페이지 9개 | `<div class="page" data-page="..."` | DESIGN.md § Page Structure, PRD.md F-01 |
+| Trip Tip 탭 | `.tip-tab-btn`, `.tip-panel`, `data-jump-to`, `activateTipTab` | DESIGN.md § Page Structure (Trip Tip 섹션) |
 | 미션 카드 | `data-mission=`, `data-mission-type="bonus"` | MISSIONS.md |
 | Hidden Mission system | `state.hiddenUnlocked`, `getActivePageIds`, `celebrateMission` | MISSIONS.md § Hidden Mission |
 | 동선 시스템 | `DAY_HOTEL =`, `computeMidInsertIdx`, `renderDayRoute`, `renderDayMap`, `assignPickNumbers` | ROUTE.md (3-call-sites) |

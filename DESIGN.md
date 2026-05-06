@@ -14,18 +14,27 @@
 ## 페이지 구조
 
 ```
-PAGE_IDS = ['cover', 'prep', 'd1', 'd2', 'd3', 'd4', 'back']
+PAGE_IDS = ['cover', 'prep', 'tip', 'd1', 'd2', 'd3', 'd4', 'back', 'hidden']
 ```
 
 | ID | 역할 | 핵심 컴포넌트 |
 |---|---|---|
-| `cover` | 표지 + 목차 | 6장 챕터 링크 |
-| `prep` | 출발 전 준비 | Packing list, Things I Want, prep-ready 미션 |
+| `cover` | 표지 + 목차 | 챕터 링크 |
+| `prep` | 출발 전 준비 | Packing list · Things I Want · prep-ready 미션 · prep-japanese 미션 (일본어 워밍업) |
+| `tip` | Trip Tip | 3 탭 (ADVENTURE 조카·OPERATIONS 부모·LANGUAGE 일본어) |
 | `d1` | Arrival | hotel-card · 미션 3개 (boarding, hotel, family-photo) · 옵션 슬롯 |
 | `d2` | The Whale Shark | Churaumi 메인 옵션(미션) + 코우리 대교(미션) · 평범한 옵션 |
 | `d3` | Crossing South | hotel-card.dual (Orion 체크아웃 + Vessel 체크인) · 미션 (vessel) · 옵션 + chatan-sunset(미션) |
 | `d4` | Going Home | d4-departure 미션 + 공항 도착 가이드 |
-| `back` | 마무리 | trip-conquer-card · stamp-grid · trip-done-msg · visited-list |
+| `back` | 마무리 | trip-conquer-card · stamp-grid · trip-done-msg · visited-list · hidden-unlock-cta (단계 2) |
+| `hidden` | Hidden Mission | 6 미션 카드 + legend-card (PRO TRAVELER) — d1-hotel done 후 unlock |
+
+**Trip Tip 페이지 — 3 탭 시스템**:
+- `data-tab="adventure"` (8 카테고리, 조카 1순위 시점)
+- `data-tab="operations"` (10 카테고리, 부모/메인테이너 실용 디테일)
+- `data-tab="language"` (9 카테고리 / 53 phrase, 공통)
+- 탭 토글 — `.tip-tab-btn click` → 같은 `data-panel` 활성, 나머지 hidden
+- Cross-page jump: `data-jump-to="page:target"` 4 형식 (page / tab / mission / selector)
 
 ## 상태 모델 (localStorage)
 
@@ -42,7 +51,7 @@ type State = {
   chosenExtras: { [extraId: string]: true };  // 동적 추가 ✓
   extras: { [slotKey: string]: string[] };    // 동적 추가 카드 list
   extraOptions: { [extraId: string]: string };// 동적 카드 텍스트 (legacy)
-  missions: { [missionId: string]: { done: true, at?: number } };  // 메인 9 + 히든 6 (data-mission-type 으로 분리)
+  missions: { [missionId: string]: { done: true, at?: number } };  // 메인 10 + 히든 6 (data-mission-type 으로 분리)
   hiddenUnlocked?: true;                      // d1-hotel done 후 사용자가 YES → Hidden 탭 unlock 영속 플래그
 };
 ```
