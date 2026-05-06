@@ -6242,6 +6242,36 @@
     }
   }
 
+  /* 미션 카드 안 cross-page 점프 버튼 (예: 'LANGUAGE 탭 열기')
+     - data-jump-to="page:tab" 형식: 'tip:language' 같이 페이지+탭 동시 이동
+     - 미션 ✓ 도장 버튼보다 약하게 (보조 액션) */
+  .mission-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    background: rgba(0, 71, 255, 0.06);
+    border: 1.5px dashed var(--blue);
+    border-radius: 999px;
+    color: var(--blue);
+    font-family: 'Pretendard Variable', Pretendard, sans-serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 0 0 var(--box-gap-tight);
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  @media (hover: hover) {
+    .mission-link-btn:hover {
+      background: var(--blue);
+      color: #fff;
+      border-style: solid;
+      transform: translateY(-1px);
+    }
+  }
+
   /* ============================================================
      Trip Tip 페이지 — 3 탭 시스템 (ADVENTURE / OPERATIONS / LANGUAGE)
      - 사용자: 조카 (모험) / 부모 (운영) / 둘 다 (일본어)
@@ -6471,7 +6501,7 @@
     <div class="hum-icon">🎫</div>
     <div class="hum-tag">TICKET ISSUED</div>
     <h3 class="hum-title" id="hum-title">Hidden Mission 활성화</h3>
-    <p class="hum-body">비밀 보너스 미션 6개 활성화.<br/>비밀 미션 완료해서 추가 보상 진행 가능<br/>— 메인 9개 미션과 별도.</p>
+    <p class="hum-body">비밀 보너스 미션 6개 활성화.<br/>비밀 미션 완료해서 추가 보상 진행 가능<br/>— 메인 10개 미션과 별도.</p>
     <div class="hum-actions">
       <button type="button" class="hum-btn hum-btn-yes" id="hum-yes">🗝 응! 지금 풀게</button>
       <button type="button" class="hum-btn hum-btn-no" id="hum-no">나중에 풀게 (마무리 페이지에서 다시)</button>
@@ -8848,6 +8878,24 @@
     <div class="mission-timestamp"></div>
   </div>
 
+  <!-- ========== 미션 #2 — 출발 전 일본어 워밍업 ========== -->
+  <div class="mission-card boarding" data-mission="prep-japanese" style="margin: 0 0 32px;">
+    <span class="mission-tag">Mission · Pre-Trip</span>
+    <h3 class="mission-title">출발 전 일본어 3개 연습</h3>
+    <p class="mission-desc">Trip Tip 의 <strong>LANGUAGE</strong> 탭에서 일본어 phrase 3개 골라 부모님과 함께 입으로 연습해봐. 입에 익혀두면 현지에서 자신감 ↑. 부모님이 OK 하면 도장 ✓</p>
+    <button type="button" class="mission-link-btn" data-jump-to="tip:language">
+      📖 LANGUAGE 탭 열기 →
+    </button>
+    <div class="mission-action-row">
+      <button type="button" class="mission-stamp-btn" aria-label="미션 인증">
+        <span class="ms-icon">✓</span>
+        <span class="ms-label">연습 완료!</span>
+      </button>
+      <span class="mission-hint">부모님이 OK 해주실 거야</span>
+    </div>
+    <div class="mission-timestamp"></div>
+  </div>
+
   <div class="pack-grid">
     <div class="pack-col">
       <div class="p-num">i</div>
@@ -8970,7 +9018,7 @@
           <li><strong>입 다문 시사 (암컷)</strong> — 행운 가둠</li>
           <li>둘 다 짝으로 있으면 진짜 류큐 부적</li>
         </ul>
-        Hidden Mission 3 의 미션 — 사진 1 장이면 도장!
+        ✨ 시사 사진 1 장 찍어두면 — 어딘가에서 좋은 일 생길지도? 🦁
       </p>
     </div>
 
@@ -9063,95 +9111,453 @@
 
   </div><!-- /panel adventure -->
 
-  <!-- 탭 2: OPERATIONS — 여행 운영 가이드 (부모, 10 카테고리) -->
+  <!-- 탭 2: OPERATIONS — 여행 운영 가이드 (부모/자형/누나/본인 — 디테일 + 실용) -->
   <div class="tip-panel" data-panel="operations" role="tabpanel">
 
     <div class="tt-card">
-      <div class="tt-card-head"><span class="tt-card-icon">🚗</span><h3 class="tt-card-title">렌터카</h3></div>
+      <div class="tt-card-head"><span class="tt-card-icon">🚗</span><h3 class="tt-card-title">렌터카 — 픽업부터 사고 대응까지</h3></div>
       <p class="tt-card-body">
-        <strong>좌측통행</strong>. 한국 면허 + <strong>국제면허 (일본어 번역본)</strong> 필수. 한국 면허만으론 픽업 안 됨.<br/>
-        주유: 셀프 주유소 가능. <strong>"만탕 (満タン)"</strong> = 가득. 직원 주유는 살짝 비쌈.<br/>
-        <strong>매피온 (Mapion) 코드</strong> 가 전화번호보다 정확 — 호텔/식당 미리 메모.
-      </p>
-    </div>
-
-    <div class="tt-card">
-      <div class="tt-card-head"><span class="tt-card-icon">💳</span><h3 class="tt-card-title">결제</h3></div>
-      <p class="tt-card-body">
-        북부·소도시는 <strong>현금 위주</strong>. 도시 체인은 카드 OK.<br/>
-        <strong>JCB</strong> 가 Visa·Master 보다 일본 매장에서 잘 받음.<br/>
-        <strong>PayPay·LINE Pay</strong> 일부 매장 (외국인 발급 가능).
-      </p>
-    </div>
-
-    <div class="tt-card">
-      <div class="tt-card-head"><span class="tt-card-icon">📶</span><h3 class="tt-card-title">통신</h3></div>
-      <p class="tt-card-body">
-        <strong>eSIM 추천</strong> (트래블심·Ubigi 등). 공항 도착 즉시 활성화.<br/>
-        호텔 와이파이 강도 변동 — 백업 통신 수단 필수.
-      </p>
-    </div>
-
-    <div class="tt-card">
-      <div class="tt-card-head"><span class="tt-card-icon">🌧</span><h3 class="tt-card-title">5월 날씨</h3></div>
-      <p class="tt-card-body">
-        평균 <strong>22~27°C</strong>. <strong>우기 진입</strong> — 작은 우산 필수.<br/>
-        자외선 강함 — <strong>SPF 50+</strong> 선크림. 모자.<br/>
-        밤은 19~22°C — 얇은 긴팔.
-      </p>
-    </div>
-
-    <div class="tt-card">
-      <div class="tt-card-head"><span class="tt-card-icon">🍱</span><h3 class="tt-card-title">식사</h3></div>
-      <p class="tt-card-body">
-        영업시간 <strong>엄격</strong> — 라스트오더 1 시간 전.<br/>
-        <strong>점심 휴게 (14~17 시) 휴무 가게 많음</strong>.<br/>
-        인기 식당 (기시모토 등) <strong>예약 필수</strong>.
-      </p>
-    </div>
-
-    <div class="tt-card">
-      <div class="tt-card-head"><span class="tt-card-icon">🏖</span><h3 class="tt-card-title">비치/풀</h3></div>
-      <p class="tt-card-body">
-        5월 수온 <strong>23~24°C</strong> — 수영 가능 (살짝 차가움).<br/>
-        호텔 풀 OK. 자외선 + <strong>래시가드</strong> 강추.
-      </p>
-    </div>
-
-    <div class="tt-card">
-      <div class="tt-card-head"><span class="tt-card-icon">🎌</span><h3 class="tt-card-title">매너</h3></div>
-      <p class="tt-card-body">
-        신발 벗는 식당·신사·온천. <strong>팁 X</strong> (오히려 무례).<br/>
-        대중교통 조용. 줄 잘 서기.
-      </p>
-    </div>
-
-    <div class="tt-card tt-emergency">
-      <div class="tt-card-head"><span class="tt-card-icon">🚨</span><h3 class="tt-card-title">비상 연락처</h3></div>
-      <p class="tt-card-body">
+        <strong>📋 픽업 시 필요한 것</strong>:
         <ul>
-          <li><strong>119</strong> — 구급 / 소방</li>
-          <li><strong>110</strong> — 경찰</li>
-          <li><strong>주오키나와 한국 영사관</strong> — <a href="tel:0988660011" style="color:var(--blue);">098-866-0011</a></li>
-          <li><strong>외교부 영사 콜센터</strong> — +82-2-3210-0404 (24h)</li>
+          <li><strong>한국 운전면허증</strong> + <strong>국제운전면허증</strong> (또는 일본어 번역본). <span style="color: #c00;">한국 면허만으로는 X</span></li>
+          <li>예약 확인서 (이메일·앱)</li>
+          <li>본인 명의 신용카드 (디포짓·보험)</li>
+          <li>여권</li>
+        </ul>
+        <strong>🛣 운전 룰</strong>:
+        <ul>
+          <li><strong>좌측통행 / 운전석 우측</strong> — 회전 시 반대편 차선 진입 X 주의</li>
+          <li><strong>빨간 신호 우회전 금지</strong> (한국과 다름) — 신호 켜질 때까지 대기</li>
+          <li>속도 단위: km/h. 일반도로 50~60, 고속도로 80~100</li>
+          <li>음주운전 — <strong>한 잔도 안 됨</strong>. 처벌 매우 엄격 (벌금·실형)</li>
+          <li>핸드폰 통화·조작 금지 (블루투스 OK)</li>
+        </ul>
+        <strong>📍 매피온 (Mapion) 코드</strong>:
+        <ul>
+          <li>7자리 숫자 — 호텔·식당·관광지 좌표가 전화번호보다 정확</li>
+          <li>네비게이션 입력 시 가장 빠른 방법</li>
+          <li>각 옵션 카드의 매피온 코드 미리 메모 권장</li>
+        </ul>
+        <strong>⛽ 주유</strong>:
+        <ul>
+          <li>셀프 주유소 보편적 — レギュラー (Regular, 휘발유) 선택</li>
+          <li>"만탕 (満タン)" = 가득. 반납 전 만탕 권장 (안 채우면 비싸게 정산됨)</li>
+          <li>직원 주유 (フルサービス) 는 살짝 비쌈 (1L 당 5~10엔 추가)</li>
+          <li>현금 또는 카드 OK</li>
+        </ul>
+        <strong>🅿️ 주차</strong>:
+        <ul>
+          <li>호텔 — 무료 주차 (Orion Motobu, Vessel Chatan 둘 다)</li>
+          <li>관광지 (추라우미·만자모) — 무료 또는 유료 (300~500엔)</li>
+          <li>도시 코인주차 — 30분 200~400엔</li>
+          <li><span style="color: #c00;">콘비니 주차 X</span> (식사·구매 안 하면 벌금 가능)</li>
+        </ul>
+        <strong>🛡 보험 (사고 대비)</strong>:
+        <ul>
+          <li><strong>CDW</strong> (대물 보험) + <strong>NOC</strong> (영업 손실 보상) 모두 가입 권장</li>
+          <li>NOC 미가입 시 사고 후 추가 청구 가능 (수만~수십만엔)</li>
+          <li>일일 1500~3000엔 추가 — 안전 보험료</li>
+        </ul>
+        <strong>🚨 사고 시</strong>:
+        <ul>
+          <li>① <strong>경찰 110</strong> 신고 (필수, 안 하면 보험 X)</li>
+          <li>② <strong>렌터카 회사 24/7 콜센터</strong> 동시 전화</li>
+          <li>③ 사진 (피해 부위, 차량 위치, 상대 면허) 다 찍기</li>
+          <li>④ 부상자 있으면 119 동시</li>
+        </ul>
+        <strong>🚧 톨게이트 / 고속도로</strong>:
+        <ul>
+          <li>오키나와 자동차도 (沖縄自動車道) 유료 — 허타·許田 IC 등</li>
+          <li>요금소 입구에서 티켓 → 출구에서 정산</li>
+          <li>현금 또는 ETC 카드. ETC 카드 렌트 가능 (편리)</li>
         </ul>
       </p>
     </div>
 
     <div class="tt-card">
-      <div class="tt-card-head"><span class="tt-card-icon">💱</span><h3 class="tt-card-title">환전 / ATM</h3></div>
+      <div class="tt-card-head"><span class="tt-card-icon">💳</span><h3 class="tt-card-title">결제 — 현금·카드·페이앱</h3></div>
       <p class="tt-card-body">
-        공항보다 시내 환전소 유리.<br/>
-        <strong>트래블월렛 카드</strong> — 수수료 0, ATM 으로 엔 바로 인출.<br/>
-        <strong>세븐은행 ATM</strong> (편의점 안) — 외국 카드 OK.
+        <strong>💰 어디서 어떤 결제 수단?</strong>:
+        <ul>
+          <li><strong>북부·소도시 식당</strong> → 거의 <strong>현금</strong></li>
+          <li><strong>도시 체인 (나하·차탄)</strong> → 카드 OK</li>
+          <li><strong>편의점</strong> → 카드 + 현금 + PayPay</li>
+          <li><strong>대형 마트 (이온·돈키호테)</strong> → 모든 수단</li>
+          <li><strong>택시</strong> → 카드 OK 늘어나는 추세, 단 현금 백업</li>
+        </ul>
+        <strong>💳 카드 우선순위</strong>:
+        <ul>
+          <li>① <strong>JCB</strong> — 일본 매장 가장 잘 받음 (미국 Visa·Master 보다 우대)</li>
+          <li>② Visa / Master — 도시 OK, 시골 일부 X</li>
+          <li>③ Amex / Diners — 받는 곳 적음</li>
+          <li>④ 컨택리스 (Apple Pay·Google Pay) — JR 역·일부 콘비니</li>
+        </ul>
+        <strong>📱 모바일 페이</strong>:
+        <ul>
+          <li><strong>PayPay</strong> — 외국인 관광객 가입 가능. 일본 가장 보편</li>
+          <li><strong>LINE Pay</strong> — 라인 앱 안. 일부 매장</li>
+          <li>한국 카카오페이 / 네이버페이 — 일본 X</li>
+        </ul>
+        <strong>🏧 ATM 현금 인출</strong>:
+        <ul>
+          <li><strong>세븐은행 ATM</strong> (세븐일레븐 안) — 외국 카드 24/7 OK, 한글 메뉴, 수수료 110~220엔/회</li>
+          <li><strong>로손 / 패밀리마트 ATM</strong> — 외국 카드 OK</li>
+          <li>일본 은행 ATM — 영업시간만 (08:45~21:00) + 외국 카드 X 가 많음</li>
+          <li>1 회 한도 5만엔, 1 일 10만엔 (카드사별)</li>
+        </ul>
+        <strong>💴 현금 권장 액수</strong>:
+        <ul>
+          <li>1 일 인당 <strong>1만~1.5만엔</strong> (식사·자판기·주차·주유)</li>
+          <li>가족 4명 × 4일 = 16만~24만엔 정도</li>
+          <li>큰 지폐 (1만엔) 보다 <strong>5천엔·1천엔 권 섞어두기</strong> (작은 가게 거스름돈 부담 ↓)</li>
+          <li>500엔 동전 다수 — 자판기·주차장</li>
+        </ul>
+        <strong>🌟 트래블월렛 카드 (강추)</strong>:
+        <ul>
+          <li>한국 원 → 카드에 충전 → 일본 ATM 으로 엔 인출</li>
+          <li>환전 수수료 0 / ATM 수수료만 110~220엔</li>
+          <li>분실 시 앱에서 즉시 정지 가능</li>
+          <li>출발 1주일 전 발급 + 충전 권장</li>
+        </ul>
       </p>
     </div>
 
     <div class="tt-card">
-      <div class="tt-card-head"><span class="tt-card-icon">🔌</span><h3 class="tt-card-title">전기 / 콘센트</h3></div>
+      <div class="tt-card-head"><span class="tt-card-icon">📶</span><h3 class="tt-card-title">통신 — eSIM·와이파이·핫스팟</h3></div>
       <p class="tt-card-body">
-        일본 <strong>110V, A타입</strong> 콘센트 (한국 220V C타입과 다름).<br/>
-        한국 전자기기 → <strong>A타입 어댑터</strong> 필수. 다이소·돈키호테에서 구입 가능.
+        <strong>📡 eSIM (가장 추천)</strong>:
+        <ul>
+          <li>출발 전 한국에서 구매 → QR 코드 받음 → 폰에 등록 → 공항 도착 즉시 활성화</li>
+          <li>추천 서비스: <strong>트래블심 / Ubigi / Klook eSIM</strong></li>
+          <li>4박 5일 5GB 패키지 → 1만~1.5만원</li>
+          <li>일본 SoftBank·KDDI 망 — 오키나와 전역 신호 OK (북부 일부 약함)</li>
+          <li>장점: 물리 SIM 분실 위험 X, 한국 번호 그대로 (이중)</li>
+        </ul>
+        <strong>📶 호텔 와이파이</strong>:
+        <ul>
+          <li><strong>Orion Motobu</strong> — 객실 5GHz 무료, 강함</li>
+          <li><strong>Vessel Chatan</strong> — 객실 + 로비 무료, 보통</li>
+          <li>여러 명 동시 접속 시 속도 ↓ — 영상 통화는 1~2 명만</li>
+        </ul>
+        <strong>📲 핸드폰 핫스팟 공유</strong>:
+        <ul>
+          <li>iPhone: 설정 → 개인용 핫스팟 → ON</li>
+          <li>가족 4명 → 1명만 eSIM 사도 핫스팟으로 공유 가능 (배터리 빨리 닳음)</li>
+        </ul>
+        <strong>🚫 피해야 할 것</strong>:
+        <ul>
+          <li>공항 SIM 자판기 / 카운터 — 비쌈 (4일 1.5~2만엔)</li>
+          <li>한국 통신사 데이터 로밍 — 비쌈 (1일 1만원+)</li>
+          <li>공공 와이파이 (역·카페) — 보안 약함, 결제 X</li>
+        </ul>
+      </p>
+    </div>
+
+    <div class="tt-card">
+      <div class="tt-card-head"><span class="tt-card-icon">🌧</span><h3 class="tt-card-title">5월 날씨 — 장마 진입 + 짐 싸기</h3></div>
+      <p class="tt-card-body">
+        <strong>🌡 기온 (5월 오키나와 평년)</strong>:
+        <ul>
+          <li>낮 평균 <strong>25~27°C</strong>, 최고 30°C 가능</li>
+          <li>밤 평균 <strong>20~22°C</strong>, 호텔 객실 에어컨 필요</li>
+          <li>실내 (식당·박물관) 에어컨 강함 → 카디건 필수</li>
+        </ul>
+        <strong>☔ 5월 = 장마 시작</strong>:
+        <ul>
+          <li>오키나와 장마: 5/10 ~ 6/22 평균 (정확한 입대일은 매년 변동)</li>
+          <li><strong>강수 확률 60~70%</strong> — 4 일 중 2~3 일 비 가능</li>
+          <li>스콜 (소나기) 패턴 — 갑자기 30분~1시간 강하게 → 그치고 다시 맑음</li>
+          <li>태풍 — 5월은 보통 X (6월부터)</li>
+        </ul>
+        <strong>☂️ 우산 / 우비</strong>:
+        <ul>
+          <li><strong>접이식 우산</strong> 가족당 1 개 — 큰 우산 X (거추장)</li>
+          <li>비 갑자기 → 편의점에서 비닐 우산 500엔 가능</li>
+          <li>가벼운 <strong>방수 자켓 / 비치 가운</strong> 추천</li>
+        </ul>
+        <strong>☀️ 자외선 + 햇빛</strong>:
+        <ul>
+          <li>자외선 지수 <strong>8+</strong> (매우 강함, 한국 7월 수준)</li>
+          <li><strong>SPF 50+ PA++++</strong> 선크림. 2~3 시간마다 재도포</li>
+          <li>모자 (챙 넓은 것) + 선글라스 + 래시가드 (수영 시)</li>
+          <li>특히 <strong>11살 조카</strong> — 어른보다 자외선 영향 큼, 자주 도움</li>
+        </ul>
+        <strong>👕 옷차림 by Day</strong>:
+        <ul>
+          <li>낮: 반팔 + 가벼운 긴 바지 (모기 방지) + 운동화</li>
+          <li>밤: 얇은 긴팔 + 카디건 (실내 에어컨 + 야외 19°C)</li>
+          <li>비치: 수영복 + 래시가드 + 비치 샌들</li>
+          <li>식당 (격식) X — 캐주얼 OK</li>
+        </ul>
+      </p>
+    </div>
+
+    <div class="tt-card">
+      <div class="tt-card-head"><span class="tt-card-icon">🍱</span><h3 class="tt-card-title">식사 — 시간·예약·알러지</h3></div>
+      <p class="tt-card-body">
+        <strong>⏰ 영업시간 룰</strong>:
+        <ul>
+          <li><strong>라스트오더 (LO)</strong> — 보통 마감 1 시간 전. 식당 입구 표시 확인</li>
+          <li>예: 22:00 마감 → LO 21:00. 21:30 도착 시 입장 거절 가능</li>
+          <li><strong>점심 휴게 (中休み)</strong> — 14:00~17:00 휴무 가게 많음. 일본 전국 패턴</li>
+          <li>오키나와 — 일요일 휴무 가게 일부 있음 (관광지 제외)</li>
+        </ul>
+        <strong>📅 예약 필수 / 권장 식당</strong>:
+        <ul>
+          <li><strong>기시모토 식당</strong> (Kishimoto, 본점) — 줄 1~2시간. 개점 30분 전 도착 또는 분점 (해양박공원 안)</li>
+          <li><strong>Calif Kitchen</strong> 차탄 — 일몰 시간 예약 불가 (선착순). 17:00 입장</li>
+          <li>인기 식당 일반 — 호텔 컨시어지에 부탁 (일본어 OK)</li>
+        </ul>
+        <strong>🥢 대표 음식 추천</strong>:
+        <ul>
+          <li><strong>오키나와 소바</strong> — 면 굵음, 돼지뼈 국물, 라후테 (삼겹살 조림) 토핑</li>
+          <li><strong>타코라이스</strong> — 멕시칸 + 일본 (밥 + 타코미트 + 야채)</li>
+          <li><strong>아구 돼지</strong> — 흑돼지 종류, 차슈·삼겹살 어디든</li>
+          <li><strong>고야 챔플 (ゴーヤチャンプル)</strong> — 여주 볶음, 쓴 맛 있음</li>
+          <li><strong>시콰사 음료</strong> — 오키나와 라임, 사이다·맥주 가능</li>
+          <li><strong>오리온 맥주</strong> — 오키나와 토종 맥주</li>
+        </ul>
+        <strong>⚠️ 알러지 / 식이 제한</strong>:
+        <ul>
+          <li>일본은 <strong>매운 음식 거의 X</strong> (어린이 친화)</li>
+          <li>채식 / 비건 / 글루텐프리 — 영어 메뉴 카드 미리 준비. 호텔 컨시어지 도움</li>
+          <li>견과 알러지 — 일부 디저트 위험. 영어 의사 표현 (No nuts, please) 필수</li>
+          <li>해산물 알러지 — 오키나와 음식 70% 해산물 — 신중</li>
+        </ul>
+        <strong>👶 어린이 친화</strong>:
+        <ul>
+          <li>"お子様ランチ" (오코사마 런치) — 어린이 메뉴, 일부 식당</li>
+          <li>높은 의자 (ベビーチェア) 요청 가능 — 영어 OK</li>
+          <li>대부분 식당 어린이 환영 — 식사 매너 잘 지키면 OK</li>
+        </ul>
+        <strong>🛒 식료품 (호텔 비축용)</strong>:
+        <ul>
+          <li>이온 (AEON) — 마트 + 음식점 + 의류 다 (가족 쇼핑 명소)</li>
+          <li>돈키호테 — 24시간, 이상한 일본 음식 다 있음</li>
+          <li>편의점 (패밀리마트·로손·세븐) — 편리, 약간 비쌈</li>
+        </ul>
+      </p>
+    </div>
+
+    <div class="tt-card">
+      <div class="tt-card-head"><span class="tt-card-icon">🏖</span><h3 class="tt-card-title">비치/풀 — 5월 수영 가이드</h3></div>
+      <p class="tt-card-body">
+        <strong>🏊 5월 수영 가능?</strong>:
+        <ul>
+          <li>수온 23~24°C — <strong>수영 가능</strong> (한국 7월 수준)</li>
+          <li>비치 수영 시즌: 보통 5/1 ~ 10/31 (비치별 다름)</li>
+          <li>호텔 풀 — 야외 풀 5 월 오픈, 실내 풀 연중</li>
+        </ul>
+        <strong>🌊 비치 추천</strong>:
+        <ul>
+          <li><strong>에메랄드 비치</strong> (추라우미 옆) — 인공, 가족 친화, 무료, 라이프가드</li>
+          <li><strong>선셋 비치</strong> (차탄 아메리칸 빌리지) — 일몰 명소, 무료</li>
+          <li><strong>비세 비치</strong> (Orion 호텔 앞) — 호텔 손님 전용 ish</li>
+          <li><strong>코우리 비치</strong> (코우리 대교 근처) — 한적, 차로 접근</li>
+        </ul>
+        <strong>🚩 안전 깃발 색깔</strong>:
+        <ul>
+          <li>🟢 녹색 — 안전 (모든 활동 OK)</li>
+          <li>🟡 노랑 — 주의 (수영 가능, 신중)</li>
+          <li>🔴 빨강 — 위험 (수영 금지)</li>
+          <li>⚫ 검정 — 폐쇄</li>
+        </ul>
+        <strong>🪼 해파리 / 위험 생물</strong>:
+        <ul>
+          <li>5월 — <strong>해파리 거의 X</strong> (6~9월이 시즌)</li>
+          <li>성게·바다뱀 — 산호 근처 주의</li>
+          <li>해초 미끄러움 — 비치 샌들 필수</li>
+        </ul>
+        <strong>🎒 비치 짐</strong>:
+        <ul>
+          <li>래시가드 (자외선 + 보온)</li>
+          <li>비치 샌들 (호텔 → 비치 → 풀 다 사용)</li>
+          <li>방수 가방 (핸드폰·지갑)</li>
+          <li>스노클링 마스크 (호텔에서 대여 또는 다이소)</li>
+          <li>대형 수건 (가족당 1)</li>
+        </ul>
+      </p>
+    </div>
+
+    <div class="tt-card">
+      <div class="tt-card-head"><span class="tt-card-icon">🎌</span><h3 class="tt-card-title">매너 — 식당·신사·온천</h3></div>
+      <p class="tt-card-body">
+        <strong>👞 신발 벗기</strong>:
+        <ul>
+          <li>식당 다다미 / 가정집 / 신사 본전 / 온천 / 일부 료칸</li>
+          <li>입구 신발 벗는 곳 (玄関) 발견 → 양말 깨끗하게</li>
+          <li>슬리퍼 제공되는 곳 — 신어도 OK</li>
+        </ul>
+        <strong>💴 팁 문화 X</strong>:
+        <ul>
+          <li>일본은 팁 없음 — <strong>오히려 무례</strong></li>
+          <li>거스름돈 정확히 받아야 (반올림 X)</li>
+          <li>고급 료칸 — 「心付け (코코로즈케)」 봉투에 담아 주는 옛 풍습 가끔. 일반 X</li>
+        </ul>
+        <strong>🚶 줄 잘 서기</strong>:
+        <ul>
+          <li>새치기 절대 X — 일본인 줄 사랑</li>
+          <li>엘리베이터 / 식당 / 매장 입장 / 화장실</li>
+          <li>가족 동반 시 — 한 사람씩 들어가 자리 잡기 X (한 줄로)</li>
+        </ul>
+        <strong>🤫 소리 매너</strong>:
+        <ul>
+          <li>카페 / 식당 — 한국말 큰 소리 X. 옆 테이블 듣기 부담</li>
+          <li>핸드폰 통화 — 식당 / 대중교통 X</li>
+          <li>엘리베이터·미술관·신사 — 정숙</li>
+          <li>예외: 라멘 후루룩 OK (일본 식 매너)</li>
+        </ul>
+        <strong>📷 사진 매너</strong>:
+        <ul>
+          <li>가게 안 / 음식 — 보통 OK, 단 NO PHOTO 표시 확인</li>
+          <li>사람 / 점원 — "스미마셍, 샤신 톳떼모 이이데스카?" 한 마디</li>
+          <li>신사 본전 안 — 사진 X (神様)</li>
+        </ul>
+        <strong>🚬 흡연</strong>:
+        <ul>
+          <li>지정 흡연 구역 외 흡연 — <strong>벌금 가능</strong> (도시 조례)</li>
+          <li>호텔 객실 — 비흡연 (위반 시 1~3만엔 벌금)</li>
+          <li>식당 — 분리 또는 전 비흡연</li>
+        </ul>
+        <strong>⛩ 신사 / 절 참배 매너</strong>:
+        <ul>
+          <li>입구 토리이 — 가운데 X (神様 자리), 옆으로 통과</li>
+          <li>손 씻기 (手水) — 왼손 → 오른손 → 입 헹굼 → 다시 왼손</li>
+          <li>참배: <strong>두 번 절 → 두 번 박수 → 한 번 절</strong></li>
+          <li>오미쿠지 (おみくじ, 운세) — 100엔 정도, 재미 있음</li>
+        </ul>
+      </p>
+    </div>
+
+    <div class="tt-card tt-emergency">
+      <div class="tt-card-head"><span class="tt-card-icon">🚨</span><h3 class="tt-card-title">비상 — 응급·영사관·의료</h3></div>
+      <p class="tt-card-body">
+        <strong>🚑 응급 전화</strong>:
+        <ul>
+          <li><strong>119</strong> — 구급 / 소방 (영어 OK)</li>
+          <li><strong>110</strong> — 경찰 (영어 일부 OK)</li>
+          <li><strong>118</strong> — 해상 사고 (서핑·다이빙 시)</li>
+        </ul>
+        <strong>🇰🇷 한국 영사관</strong>:
+        <ul>
+          <li><strong>주오키나와 한국 영사관</strong> — <a href="tel:0988660011" style="color:var(--blue);">098-866-0011</a> (평일 09:00~17:30)</li>
+          <li>주소: 沖縄県那覇市久茂地1-1-1</li>
+          <li><strong>외교부 영사 콜센터 (서울)</strong> — <a href="tel:+82-2-3210-0404" style="color:var(--blue);">+82-2-3210-0404</a> (24시간)</li>
+          <li>카카오톡 채널: "외교부 영사콜센터"</li>
+        </ul>
+        <strong>🏥 의료 (영어 가능 병원)</strong>:
+        <ul>
+          <li><strong>나하 시립 병원</strong> — 영어 OK, 외국인 안내</li>
+          <li><strong>오키나와 추라 가든 병원</strong> — 종합, 큰 응급 OK</li>
+          <li><strong>약국</strong>: マツモトキヨシ (마츠모토 키요시) — 진통제·지사제·감기약 보유</li>
+          <li>처방전 약 — 원본 + 일본 의사 처방 필요</li>
+        </ul>
+        <strong>🛂 여권 분실</strong>:
+        <ul>
+          <li>경찰 110 신고 → 분실 신고서 (盗難届) 발급</li>
+          <li>영사관 → <strong>여행자 임시 여권</strong> 발급 (2~3일 소요)</li>
+          <li>여권 사진 (4×3.5cm) 2 장 + 신분증 사본 미리 준비</li>
+        </ul>
+        <strong>💳 카드 분실</strong>:
+        <ul>
+          <li>한국 카드사 24/7 콜센터 (+82 국제전화)</li>
+          <li>즉시 정지 → 분실 신고 → 한국 도착 후 재발급</li>
+          <li>해외 결제 한도 미리 확인 (일부 카드 해외 차단)</li>
+        </ul>
+        <strong>🚗 렌터카 사고</strong>:
+        <ul>
+          <li>① 경찰 110 신고 (필수)</li>
+          <li>② 렌터카 회사 24/7 콜센터</li>
+          <li>③ 사진·영상 (피해 부위, 차량 위치, 상대 정보) 다 기록</li>
+          <li>④ 부상 시 119</li>
+          <li>⑤ 한국 가족·영사관 통보</li>
+        </ul>
+        <strong>🌊 자연재해</strong>:
+        <ul>
+          <li>지진 — 호텔 안 안내 따라 (대피로 표시)</li>
+          <li>쓰나미 표지 — 노란색 / 높은 곳으로 즉시 이동</li>
+          <li>태풍 — 5월 거의 X, 단 알림 시 호텔 대기</li>
+        </ul>
+      </p>
+    </div>
+
+    <div class="tt-card">
+      <div class="tt-card-head"><span class="tt-card-icon">💱</span><h3 class="tt-card-title">환전 / ATM — 어디서 얼마</h3></div>
+      <p class="tt-card-body">
+        <strong>📊 환율 비교 (2026 현재 추정)</strong>:
+        <ul>
+          <li>한국 원 1,000 ≈ 일본 엔 110 (변동)</li>
+          <li><strong>한국 돈 ÷ 9 ≈ 일본 돈</strong> (직관 환산)</li>
+          <li>1만엔 ≈ 9만~9.5만원</li>
+        </ul>
+        <strong>💸 환전 어디서?</strong>:
+        <ul>
+          <li><strong>① 트래블월렛 (강추)</strong> — 한국 원 충전 → 일본 ATM 으로 엔 인출, 환전 수수료 0</li>
+          <li>② 한국 시중 은행 (출발 전) — 우대 환율 가능</li>
+          <li>③ 인천 공항 환전소 — 환율 OK</li>
+          <li>④ 나하 공항 환전소 — 환율 안 좋음</li>
+          <li>⑤ 일본 시내 환전소 — 환율 안 좋음 (호텔 환전소도 X)</li>
+        </ul>
+        <strong>🏧 ATM 인출</strong>:
+        <ul>
+          <li><strong>세븐은행 ATM</strong> (세븐일레븐 안) — 24/7, 외국 카드 OK, 한글 메뉴</li>
+          <li><strong>로손 ATM</strong> — 외국 카드 OK</li>
+          <li><strong>패밀리마트 ATM</strong> — 외국 카드 OK</li>
+          <li>수수료: 110엔 (1만엔 미만), 220엔 (1만엔 이상)</li>
+          <li>1 회 한도 5만엔 / 1 일 10만엔 (카드사별 다름)</li>
+        </ul>
+        <strong>💴 현금 분배 권장</strong>:
+        <ul>
+          <li>1만엔 권 → 큰 결제용 (호텔·식사)</li>
+          <li>5천엔·1천엔 권 → 일상</li>
+          <li>500엔·100엔 동전 → 자판기·주차·자판기</li>
+          <li>가족 4명 분산 (한 사람 분실 시 백업)</li>
+        </ul>
+        <strong>🛡 안전 보관</strong>:
+        <ul>
+          <li>호텔 객실 금고 — 큰 현금 보관</li>
+          <li>외출 시 — 인당 2~3만엔 정도만 휴대</li>
+          <li>지갑 분실 — 카드 정지 + 영사관 + 경찰 110</li>
+        </ul>
+      </p>
+    </div>
+
+    <div class="tt-card">
+      <div class="tt-card-head"><span class="tt-card-icon">🔌</span><h3 class="tt-card-title">전기 / 콘센트 / 충전</h3></div>
+      <p class="tt-card-body">
+        <strong>⚡ 전압 차이</strong>:
+        <ul>
+          <li>한국: 220V, C타입 (둥근 2 핀)</li>
+          <li>일본: <strong>100V, A타입</strong> (납작한 2 핀, 한국 미국 스타일)</li>
+          <li><span style="color: #c00;">한국 220V 가전 직결 X</span> — 어댑터 필수</li>
+        </ul>
+        <strong>🔌 어댑터</strong>:
+        <ul>
+          <li>한국 C → 일본 A 변환 어댑터 — 1 인 1 개 또는 멀티탭 1 개</li>
+          <li>가족 4명 → <strong>멀티탭 + 어댑터 1 세트</strong> 가장 효율</li>
+          <li>다이소 (한국) — 1~2 천원, 출발 전 구매</li>
+          <li>일본 다이소·돈키호테·공항 매장 — 200~500엔, 도착 후도 가능</li>
+        </ul>
+        <strong>🔋 배터리 / 충전</strong>:
+        <ul>
+          <li>USB 멀티 충전기 + USB-C 케이블 4 개 — 핸드폰·태블릿·카메라 동시</li>
+          <li>보조배터리 (10000mAh+) — 비치·관광 장시간</li>
+          <li>비행기 휴대 — 보조배터리 100Wh 이하만 (대부분 10000mAh = 37Wh OK)</li>
+          <li>위탁 수하물 X — 무조건 휴대</li>
+        </ul>
+        <strong>💡 호텔 객실 콘센트 위치</strong>:
+        <ul>
+          <li>침대 옆 사이드 테이블 — 보통 1~2 개</li>
+          <li>책상 — 1 개</li>
+          <li>욕실 — 면도기 전용 (다른 가전 X)</li>
+          <li>USB 포트 내장 룸 — 일부 신축 호텔만</li>
+        </ul>
+        <strong>📱 카메라·드론</strong>:
+        <ul>
+          <li>드론 — 일본 항공법, <strong>관광지 대부분 비행 금지</strong>. 사용 전 지도 확인 (drs.mlit.go.jp)</li>
+          <li>액션캠 (GoPro 등) — 비치·풀 OK</li>
+          <li>폴라로이드 / 후지 인스탁스 — 가족 사진 추천</li>
+        </ul>
       </p>
     </div>
 
@@ -9159,6 +9565,17 @@
 
   <!-- 탭 3: LANGUAGE — 생활 일본어 (조카·부모 공통, 9 카테고리) -->
   <div class="tip-panel" data-panel="language" role="tabpanel">
+
+    <!-- prep-japanese 미션과 양방향 연결 — '연습할 phrase 3개 골랐으면 미션 도장 찍으러 가기' -->
+    <div class="tt-card" style="background: linear-gradient(180deg, #fff8e1 0%, #fff 100%); border-color: var(--amber);">
+      <div class="tt-card-head"><span class="tt-card-icon">⭐</span><h3 class="tt-card-title">Mission 2 — 일본어 3개 연습</h3></div>
+      <p class="tt-card-body">
+        아래 9 카테고리에서 마음에 드는 phrase <strong>3개</strong>를 골라 부모님과 함께 입으로 연습해봐. 다 익혔으면 미션 도장 찍으러 가자.
+      </p>
+      <button type="button" class="mission-link-btn" data-jump-to="prep:prep-japanese" style="margin-top: 8px;">
+        ✓ 미션 카드로 돌아가기 →
+      </button>
+    </div>
 
     <div class="tt-lang-section">
       <h4>① 인사 / 감사</h4>
@@ -9281,8 +9698,8 @@
     <h2>Enjoy<br/>the <em>sea.</em></h2>
     <!-- 기본 메시지 (여행 전·중) — 미션 독려 + 살짝 약 치기 -->
     <p class="back-intro" data-state="default">
-      이 여행책엔 <strong>★ 미션 도장 9개</strong>가 페이지마다 숨어있어. 하나씩 찾아 ✓ 도장 찍어봐.<br/>
-      <em>9개 다 모은 순간 — 너만 볼 수 있는 히든 엔딩이 펼쳐져.</em><br/>
+      이 여행책엔 <strong>★ 미션 도장 10개</strong>가 페이지마다 숨어있어. 하나씩 찾아 ✓ 도장 찍어봐.<br/>
+      <em>10개 다 모은 순간 — 너만 볼 수 있는 히든 엔딩이 펼쳐져.</em><br/>
       어떤 엔딩일지는… 직접 다 모아서 봐.
     </p>
   </div>
@@ -9441,7 +9858,7 @@
     <div class="hidden-mark">🎮 SECRET LEVEL · 너만 풀었어</div>
     <div class="hidden-page-head">
       <h2>Hidden<br/><em>Mission.</em></h2>
-      <p class="hidden-page-sub">호텔 도착 미션 클리어 → <strong>티켓 발급 완료</strong>.<br/>6개 비밀 미션은 가족이랑 함께 — 메인 9개와는 별도.</p>
+      <p class="hidden-page-sub">호텔 도착 미션 클리어 → <strong>티켓 발급 완료</strong>.<br/>6개 비밀 미션은 가족이랑 함께 — 메인 10개와는 별도.</p>
       <div class="hidden-counter">
         <span class="hc-num" id="hidden-counter-num">0</span>
         <span class="hc-divider">/</span>
@@ -12581,21 +12998,60 @@
   //  - 같은 data-tab 의 panel 도 active 토글
   //  - aria-selected 동기 (a11y)
   // ==========================================
+  function activateTipTab(tabId) {
+    document.querySelectorAll('.tip-tab-btn').forEach(b => {
+      const isMatch = b.dataset.tab === tabId;
+      b.classList.toggle('active', isMatch);
+      b.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+    });
+    document.querySelectorAll('.tip-panel').forEach(p => {
+      p.classList.toggle('active', p.dataset.panel === tabId);
+    });
+  }
   document.querySelectorAll('.tip-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const target = btn.dataset.tab;
-      if (!target) return;
-      // 모든 탭 버튼 active 해제 + aria
-      document.querySelectorAll('.tip-tab-btn').forEach(b => {
-        b.classList.toggle('active', b === btn);
-        b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
-      });
-      // 패널 토글
-      document.querySelectorAll('.tip-panel').forEach(p => {
-        p.classList.toggle('active', p.dataset.panel === target);
-      });
+      if (target) activateTipTab(target);
     });
   });
+
+  // ==========================================
+  //  Cross-page jump 버튼 (data-jump-to)
+  //  - 'page' — 페이지만 이동
+  //  - 'page:tabId' — 페이지 + Trip Tip 탭 활성화
+  //  - 'page:missionId' — 페이지 + 해당 미션 카드로 스크롤
+  //  - 'page:#cssSelector' — 페이지 + 임의 selector 로 스크롤
+  // ==========================================
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-jump-to]');
+    if (!btn) return;
+    e.preventDefault();
+    const spec = btn.dataset.jumpTo;
+    if (!spec) return;
+    const [pageId, target] = spec.split(':');
+    if (typeof showPage === 'function') showPage(pageId);
+    setTimeout(() => {
+      if (!target) { window.scrollTo({top: 0, behavior: 'smooth'}); return; }
+      // [1] Trip Tip 탭 이름이면 탭 토글
+      const tipTab = document.querySelector(`.tip-tab-btn[data-tab="${target}"]`);
+      if (tipTab) {
+        activateTipTab(target);
+        tipTab.scrollIntoView({block: 'start', behavior: 'smooth'});
+        return;
+      }
+      // [2] mission ID 면 카드로 스크롤
+      const mission = document.querySelector(`[data-mission="${target}"]`);
+      if (mission) {
+        mission.scrollIntoView({block: 'center', behavior: 'smooth'});
+        return;
+      }
+      // [3] 임의 selector
+      try {
+        const el = document.querySelector(target);
+        if (el) el.scrollIntoView({block: 'center', behavior: 'smooth'});
+      } catch(_) {}
+    }, 380); // showPage 전환 애니 종료 대기
+  }, false);
 
   // ==========================================
   //  옵션 카드(.opt[data-mission]) 미션 통합 (A안)
@@ -13388,7 +13844,7 @@
     // d1-hotel done 후 첫 진입 / 자물쇠 재클릭 모두 동일 텍스트
     // title — 3줄 분리 (CSS white-space: pre-line 으로 \n 렌더)
     titleEl.textContent = `${name}님께서\nHidden Mission을\n활성화시키셨습니다.`;
-    bodyEl.innerHTML = '비밀 보너스 미션 6개 활성화.<br/>비밀 미션 완료해서 추가 보상 진행 가능<br/>— 메인 9개 미션과 별도.<br/><br/><strong>Hidden Mission을 진행하시겠습니까?</strong>';
+    bodyEl.innerHTML = '비밀 보너스 미션 6개 활성화.<br/>비밀 미션 완료해서 추가 보상 진행 가능<br/>— 메인 10개 미션과 별도.<br/><br/><strong>Hidden Mission을 진행하시겠습니까?</strong>';
     // 버튼 라벨도 YES / NO 로 통일
     const yesBtn = modal.querySelector('#hum-yes');
     const noBtn = modal.querySelector('#hum-no');
