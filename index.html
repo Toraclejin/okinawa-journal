@@ -8510,13 +8510,13 @@
     <div class="opt">
       <span class="opt-badge coral"><span class="dot"></span>Option 4 · 호텔 쉬기</span>
       <div class="opt-title">Vessel 복귀 <em>쉬기</em></div>
-      <div class="opt-place">Vessel Hotel Campana · 10F/11F 대욕장 · 12F 풀</div>
+      <div class="opt-place">Vessel Hotel Campana · 10F (본관) / 11F (별관) 대욕장 · 12F 루프탑 풀</div>
       <div class="opt-body">
-        이동 피곤하면 바로 체크인하고 쉬기. **루프탑 풀(12F)은 5월 오픈** (3/20~10/31, 08:00~20:00). 대욕장(10F/11F) 투숙객 무료. 방에서 낮잠도 OK. 저녁 식사 전까지 페이스 조절.
+        이동 피곤하면 바로 체크인하고 쉬기. **루프탑 풀(12F)은 5월 오픈** (3/20~10/31, 08:00~20:00). **대욕장**(본관 10F / 별관 11F) **투숙객 무료** — 06:00~10:00 (마지막 입장 09:30) + 15:00~01:00 (마지막 입장 00:30). 방에서 낮잠도 OK. 저녁 식사 전까지 페이스 조절.
       </div>
       <ul class="opt-features">
         <li><strong>루프탑 풀</strong>5월 오픈 (유료 ¥1,200)</li>
-        <li><strong>대욕장</strong>투숙객 무료</li>
+        <li><strong>대욕장</strong>투숙객 무료 · 06:00~10:00 / 15:00~01:00</li>
         <li><strong>추천</strong>이동 피로 회복</li>
       </ul>
       <div class="opt-rating">
@@ -8685,10 +8685,10 @@
         <li><strong>공기</strong>신선한 해변 바람</li>
         <li><strong>추천</strong>대욕장 콤보</li>
       </ul>
-      <!-- 🌧 야외 미션 — 비·바람 등 날씨 못 도와줄 때 백업 버튼 (미션은 클리어, weather 플래그) -->
+      <!-- 🌧 Plan B 액션 — 비·바람 등 날씨 X 시. 그냥 클리어 X, 작은 액션 1개 후 도장 -->
       <div class="weather-backup" data-target-mission="d3-chatan-sunset">
-        <p class="wb-hint"><strong>🌧 비·바람 때문에 못 봤어?</strong> 그래도 괜찮아 — 누르면 미션은 클리어돼.</p>
-        <button type="button" class="wb-btn">🌧 날씨 때문에 못 봤어<br>(그래도 클리어!)</button>
+        <p class="wb-hint"><strong>🌧 비·바람 때문에 못 봤어?</strong> Plan B 가 있어. 메모장이나 종이에 <strong>너만의 차탄 풍경 그림</strong>을 그리고, 부모님과 함께 "이 날씨 아니면 어떤 풍경이었을까" 상상해봐. 다 끝나면 도장 ✓</p>
+        <button type="button" class="wb-btn">🎨 그림 그리고 부모님과 상상했어!<br>(Plan B 클리어)</button>
       </div>
       <div class="opt-rating">
         <span class="r-lbl">How excited?</span>
@@ -13394,8 +13394,8 @@
       alert('이미 완료한 미션이야. 도장 취소부터 해야 다시 누를 수 있어.');
       return;
     }
-    // 사용자 확인 (실수 클릭 방지 + 11살 이해)
-    if (!confirm('🌧 날씨 때문에 못 봤어?\n\n그래도 미션은 클리어할게.\n인증 카드에 "🌧 비·바람 때문에" 라고 표시될 거야.\n\n진행할까?')) return;
+    // 사용자 확인 (Plan B 액션 — 그림 + 상상 — 실제로 했는지 자기 확인)
+    if (!confirm('🎨 Plan B 액션 확인\n\n비 오는 날 — 차탄 풍경을 너만의 그림으로 그렸어?\n부모님과 함께 "이 날씨 아니면 어떤 풍경이었을까" 상상해봤어?\n\n둘 다 했으면 도장 받자. 인증 카드엔 "🌧 Plan B 클리어" 로 표시될 거야.\n\n진행할까?')) return;
     // state 저장 (weather: 'bad' 플래그 — sanitizer 통과 룰)
     const now = Date.now();
     if (!state.missions) state.missions = {};
