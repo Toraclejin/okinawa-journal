@@ -5242,6 +5242,7 @@
     color: #0e6b56;
     margin: 0 0 10px;
     line-height: 1.3;
+    white-space: pre-line; /* textContent 안 \n 을 줄바꿈으로 렌더 (innerHTML 안 써도 줄 분리 가능) */
   }
   .hum-body {
     font-family: 'Pretendard Variable', Pretendard, sans-serif;
@@ -6309,8 +6310,8 @@
   <div class="hum-card">
     <div class="hum-icon">🎫</div>
     <div class="hum-tag">TICKET ISSUED</div>
-    <h3 class="hum-title" id="hum-title">히든 미션 풀어볼래?</h3>
-    <p class="hum-body">호텔 도착 미션 클리어 — 비밀 보너스 미션 6개가 풀릴 수 있어.<br/>가족이랑 같이 하는 미션이라 메인 9개랑 별도야.</p>
+    <h3 class="hum-title" id="hum-title">Hidden Mission 활성화</h3>
+    <p class="hum-body">비밀 보너스 미션 6개 활성화.<br/>비밀 미션 완료해서 추가 보상 진행 가능<br/>— 메인 9개 미션과 별도.</p>
     <div class="hum-actions">
       <button type="button" class="hum-btn hum-btn-yes" id="hum-yes">🗝 응! 지금 풀게</button>
       <button type="button" class="hum-btn hum-btn-no" id="hum-no">나중에 풀게 (마무리 페이지에서 다시)</button>
@@ -12847,8 +12848,9 @@
     if (!titleEl || !bodyEl) return;
     const name = getTravelerName();
     // d1-hotel done 후 첫 진입 / 자물쇠 재클릭 모두 동일 텍스트
-    titleEl.textContent = `${name}님께서 Hidden Mission을 활성화시키셨습니다`;
-    bodyEl.innerHTML = '비밀 보너스 미션 6개가 풀릴 수 있어.<br/>가족이랑 같이 하는 미션 — 메인 9개랑 별도야.<br/><br/><strong>Hidden Mission을 진행하시겠습니까?</strong>';
+    // title — 3줄 분리 (CSS white-space: pre-line 으로 \n 렌더)
+    titleEl.textContent = `${name}님께서\nHidden Mission을\n활성화시키셨습니다.`;
+    bodyEl.innerHTML = '비밀 보너스 미션 6개 활성화.<br/>비밀 미션 완료해서 추가 보상 진행 가능<br/>— 메인 9개 미션과 별도.<br/><br/><strong>Hidden Mission을 진행하시겠습니까?</strong>';
     // 버튼 라벨도 YES / NO 로 통일
     const yesBtn = modal.querySelector('#hum-yes');
     const noBtn = modal.querySelector('#hum-no');
